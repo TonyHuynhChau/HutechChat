@@ -101,7 +101,7 @@
             android:background="@drawable/background_edittext"
             android:ems="10"
             android:hint="Nhập Tên Người Dùng"
-            android:inputType="textPassword"
+            android:inputType="textPersonName"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="18sp" />
@@ -109,25 +109,23 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="151dp"
-        android:layout_height="116dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="-10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        android:layout_width="152dp"
+        android:layout_height="135dp"
+        android:layout_marginTop="-64dp"
+        android:background="@drawable/background_logo_signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_hutech" />
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:srcCompat="@drawable/ic_logo_appchat_removebg_preview" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="185dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="54dp"
         android:background="@drawable/background"
-        android:text="Sign up"
+        android:text="Đăng Ký"
         android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
