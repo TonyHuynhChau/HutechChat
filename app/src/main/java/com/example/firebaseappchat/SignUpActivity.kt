@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.firebaseappchat.databinding.ActivitySignupBinding
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.lang.Exception
@@ -50,7 +51,10 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this,"Vui Lòng Điền Mật Khẩu", Toast.LENGTH_SHORT).show()
                 return
             }
-
+            if(matkhau.length < 6){
+                Toast.makeText(this,"Mật Khẩu Có Ít Nhất Là 6 Ký Tự", Toast.LENGTH_SHORT).show()
+                return
+            }
             data.createUserWithEmailAndPassword(email,matkhau).addOnCompleteListener{
                     task->
                 if (task.isSuccessful){
