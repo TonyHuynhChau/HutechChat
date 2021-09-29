@@ -11,6 +11,12 @@
         android:theme="@style/Theme.FirebaseAppChat">
         <activity
             android:name=".MainActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
