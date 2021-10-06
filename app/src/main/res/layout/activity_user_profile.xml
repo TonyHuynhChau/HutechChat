@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".UserProfile">
+
+    <TextView
+        android:id="@+id/btnSelectImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/rounded_btn"
+        android:gravity="center"
+        android:text="Chọn Ảnh"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="36dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_btn"
+        android:text="Lưu Thay Đổi"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSelectImage">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Họ Tên"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/TxtName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/background_edittext"
+                android:ems="10"
+                android:hint="Nhập Họ Tên"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Ngày Sinh"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/TxtDate"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/background_edittext"
+                android:ems="10"
+                android:hint="Nhập Ngày Sinh"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="Giới Tính"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/TxtSex"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/background_edittext"
+                android:ems="10"
+                android:hint="Nhập Giới Tính"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="Số Điện Thoại"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/TxtSDT"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/background_edittext"
+                android:ems="10"
+                android:hint="Nhập Số Điện Thoại"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/select_images"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSelectImage"
+        app:layout_constraintEnd_toEndOf="@+id/btnSelectImage"
+        app:layout_constraintStart_toStartOf="@+id/btnSelectImage"
+        app:layout_constraintTop_toTopOf="@+id/btnSelectImage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

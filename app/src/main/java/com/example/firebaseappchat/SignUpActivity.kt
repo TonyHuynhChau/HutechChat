@@ -26,7 +26,9 @@ class SignUpActivity : AppCompatActivity() {
         }
 
     }
-    class User(val uid: String,val name :String )
+    class User(val uid: String, val email:String,val name :String ){
+        constructor():this("","","")
+    }
     private fun Dangky() {
         try {
             val name = binding.TxtName.text.toString()
@@ -35,7 +37,7 @@ class SignUpActivity : AppCompatActivity() {
             val uid = FirebaseAuth.getInstance().uid ?:""
             val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-            val user = User(uid,binding.TxtName.text.toString());
+            val user = User(uid, binding.TxtEmail.text.toString(), binding.TxtName.text.toString());
 
 
 
@@ -65,6 +67,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         }catch (e: Exception){
+            Toast.makeText(this,"Email Đã Đăng Ký", Toast.LENGTH_SHORT).show()
             Toast.makeText(this,e.message, Toast.LENGTH_SHORT).show()
             return
         }

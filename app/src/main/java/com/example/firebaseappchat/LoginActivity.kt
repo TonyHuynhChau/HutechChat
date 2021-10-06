@@ -17,7 +17,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        supportActionBar?.title = ""
         data = FirebaseAuth.getInstance()
 
         binding.BtnDangNhap.setOnClickListener{
@@ -27,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
         binding.textView5.setOnClickListener{
             toDangKy()
         }
+
+        supportActionBar?.title = ""
     }
 
     private fun toDangKy() {
@@ -52,6 +54,9 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful){
                     Toast.makeText(this,"Đăng Nhập Thành Công",Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this,MainActivity::class.java))
+                }
+                else{
+                    Toast.makeText(this,"Đăng Nhập Thất Bại. Vui Lòng Đăng Ký Tại Tài Khoản Mới",Toast.LENGTH_SHORT).show()
                 }
             }
         }catch (e:Exception){
