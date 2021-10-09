@@ -9,4 +9,5 @@
     <color name="blue_line_hutech">#0162af</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="Primary">#006BB3</color>
 </resources>

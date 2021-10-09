@@ -3,10 +3,12 @@ package com.example.firebaseappchat
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.firebaseappchat.databinding.ActivitySignupBinding
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import java.lang.Exception
 
@@ -34,10 +36,7 @@ class SignUpActivity : AppCompatActivity() {
             val name = binding.TxtName.text.toString()
             val email = binding.TxtEmail.text.toString()
             val matkhau = binding.TxtMatKhau.text.toString()
-            val uid = FirebaseAuth.getInstance().uid ?:""
-            val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-            val user = User(uid, binding.TxtEmail.text.toString(), binding.TxtName.text.toString());
 
 
 
@@ -60,9 +59,22 @@ class SignUpActivity : AppCompatActivity() {
             data.createUserWithEmailAndPassword(email,matkhau).addOnCompleteListener{
                     task->
                 if (task.isSuccessful){
-
+                //Đăng Ký Tài Khoản với Displayname
+                    val user = FirebaseAuth.getInstance().currentUser
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
+                    user!!.updateProfile(profileUpdates)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d("NewMessage", "User profile updated.")
+                            }
+                        }
+                //
+                    val ref = FirebaseDatabase.getInstance().getReference("/user/${user.uid}")
+                    val Realtime = User(user.uid, user.email.toString(),name);
                     Toast.makeText(this,"Đăng Ký Thành Công", Toast.LENGTH_SHORT).show()
-                    ref.setValue(user)
+                    ref.setValue(Realtime)
                     startActivity(Intent(this,LoginActivity::class.java))
                 }
             }

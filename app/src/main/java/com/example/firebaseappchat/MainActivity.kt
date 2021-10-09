@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.firebaseappchat.databinding.ActivityMainBinding
-import com.example.firebaseappchat.databinding.ActivityUserProfileBinding
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
@@ -19,8 +21,11 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Hutech Chat"
         verifyUserLoggedIn()
 
-        data = FirebaseAuth.getInstance()
-        binding.Settext.text = data.uid
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user != null) {
+            binding.Settext.text = user.email+"/"+user.displayName
+        }
     }
 
     private fun verifyUserLoggedIn(){
