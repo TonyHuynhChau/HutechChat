@@ -54,8 +54,8 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
 
     private fun pickDate() {
         binding.TxtDate.setOnClickListener{
-            getDateTimeCalendar()
-            DatePickerDialog(this,this,year,month,day).show()
+                getDateTimeCalendar()
+                DatePickerDialog(this,this,year,month,day).show()
         }
     }
 

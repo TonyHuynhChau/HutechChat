@@ -81,7 +81,7 @@
                 android:inputType="textPersonName"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -96,22 +96,20 @@
             <TextView
                 android:id="@+id/TxtDate"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/background_edittext"
-                android:drawableRight="@drawable/lich"
                 android:editable="false"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
-                android:textSize="18sp"
+                android:textSize="32dp"
                 android:visibility="visible"
                 tools:ignore="Deprecated,SpeakableTextPresentCheck"
-                tools:visibility="visible" />
+                tools:visibility="visible"
+                app:drawableRightCompat="@drawable/lich_noBG" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -136,7 +134,7 @@
                 android:inputType="textPersonName"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -163,7 +161,7 @@
                 android:inputType="textPersonName"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="22sp" />
         </LinearLayout>
     </ScrollView>
 
