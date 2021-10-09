@@ -109,6 +109,7 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             // binding.TxtName.text = Editable.Factory.getInstance().newEditable(it.toString())
                 photoUrl = it
                 saveUserToRealtime(it.toString())
+                Toast.makeText(this,"Lưu Thành Công",Toast.LENGTH_SHORT).show()
             }.addOnFailureListener{
                 Toast.makeText(this,"Lỗi :"+it.toString(),Toast.LENGTH_SHORT).show()
             }
