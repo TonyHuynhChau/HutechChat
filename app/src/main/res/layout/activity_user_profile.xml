@@ -96,7 +96,7 @@
             <TextView
                 android:id="@+id/TxtDate"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="65dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
@@ -104,12 +104,13 @@
                 android:background="@drawable/background_edittext"
                 android:editable="false"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="#ffffff"
-                android:textSize="32dp"
+                android:textSize="24dp"
                 android:visibility="visible"
                 tools:ignore="Deprecated,SpeakableTextPresentCheck"
                 tools:visibility="visible"
-                app:drawableRightCompat="@drawable/lich_noBG" />
+                app:drawableRightCompat="@drawable/lich_nobg" />
 
             <TextView
                 android:layout_width="match_parent"
