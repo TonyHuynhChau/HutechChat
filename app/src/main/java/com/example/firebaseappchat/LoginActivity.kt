@@ -53,7 +53,8 @@ class LoginActivity : AppCompatActivity() {
                     task->
                 if (task.isSuccessful){
                     Toast.makeText(this,"Đăng Nhập Thành Công",Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this,MainActivity::class.java))
+                    val intent = Intent(this,MainActivity::class.java)
+                    startActivity(intent)
                 }
                 else{
                     Toast.makeText(this,"Đăng Nhập Thất Bại. Vui Lòng Đăng Ký Tại Tài Khoản Mới",Toast.LENGTH_SHORT).show()

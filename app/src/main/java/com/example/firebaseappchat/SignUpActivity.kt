@@ -28,6 +28,10 @@ class SignUpActivity : AppCompatActivity() {
         }
 
     }
+    //class để nhận các giá trị User
+    class getUser(val uid: String, val email:String,val name :String ,val Urlphoto:String){
+        constructor():this("","","","")
+    }
     class User(val uid: String, val email:String,val name :String ){
         constructor():this("","","")
     }
