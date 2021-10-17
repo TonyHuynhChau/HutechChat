@@ -23,10 +23,12 @@ class Welcome : AppCompatActivity() {
     }
 
     private fun btnDN() {
-        startActivity(Intent(this,LoginActivity::class.java))
+        val intent = Intent(this,LoginActivity::class.java)
+        startActivity(intent)
     }
 
     private fun btnDK() {
-        startActivity(Intent(this,SignUpActivity::class.java))
+        val intent = Intent(this,SignUpActivity::class.java)
+        startActivity(intent)
     }
 }
