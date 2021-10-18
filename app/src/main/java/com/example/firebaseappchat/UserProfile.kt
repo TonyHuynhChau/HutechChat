@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.util.Log
-import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import com.example.firebaseappchat.databinding.ActivityUserProfileBinding
@@ -17,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_user_profile.*
 import java.util.*
 
 class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
@@ -29,16 +30,21 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
     var savemonth = 0
     var saveday = 0
 
+    //Lấy uid Của Người Dùng Từ Authentication gồm (Email,Pass,Display,.....)
+    val userdata = FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.title = "Profile"
 
-        val user = FirebaseAuth.getInstance().currentUser
 
-        if (user != null) {
-            binding.TxtName.text = Editable.Factory.getInstance().newEditable(user.displayName.toString())
+
+        if (userdata != null) {
+            if (userdata.photoUrl != null) {
+                readata(userdata.uid)
+            }
         }
 
         binding.btnSelectImage.setOnClickListener(){
@@ -47,9 +53,38 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             startActivityForResult(intent, 0)
         }
         pickDate()
+        binding.btnSave.setOnClickListener{
+            val ifn = userdata?.photoUrl.toString()
+            if (!ifn.equals("null")){
+                saveUserToRealtimeold()
+            }
+            else{
+                Toast.makeText(this,"Vui Lòng Điền Đầy Đủ Thông Tin",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
+    private fun readata(uid: String?) {
+        var database = FirebaseDatabase.getInstance().getReference("user")
+        database.child(uid.toString()).get().addOnSuccessListener{
+            if (it.exists()){
+                val name = it.child("name").value
+                val date = it.child("Date").value
+                val phonenumber = it.child("Phone").value
+                val Sex = it.child("Sex").value
+                val photo = it.child("Urlphoto").value
 
-
+                Picasso.get().load(photo.toString()).into(select_images)
+                binding.TxtName.text = Editable.Factory.getInstance().newEditable(name.toString())
+                binding.TxtDate.text = Editable.Factory.getInstance().newEditable(date.toString())
+                binding.TxtSex.text = Editable.Factory.getInstance().newEditable(Sex.toString())
+                binding.TxtSDT.text = Editable.Factory.getInstance().newEditable(phonenumber.toString())
+            }else{
+                Toast.makeText(this,"User Doesn't xist",Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener{
+            Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun pickDate() {
@@ -69,7 +104,6 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         saveday = dayOfMonth
         savemonth = month+1
         saveyear = year
-
         var Datepick = "$saveday-$savemonth-$saveyear"
         binding.TxtDate.setText(Datepick)
     }
@@ -88,10 +122,13 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             //val bitmapDrawable = BitmapDrawable(bitmap)
             //binding.btnSelectImage.setBackgroundDrawable(bitmapDrawable)
             binding.btnSelectImage.setText("")
-            //Click button to save images and info user
-            binding.btnSave.setOnClickListener{
+            binding.btnSave.setOnClickListener {
                 updateImages()
             }
+
+        }
+        else{
+            Toast.makeText(this,"TEST",Toast.LENGTH_SHORT).show()
         }
     }
     private fun updateImages(){
@@ -106,7 +143,6 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         ref.putFile(selectPhotoUrl!!).addOnSuccessListener {
             //Lấy URL Của Ảnh
             ref.downloadUrl.addOnSuccessListener {
-            // binding.TxtName.text = Editable.Factory.getInstance().newEditable(it.toString())
                 photoUrl = it
                 saveUserToRealtime(it.toString())
                 Toast.makeText(this,"Lưu Thành Công",Toast.LENGTH_SHORT).show()
@@ -118,31 +154,43 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         }
     }
 
-    lateinit var photoUrl :Uri
+    var photoUrl : Uri? = null
     private fun saveUserToRealtime(profileImageUrl: String){
-
-        var NguoiDung = FirebaseAuth.getInstance().currentUser
-        val ref = FirebaseDatabase.getInstance().getReference("user/${NguoiDung?.uid.toString()}")
-
         val fullName = binding.TxtName.text.toString()
         val birth = binding.TxtDate.text.toString()
         val sex = binding.TxtSex.text.toString()
         val phone = binding.TxtSDT.text.toString()
         val userIMG = profileImageUrl
         updateuser(fullName,birth,sex,phone,userIMG)
+
+
+    }
+
+    private fun saveUserToRealtimeold(){
+        val fullName = binding.TxtName.text.toString()
+        val birth = binding.TxtDate.text.toString()
+        val sex = binding.TxtSex.text.toString()
+        val phone = binding.TxtSDT.text.toString()
+        val userIMG = userdata?.photoUrl.toString()
+        updateuser(fullName,birth,sex,phone,userIMG)
     }
 
     //Cập Nhật Lại Thông Tin Người Dùng Trên Realtime
     private fun updateuser(fullName: String, birth: String, sex: String, phone: String, userIMG: String) {
         var database = FirebaseDatabase.getInstance().getReference("user")
-        //Lấy uid Của Người Dùng Từ Authentication gồm (Email,Pass,Display,.....)
-        var NguoiDung = FirebaseAuth.getInstance().currentUser
         //Cách Cập Nhật Vào Authentication
         val profileUpdates = userProfileChangeRequest {
             displayName = fullName
-            photoUri = photoUrl
+           if (photoUrl==null){
+               if (userdata != null) {
+                   photoUri = userdata.photoUrl
+               }
+           }else{
+               photoUri = photoUrl
+           }
+
         }
-        NguoiDung!!.updateProfile(profileUpdates)
+        userdata!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("NewMessage", "User profile updated.")
@@ -156,7 +204,7 @@ class UserProfile : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
                 "Phone" to phone,
                 "Urlphoto" to userIMG
         )
-        database.child(NguoiDung?.uid.toString()).updateChildren(user).addOnSuccessListener {
+        database.child(userdata?.uid.toString()).updateChildren(user).addOnSuccessListener {
             binding.TxtName.text.clear()
             binding.TxtDate.text = ""
             binding.TxtSex.text.clear()
