@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun verifyUserLoggedIn(){
-        val uid = FirebaseAuth.getInstance()?.uid
+        val uid = FirebaseAuth.getInstance().uid
         if(uid == null){
             val intent = Intent(this,LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId){
+        when(item.itemId){
             R.id.menu_new_mess -> {
                 startActivity(Intent(this,NewMessActivity::class.java))
             }

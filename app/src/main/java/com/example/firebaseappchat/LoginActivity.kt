@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful){
                     Toast.makeText(this,"Đăng Nhập Thành Công",Toast.LENGTH_SHORT).show()
                     val intent = Intent(this,MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
                 else{
