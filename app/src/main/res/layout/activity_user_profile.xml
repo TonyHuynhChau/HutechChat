@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".UserProfile">
+    tools:context=".model.UserProfile">
 
     <TextView
         android:id="@+id/btnSelectImage"

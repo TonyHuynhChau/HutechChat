@@ -1,8 +1,9 @@
-package com.example.firebaseappchat
+package com.example.firebaseappchat.registerlogin
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import com.example.firebaseappchat.databinding.ActivitySignupBinding
@@ -10,6 +11,7 @@ import com.example.firebaseappchat.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.parcel.Parcelize
 import java.lang.Exception
 
 class SignUpActivity : AppCompatActivity() {
@@ -29,10 +31,12 @@ class SignUpActivity : AppCompatActivity() {
 
     }
     //class để nhận các giá trị User
-    class getUser(val uid: String, val email:String,val name :String ,val Urlphoto:String){
+    @Parcelize
+    class getUser(val uid: String, val email:String,val name :String ,val Urlphoto:String): Parcelable{
         constructor():this("","","","")
     }
-    class User(val uid: String, val email:String,val name :String ){
+    @Parcelize
+    class User(val uid: String, val email:String,val name :String ):Parcelable{
         constructor():this("","","")
     }
     private fun Dangky() {
@@ -79,7 +83,7 @@ class SignUpActivity : AppCompatActivity() {
                     val Realtime = User(user.uid, user.email.toString(),name);
                     Toast.makeText(this,"Đăng Ký Thành Công", Toast.LENGTH_SHORT).show()
                     ref.setValue(Realtime)
-                    startActivity(Intent(this,LoginActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                 }
             }
         }catch (e: Exception){
