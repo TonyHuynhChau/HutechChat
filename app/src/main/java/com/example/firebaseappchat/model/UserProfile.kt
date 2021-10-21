@@ -43,7 +43,7 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         supportActionBar?.title = "Profile"
 
         if (userdata != null) {
-            if (userdata.photoUrl != null) {
+            if (userdata.displayName != null) {
                 readata(userdata.uid)
             }
         }
@@ -53,12 +53,23 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             intent.type = "image/*"
             startActivityForResult(intent, 0)
         }
+
         pickDate()
+<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
         binding.btnSave.setOnClickListener {
+=======
+
+        binding.btnSave.setOnClickListener{
+>>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
             val ifn = userdata?.photoUrl.toString()
             if (!ifn.equals("null")) {
                 saveUserToRealtimeold()
+<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
             } else {
+=======
+            }
+            else{
+>>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
                 val IMGURL = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
                         "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
                         "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
@@ -167,16 +178,34 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         }
     }
 
+<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
     var photoUrl: Uri? = null
     private fun saveUserToRealtime(profileImageUrl: String) {
+=======
+    var photoUrl : Uri? = null
+
+
+    private fun saveUserToRealtime(profileImageUrl: String){
+>>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
         val fullName = binding.TxtName.text.toString()
         val birth = binding.TxtDate.text.toString()
         val sex = binding.TxtSex.text.toString()
         val phone = binding.TxtSDT.text.toString()
         val userIMG = profileImageUrl
+<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
         updateuser(fullName, birth, sex, phone, userIMG)
+=======
+        updateuser(fullName,birth,sex,phone,userIMG)
+    }
+>>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
 
-
+    private fun saveUserToRealtimeForNoIMG(profileImageUrl: String){
+        val fullName = binding.TxtName.text.toString()
+        val birth = binding.TxtDate.text.toString()
+        val sex = binding.TxtSex.text.toString()
+        val phone = binding.TxtSDT.text.toString()
+        val userIMG = profileImageUrl
+        updateuser(fullName,birth,sex,phone,userIMG)
     }
 
     private fun saveUserToRealtimeold() {
@@ -223,7 +252,7 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             "Phone" to phone,
             "Urlphoto" to userIMG
         )
-        database.child(userdata?.uid.toString()).updateChildren(user).addOnSuccessListener {
+        database.child(userdata.uid.toString()).updateChildren(user).addOnSuccessListener {
             binding.TxtName.text.clear()
             binding.TxtDate.text = ""
             binding.TxtSex.text.clear()
