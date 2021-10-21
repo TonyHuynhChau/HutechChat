@@ -42,6 +42,33 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         setContentView(binding.root)
         supportActionBar?.title = "Profile"
 
+        fun readata(uid: String) {
+            var database = FirebaseDatabase.getInstance().getReference("user")
+            val postListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val name = dataSnapshot.child("$uid/name").value
+                    val date = dataSnapshot.child("$uid/Date").value
+                    val phonenumber = dataSnapshot.child("$uid/Phone").value
+                    val Sex = dataSnapshot.child("$uid/Sex").value
+                    val photo = dataSnapshot.child("$uid/Urlphoto").value
+
+                    Picasso.get().load(photo.toString()).into(select_images)
+                    binding.TxtName.text =
+                        Editable.Factory.getInstance().newEditable(name.toString())
+                    binding.TxtDate.text =
+                        Editable.Factory.getInstance().newEditable(date.toString())
+                    binding.TxtSex.text = Editable.Factory.getInstance().newEditable(Sex.toString())
+                    binding.TxtSDT.text =
+                        Editable.Factory.getInstance().newEditable(phonenumber.toString())
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("loadPost:onCancelled", error.toException())
+                }
+            }
+            database.addValueEventListener(postListener)
+        }
+
         if (userdata != null) {
             if (userdata.displayName != null) {
                 readata(userdata.uid)
@@ -54,212 +81,168 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             startActivityForResult(intent, 0)
         }
 
-        pickDate()
-<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
-        binding.btnSave.setOnClickListener {
-=======
+        var photoUrl: Uri? = null
+        fun saveUserToRealtime(profileImageUrl: String) {
+            var photoUrl: Uri? = null
+            //Cập Nhật Lại Thông Tin Người Dùng Trên Realtime
+            fun updateuser(fullName: String, birth: String, sex: String, phone: String, userIMG: String) {
+                var database = FirebaseDatabase.getInstance().getReference("user")
+                //Cách Cập Nhật Vào Authentication
+                val profileUpdates = userProfileChangeRequest {
+                    displayName = fullName
+                    if (photoUrl == null) {
+                        if (userdata != null) {
+                            photoUri = userdata.photoUrl
+                        }
+                    } else {
+                        photoUri = photoUrl
+                    }
 
-        binding.btnSave.setOnClickListener{
->>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
-            val ifn = userdata?.photoUrl.toString()
-            if (!ifn.equals("null")) {
-                saveUserToRealtimeold()
-<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
-            } else {
-=======
+                }
+                userdata!!.updateProfile(profileUpdates)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("NewMessage", "User profile updated.")
+                        }
+                    }
+                //Cách Cập Nhật vào Realtime
+                var user = mapOf<String, String>(
+                    "name" to fullName,
+                    "Date" to birth,
+                    "Sex" to sex,
+                    "Phone" to phone,
+                    "Urlphoto" to userIMG
+                )
+                database.child(userdata.uid.toString()).updateChildren(user).addOnSuccessListener {
+                    binding.TxtName.text.clear()
+                    binding.TxtDate.text = ""
+                    binding.TxtSex.text.clear()
+                    binding.TxtSDT.text.clear()
+                    Toast.makeText(this, "Cập Nhật Thành Công", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Lỗi" + it.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
-            else{
->>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
+
+            fun saveUserToRealtimeold() {
+                val fullName = binding.TxtName.text.toString()
+                val birth = binding.TxtDate.text.toString()
+                val sex = binding.TxtSex.text.toString()
+                val phone = binding.TxtSDT.text.toString()
+                val userIMG = userdata?.photoUrl.toString()
+                updateuser(fullName, birth, sex, phone, userIMG)
+            }
+
+            fun saveUserToRealtime(profileImageUrl: String) {
+                val fullName = binding.TxtName.text.toString()
+                val birth = binding.TxtDate.text.toString()
+                val sex = binding.TxtSex.text.toString()
+                val phone = binding.TxtSDT.text.toString()
+                val userIMG = profileImageUrl
+                updateuser(fullName, birth, sex, phone, userIMG)
+            }
+
+            fun saveUserToRealtimeForNoIMG(profileImageUrl: String) {
+                val fullName = binding.TxtName.text.toString()
+                val birth = binding.TxtDate.text.toString()
+                val sex = binding.TxtSex.text.toString()
+                val phone = binding.TxtSDT.text.toString()
+                val userIMG = profileImageUrl
+                updateuser(fullName, birth, sex, phone, userIMG)
+            }
+
+        }
+
+        fun getDateTimeCalendar() {
+            val calendar: Calendar = Calendar.getInstance()
+            year = calendar.get(Calendar.YEAR)
+            month = calendar.get(Calendar.MONTH)
+            day = calendar.get(Calendar.DAY_OF_MONTH)
+        }
+
+        fun pickDate() {
+            binding.TxtDate.setOnClickListener {
+                getDateTimeCalendar()
+                DatePickerDialog(this, this, year, month, day).show()
+            }
+        }
+
+        var selectPhotoUrl: Uri? = null
+        fun updateImages() {
+            if (selectPhotoUrl == null) {
+                Toast.makeText(this, "Vui Lòng Chọn Ảnh", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            //code thành công tới lưu vào storage images
+            val filename = UUID.randomUUID().toString()
+            val ref = FirebaseStorage.getInstance().getReference("/Images/$filename")
+            ref.putFile(selectPhotoUrl!!).addOnSuccessListener {
+                //Lấy URL Của Ảnh
+                ref.downloadUrl.addOnSuccessListener {
+                    var photoUrl = it
+                    saveUserToRealtime(it.toString())
+                    Toast.makeText(this, "Lưu Thành Công", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            saveday = dayOfMonth
+            savemonth = month + 1
+            saveyear = year
+            var Datepick = "$saveday-$savemonth-$saveyear"
+            binding.TxtDate.setText(Datepick)
+        }
+
+        pickDate()
+        binding.btnSave.setOnClickListener {
+
+            binding.btnSave.setOnClickListener {
+
+                val ifn = userdata?.photoUrl.toString()
+                if (!ifn.equals("null")) {
+                    saveUserToRealtime("")
+                } else{
                 val IMGURL = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
                         "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
                         "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
                         "&pid=ImgRaw&r=0"
-                saveUserToRealtimeForNoIMG(IMGURL)
+                saveUserToRealtime(IMGURL)
+            }
             }
         }
-    }
-
-    private fun saveUserToRealtimeForNoIMG(profileImageUrl: String) {
-        val fullName = binding.TxtName.text.toString()
-        val birth = binding.TxtDate.text.toString()
-        val sex = binding.TxtSex.text.toString()
-        val phone = binding.TxtSDT.text.toString()
-        val userIMG = profileImageUrl
-        updateuser(fullName, birth, sex, phone, userIMG)
-    }
-
-    private fun readata(uid: String) {
-        var database = FirebaseDatabase.getInstance().getReference("user")
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val name = dataSnapshot.child("$uid/name").value
-                val date = dataSnapshot.child("$uid/Date").value
-                val phonenumber = dataSnapshot.child("$uid/Phone").value
-                val Sex = dataSnapshot.child("$uid/Sex").value
-                val photo = dataSnapshot.child("$uid/Urlphoto").value
-
-                Picasso.get().load(photo.toString()).into(select_images)
-                binding.TxtName.text = Editable.Factory.getInstance().newEditable(name.toString())
-                binding.TxtDate.text = Editable.Factory.getInstance().newEditable(date.toString())
-                binding.TxtSex.text = Editable.Factory.getInstance().newEditable(Sex.toString())
-                binding.TxtSDT.text = Editable.Factory.getInstance().newEditable(phonenumber.toString())
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("loadPost:onCancelled", error.toException())
-            }
-        }
-        database.addValueEventListener(postListener)
-    }
-
-    private fun pickDate() {
-        binding.TxtDate.setOnClickListener {
-            getDateTimeCalendar()
-            DatePickerDialog(this, this, year, month, day).show()
-        }
-    }
-
-    private fun getDateTimeCalendar() {
-        val calendar: Calendar = Calendar.getInstance()
-        year = calendar.get(Calendar.YEAR)
-        month = calendar.get(Calendar.MONTH)
-        day = calendar.get(Calendar.DAY_OF_MONTH)
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        saveday = dayOfMonth
-        savemonth = month + 1
-        saveyear = year
-        var Datepick = "$saveday-$savemonth-$saveyear"
-        binding.TxtDate.setText(Datepick)
-    }
 
 
-    var selectPhotoUrl: Uri? = null
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            selectPhotoUrl = data.data
-            //select images
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectPhotoUrl)
-            binding.selectImages.setImageBitmap(bitmap)
+            if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+                selectPhotoUrl = data.data
+                //select images
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectPhotoUrl)
+                binding.selectImages.setImageBitmap(bitmap)
 
-            binding.btnSelectImage.setText("")
-            binding.btnSave.setOnClickListener {
-                updateImages()
-            }
-
-        } else {
-            Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun updateImages() {
-        if (selectPhotoUrl == null) {
-            Toast.makeText(this, "Vui Lòng Chọn Ảnh", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        //code thành công tới lưu vào storage images
-        val filename = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/Images/$filename")
-        ref.putFile(selectPhotoUrl!!).addOnSuccessListener {
-            //Lấy URL Của Ảnh
-            ref.downloadUrl.addOnSuccessListener {
-                photoUrl = it
-                saveUserToRealtime(it.toString())
-                Toast.makeText(this, "Lưu Thành Công", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
-    var photoUrl: Uri? = null
-    private fun saveUserToRealtime(profileImageUrl: String) {
-=======
-    var photoUrl : Uri? = null
-
-
-    private fun saveUserToRealtime(profileImageUrl: String){
->>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
-        val fullName = binding.TxtName.text.toString()
-        val birth = binding.TxtDate.text.toString()
-        val sex = binding.TxtSex.text.toString()
-        val phone = binding.TxtSDT.text.toString()
-        val userIMG = profileImageUrl
-<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/model/UserProfile.kt
-        updateuser(fullName, birth, sex, phone, userIMG)
-=======
-        updateuser(fullName,birth,sex,phone,userIMG)
-    }
->>>>>>> e59e4675f068a2c935b73f7c3e9c7e7b18af9fcb:app/src/main/java/com/example/firebaseappchat/UserProfile.kt
-
-    private fun saveUserToRealtimeForNoIMG(profileImageUrl: String){
-        val fullName = binding.TxtName.text.toString()
-        val birth = binding.TxtDate.text.toString()
-        val sex = binding.TxtSex.text.toString()
-        val phone = binding.TxtSDT.text.toString()
-        val userIMG = profileImageUrl
-        updateuser(fullName,birth,sex,phone,userIMG)
-    }
-
-    private fun saveUserToRealtimeold() {
-        val fullName = binding.TxtName.text.toString()
-        val birth = binding.TxtDate.text.toString()
-        val sex = binding.TxtSex.text.toString()
-        val phone = binding.TxtSDT.text.toString()
-        val userIMG = userdata?.photoUrl.toString()
-        updateuser(fullName, birth, sex, phone, userIMG)
-    }
-
-    //Cập Nhật Lại Thông Tin Người Dùng Trên Realtime
-    private fun updateuser(
-        fullName: String,
-        birth: String,
-        sex: String,
-        phone: String,
-        userIMG: String
-    ) {
-        var database = FirebaseDatabase.getInstance().getReference("user")
-        //Cách Cập Nhật Vào Authentication
-        val profileUpdates = userProfileChangeRequest {
-            displayName = fullName
-            if (photoUrl == null) {
-                if (userdata != null) {
-                    photoUri = userdata.photoUrl
+                binding.btnSelectImage.setText("")
+                binding.btnSave.setOnClickListener {
+                    updateImages()
                 }
+
             } else {
-                photoUri = photoUrl
+                Toast.makeText(this, "TEST", Toast.LENGTH_SHORT).show()
             }
+        }
 
-        }
-        userdata!!.updateProfile(profileUpdates)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("NewMessage", "User profile updated.")
-                }
-            }
-        //Cách Cập Nhật vào Realtime
-        var user = mapOf<String, String>(
-            "name" to fullName,
-            "Date" to birth,
-            "Sex" to sex,
-            "Phone" to phone,
-            "Urlphoto" to userIMG
-        )
-        database.child(userdata.uid.toString()).updateChildren(user).addOnSuccessListener {
-            binding.TxtName.text.clear()
-            binding.TxtDate.text = ""
-            binding.TxtSex.text.clear()
-            binding.TxtSDT.text.clear()
-            Toast.makeText(this, "Cập Nhật Thành Công", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener {
-            Toast.makeText(this, "Lỗi" + it.toString(), Toast.LENGTH_SHORT).show()
-        }
+
+    }
+
+    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+        TODO("Not yet implemented")
     }
 }

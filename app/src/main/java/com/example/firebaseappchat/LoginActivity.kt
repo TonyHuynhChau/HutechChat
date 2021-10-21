@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.firebaseappchat.databinding.ActivityLoginBinding
+import com.example.firebaseappchat.messages.MainActivity
+import com.example.firebaseappchat.registerlogin.SignUpActivity
 
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
@@ -32,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun toDangKy() {
-        startActivity(Intent(this,SignUpActivity::class.java))
+        startActivity(Intent(this, SignUpActivity::class.java))
     }
 
     private fun login() {
@@ -53,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                     task->
                 if (task.isSuccessful){
                     Toast.makeText(this,"Đăng Nhập Thành Công",Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this,MainActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
