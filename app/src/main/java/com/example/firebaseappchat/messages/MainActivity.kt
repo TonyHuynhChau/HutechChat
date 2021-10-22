@@ -3,6 +3,7 @@ package com.example.firebaseappchat.messages
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
@@ -13,7 +14,13 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.SearchUser.SearchUserActivity
 import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.databinding.ActivityMainBinding
+import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import fragment.AccountFragment
 import fragment.DashboardFragment
 import fragment.HomeFragment
@@ -21,6 +28,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+    companion object{
+        var currentUser : SignUpActivity.getUser? = null
+    }
     private lateinit var binding: ActivityMainBinding
     private lateinit var data: FirebaseAuth
 
@@ -29,11 +39,14 @@ class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment()
     private val accountFragment = AccountFragment()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.title = "Hutech Chat"
+        fecthCurrentUser()
         verifyUserLoggedIn()
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -50,6 +63,20 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun fecthCurrentUser(){
+        val uid =FirebaseAuth.getInstance().uid
+        val ref =FirebaseDatabase.getInstance().getReference("/user/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentUser = snapshot.getValue(SignUpActivity.getUser::class.java)
+                Log.d("lastes mesager","current user ${currentUser?.Urlphoto}")
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     private fun replaceFrag(fragment: Fragment) {
