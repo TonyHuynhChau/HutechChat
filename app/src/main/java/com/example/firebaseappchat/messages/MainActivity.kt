@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
+import com.example.firebaseappchat.PageProfile.ProfilePageActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.SearchUser.SearchUserActivity
 import com.example.firebaseappchat.model.UserProfile
@@ -15,8 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var data : FirebaseAuth
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var data: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -27,13 +28,13 @@ class MainActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
 
         if (user != null) {
-            binding.Settext.text = user.email+"/"+user.displayName
+            binding.Settext.text = user.email + "/" + user.displayName
         }
     }
 
-    private fun verifyUserLoggedIn(){
+    private fun verifyUserLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
-        if(uid == null){
+        if (uid == null) {
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
@@ -41,8 +42,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_search->{
+        when (item.itemId) {
+            R.id.menu_search -> {
                 startActivity(Intent(this, SearchUserActivity::class.java))
             }
 

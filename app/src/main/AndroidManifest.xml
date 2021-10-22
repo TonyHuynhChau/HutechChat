@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseAppChat">
         <activity
+            android:name=".PageProfile.ProfilePageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".SearchUser.SearchUserActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".registerlogin.LoginActivity"
             android:exported="true"
