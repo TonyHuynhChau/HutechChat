@@ -7,6 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="yellow_hutech">#fdec00</color>
     <color name="blue_line_hutech">#0162af</color>
+    <color name="BackGroundSearch">#A696F9</color>
+    <color name="EditTextSearch">#DFD8FC</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Primary">#006BB3</color>

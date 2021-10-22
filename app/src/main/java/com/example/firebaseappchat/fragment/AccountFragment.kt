@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.UserProfile
@@ -30,10 +31,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AccountFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AccountFragment : Fragment(){
+class AccountFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
     //date
     var year = 0
     var month = 0
@@ -81,8 +83,10 @@ class AccountFragment : Fragment(){
                 name2.text = Editable.Factory.getInstance().newEditable(name.toString())
                 email2.text = Editable.Factory.getInstance().newEditable(emailU.toString())
                 TxtSex_Profile.text = Editable.Factory.getInstance().newEditable(Sex.toString())
-                txtPhone_Profile.text = Editable.Factory.getInstance().newEditable(phonenumber.toString())
+                txtPhone_Profile.text =
+                    Editable.Factory.getInstance().newEditable(phonenumber.toString())
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.w("loadPost:onCancelled", error.toException())
             }
@@ -94,8 +98,13 @@ class AccountFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_account, container, false)
+        var btnUpdate: Button = view.findViewById(R.id.btnSua)
+        btnUpdate.setOnClickListener(View.OnClickListener {
+            val intent = Intent(activity, UserProfile::class.java)
+            startActivity(intent)
+        })
+        return view
     }
 
 

@@ -3,6 +3,8 @@ package com.example.firebaseappchat.SearchUser
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -26,7 +28,6 @@ import kotlinx.android.synthetic.main.user_row.view.TxtUserName
 class SearchUserActivity : AppCompatActivity() {
 
     private lateinit var mSearchField: EditText
-    private lateinit var mSearchbtn: ImageButton
     private lateinit var mResultList: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +35,28 @@ class SearchUserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search_user)
 
         mSearchField = findViewById(R.id.TxtSearch)
-        mSearchbtn = findViewById(R.id.imageButton)
         mResultList = findViewById(R.id.ListSearch)
 
-        mSearchbtn.setOnClickListener(View.OnClickListener {
-            firebaseUserSearch()
+        mSearchField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                return
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                return
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString() != "") {
+                    firebaseUserSearch(s.toString())
+                } else {
+                    mResultList.adapter = null
+                }
+            }
         })
     }
 
-    private fun firebaseUserSearch() {
+    private fun firebaseUserSearch(name: String?) {
         val ref = FirebaseDatabase.getInstance().getReference("/user")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -51,13 +65,16 @@ class SearchUserActivity : AppCompatActivity() {
                     val user = it.getValue(SignUpActivity.getUser::class.java)
                     val userNguoiDung = FirebaseAuth.getInstance().currentUser
                     if (userNguoiDung != null) {
-                        if (user != null) {
-                            if (userNguoiDung.uid != user.uid && user.name.equals(mSearchField.text.toString())) {
+                        if (user != null && name != "") {
+                            if (userNguoiDung.uid != user.uid && user.name.contains(
+                                    name.toString(),
+                                    true
+                                )
+                            ) {
                                 adapter.add(UItem(user))
                             }
                         }
                     }
-
                 }
                 //       adapter.setOnItemClickListener { item, view ->
 
@@ -73,7 +90,7 @@ class SearchUserActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.d("Error: ", "${error.message}")
             }
         })
     }
@@ -99,6 +116,4 @@ class SearchUserActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }
