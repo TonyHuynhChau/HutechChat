@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.databinding.ActivityProfileOtherUserBinding
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private lateinit var btnMessage: Button
     private lateinit var Email: TextView
     private lateinit var FriendsRequest: DatabaseReference
-    private var Type = ""
+    private var Type = "Đã Hủy"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,24 +43,18 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             Picasso.get().load(user.Urlphoto).into(img)
             Ten.setText(user.name)
             Email.setText(user.email)
-        }
-        if (user != null) {
             KnowSent(user.uid)
-        }
-        btnSendRequestFriends.setOnClickListener(View.OnClickListener {
-            if (user != null) {
+            btnSendRequestFriends.setOnClickListener(View.OnClickListener {
                 if (Type == "Đã Hủy") {
                     btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
                     sendrequestfriends(user.uid)
                 }
-            }
-            if (user != null) {
                 if (Type == "Đã Gửi") {
                     btnSendRequestFriends.setText("Hủy Yêu Cầu")
                     HuyKetBan(user.uid)
                 }
-            }
-        })
+            })
+        }
     }
 
     private fun HuyKetBan(receiverUserid: String) {
