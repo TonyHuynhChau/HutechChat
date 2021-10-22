@@ -71,7 +71,7 @@ class AccountFragment : Fragment() {
         var database = FirebaseDatabase.getInstance().getReference("user")
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val emailU = dataSnapshot.child("$uid/E-mail").value
+                val emailU = dataSnapshot.child("$uid/email").value
                 val name = dataSnapshot.child("$uid/name").value
                 val date = dataSnapshot.child("$uid/Date").value
                 val phonenumber = dataSnapshot.child("$uid/Phone").value
