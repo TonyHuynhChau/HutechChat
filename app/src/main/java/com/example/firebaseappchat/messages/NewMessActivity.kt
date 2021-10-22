@@ -91,7 +91,7 @@ class UItem(val user: SignUpActivity.getUser): Item<GroupieViewHolder>(){
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-//<<<<<<< HEAD:app/src/main/java/com/example/firebaseappchat/messages/NewMessActivity.kt
+
         if(user == null){
             Log.d("Error Message","User Name = ${user.name}")
             return
@@ -103,7 +103,7 @@ class UItem(val user: SignUpActivity.getUser): Item<GroupieViewHolder>(){
             viewHolder.itemView.txtUserName.text = user.name+"(Need Update Profile)"
             Picasso.get().load(ImgDefault).into(viewHolder.itemView.iVUser)
         }
-//=======
+
        if(user.equals("null")){
            Log.d("Error Message","User Name = ${user.name}")
            return
