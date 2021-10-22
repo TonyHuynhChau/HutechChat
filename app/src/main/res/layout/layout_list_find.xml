@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/TxtUserName"
+        android:id="@+id/Txtusername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="UserName"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/iVUser"
+        app:layout_constraintBottom_toBottomOf="@+id/IVUser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/iVUser"
-        app:layout_constraintTop_toTopOf="@+id/iVUser" />
+        app:layout_constraintStart_toEndOf="@+id/IVUser"
+        app:layout_constraintTop_toTopOf="@+id/IVUser" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iVUser"
+        android:id="@+id/IVUser"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="16dp"
@@ -41,6 +40,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iVUser" />
-
+        app:layout_constraintTop_toBottomOf="@+id/IVUser" />
 </androidx.constraintlayout.widget.ConstraintLayout>

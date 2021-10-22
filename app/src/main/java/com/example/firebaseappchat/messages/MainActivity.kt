@@ -8,6 +8,7 @@ import android.view.MenuItem
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.SearchUser.SearchUserActivity
 import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.menu_search->{
+                startActivity(Intent(this, SearchUserActivity::class.java))
+            }
+
             R.id.menu_new_mess -> {
                 startActivity(Intent(this, NewMessActivity::class.java))
             }
