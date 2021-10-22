@@ -1,6 +1,7 @@
 package com.example.firebaseappchat.SearchUser
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
+import com.example.firebaseappchat.Friend.Profile_Other_User_Activity
+import com.example.firebaseappchat.NewMessActivity.Companion.USER_KEY
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -76,16 +79,16 @@ class SearchUserActivity : AppCompatActivity() {
                         }
                     }
                 }
-                //       adapter.setOnItemClickListener { item, view ->
+                adapter.setOnItemClickListener { item, view ->
 
-                //         val userItem = item as UItem
+                    val userItem = item as UItem
 
-                //          val intent = Intent(view.context, ChatLogActivity::class.java)
-                //intent.putExtra(USER_KEY,userItem.user.name)
-                //          intent.putExtra(NewMessActivity.USER_KEY, userItem.user)
-                //          startActivity(intent)
-                //          finish()
-                //       }
+                    val intent = Intent(view.context, Profile_Other_User_Activity::class.java)
+                    Log.d("New Message", userItem.user.name)
+                    intent.putExtra("USER_KEY", userItem.user)
+                    startActivity(intent)
+                    finish()
+                }
                 mResultList.adapter = adapter
             }
 

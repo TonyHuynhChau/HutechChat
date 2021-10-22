@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseAppChat">
         <activity
+            android:name=".Friend.Profile_Other_User_Activity"
+            android:exported="false" />
+        <activity
             android:name=".PageProfile.ProfilePageActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

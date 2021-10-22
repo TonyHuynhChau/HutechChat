@@ -60,6 +60,7 @@ class NewMessActivity : AppCompatActivity() {
 
                     val intent = Intent(view.context, ChatLogActivity::class.java)
                     //intent.putExtra(USER_KEY,userItem.user.name)
+                    Log.d("New Message:", USER_KEY)
                     intent.putExtra(USER_KEY, userItem.user)
                     startActivity(intent)
                     finish()
