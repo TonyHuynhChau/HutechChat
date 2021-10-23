@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
-    android:layout_height="350dp"
+    android:layout_height="230dp"
     android:layout_gravity="center"
     android:background="@drawable/dialog_drawable">
 
@@ -16,12 +16,12 @@
 
     <TextView
         android:id="@+id/Text_Dialog"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/IMG_Dialog"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:text="Bạn có 1 lời mời kết bạn"
         android:textAlignment="center"
         android:textSize="24sp" />
 </RelativeLayout>

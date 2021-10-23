@@ -41,44 +41,51 @@ class ThongBaoActivity : AppCompatActivity() {
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val adapter = GroupAdapter<GroupieViewHolder>()
-                        if (snapshot.value != null) {
-                            snapshot.children.forEach() {
-                                val user = it.getValue(getUser::class.java)!!
-                                adapter.add(UItem(user))
+                        snapshot.children.forEach() {
+                            val user = it.getValue(SignUpActivity.getUser::class.java)!!
+                            adapter.add(UItem(user))
 
-                            }
+                        }
+                        adapter.setOnItemClickListener { item, view ->
+
+                            val userItem = item as UItem
+
+                            val intent =
+                                Intent(view.context, Profile_Other_User_Activity::class.java)
+                            Log.d("New Message", userItem.user.name)
+                            intent.putExtra("USER_KEY", userItem.user)
+                            startActivity(intent)
+                            finish()
                         }
                         recyclervew.adapter = adapter
                     }
 
-                    override fun onCancelled(error: DatabaseError) {}
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("Error: ", "${error.message}")
+                    }
                 })
         }
     }
-    @Parcelize
-    class getUser(val Name :String ,val UrlPhoto:String):
-        Parcelable {
-        constructor():this("","")
-    }
-    class UItem(val user :getUser) : Item<GroupieViewHolder>() {
+
+    class UItem(val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
         override fun getLayout(): Int {
             return R.layout.layout_thong_bao
         }
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
-            if (user.UrlPhoto.isEmpty()) {
+            if (user.Urlphoto.isEmpty()) {
                 val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
                         "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
                         "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
                         "&pid=ImgRaw&r=0"
-                viewHolder.itemView.Txtusername_Thong_Bao.text = user.Name
+                viewHolder.itemView.Txtusername_Thong_Bao.text = user.name
                 Picasso.get().load(ImgDefault).into(viewHolder.itemView.IVUser_Thong_Bao)
-                Log.d("New Message :", "User Name : ${user.Name} \n PhotoUrl : $ImgDefault")
+                Log.d("New Message :", "User Name : ${user.name} \n PhotoUrl : $ImgDefault")
             } else {
-                viewHolder.itemView.Txtusername_Thong_Bao.text = user.Name
-                Picasso.get().load(user.UrlPhoto).into(viewHolder.itemView.IVUser_Thong_Bao)
-                Log.d("New Message :", "User Name : ${user.Name} \n PhotoUrl : ${user.UrlPhoto}")
+                viewHolder.itemView.Txtusername_Thong_Bao.text = user.name
+                Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.IVUser_Thong_Bao)
+                Log.d("New Message :", "User Name : ${user.name} \n PhotoUrl : ${user.Urlphoto}")
             }
         }
     }

@@ -1,5 +1,6 @@
 package fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
@@ -13,10 +14,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
@@ -25,6 +23,7 @@ import com.example.firebaseappchat.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.dialog_friend_request.*
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_account.*
 
@@ -93,15 +92,15 @@ class AccountFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view: View = inflater.inflate(R.layout.fragment_account, container, false)
         var imgThongBao: ImageView = view.findViewById(R.id.ImgThongBao)
-        var btnUpdate: Button = view.findViewById(R.id.btnSua)
+        val btnUpdate: Button = view.findViewById(R.id.btnSua)
         btnUpdate.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, UserProfile::class.java)
             startActivity(intent)
         })
-        var btnthongbao: LinearLayout = view.findViewById(R.id.btn_Notification)
+        val btnthongbao: LinearLayout = view.findViewById(R.id.btn_Notification)
         btnthongbao.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, ThongBaoActivity::class.java)
             if (userdata != null) {
@@ -115,10 +114,16 @@ class AccountFragment : Fragment() {
         val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
         FirebaseDb.child("Nhận $uid")
             .addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.value != null) {
+                        var i = 0
+                        snapshot.children.forEach() {
+                            i++
+                        }
                         val dialog = Dialog(context!!)
                         dialog.setContentView(R.layout.dialog_friend_request)
+                        dialog.Text_Dialog.setText("Bạn có $i lời mời kết bạn")
                         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                         dialog.show()
                     }
