@@ -55,7 +55,9 @@ class ChatLogActivity : AppCompatActivity() {
         }
     }
     private fun nhantinnhan(){
-        var ref = FirebaseDatabase.getInstance().getReference("/messages")
+        val fromId = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
         ref.addChildEventListener(object :ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
@@ -110,8 +112,11 @@ class ChatLogActivity : AppCompatActivity() {
 
         if(fromId == null ) return
 
-        val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
-
+        //val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
+        // tin nhan tu nguoi gui
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        //tin nhan tu nguoi nhan
+        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
         val chatMessage = toId?.let {
             ChatMessage(reference.key!!,text,fromId!!,
                 it,System.currentTimeMillis()/1000)
@@ -119,7 +124,10 @@ class ChatLogActivity : AppCompatActivity() {
         reference.setValue(chatMessage)
             .addOnSuccessListener {
                 Log.d(TAG,"luu thong tin: ${reference.key}")
+                editText_chat_log.text.clear()
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount -1)
             }
+        toReference.setValue(chatMessage)
     }
 
 
