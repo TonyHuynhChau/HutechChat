@@ -61,12 +61,13 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
-            FriendsRequest.child(receiverUserid).child(userNguoiDung.uid).child("request_type")
-                .setValue("recall").addOnCompleteListener(OnCompleteListener { task ->
+            FriendsRequest.child("Nhận " + receiverUserid).child("Gửi " + userNguoiDung.uid)
+                .removeValue().addOnCompleteListener(OnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        FriendsRequest.child(userNguoiDung.uid).child(receiverUserid)
-                            .child("request_type")
-                            .setValue("cancel").addOnCompleteListener(OnCompleteListener { task ->
+                        FriendsRequest.child("Gửi " + userNguoiDung.uid)
+                            .child("Nhận " + receiverUserid)
+                            .removeValue()
+                            .addOnCompleteListener(OnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Type = "Đã Hủy"
                                     btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
@@ -81,23 +82,24 @@ class Profile_Other_User_Activity : AppCompatActivity() {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
 
-            FriendsRequest.child(userNguoiDung.uid)
+            FriendsRequest.child("Gửi " + userNguoiDung.uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.hasChild(receiverUserid)) {
+                        if (snapshot.hasChild("Nhận " + receiverUserid)) {
 
                             var Request_type =
-                                snapshot.child(receiverUserid).child("request_type").value
+                                snapshot.child("Nhận " + receiverUserid).child("request_type").value
 
                             if (Request_type != null) {
-                                if (Request_type.equals("received")) {
+                                if (Request_type.equals("Đã Nhận")) {
                                     Type = "Đã Gửi"
                                     btnSendRequestFriends.setText("Hủy Yêu Cầu")
                                 }
-                                if (Request_type.equals("recall")) {
-                                    Type = "Đã Hủy"
-                                    btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
-                                }
+                                //if (Request_type.equals("Người Gửi Đã Thu Hồi")) {
+                                //    Type = "Đã Hủy"
+                                //    btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
+                                //    Log.d("New Message", "Đã Hủy")
+                                // }
                             }
                         }
                     }
@@ -116,12 +118,53 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
-            FriendsRequest.child(receiverUserid).child(userNguoiDung.uid).child("request_type")
-                .setValue("sent").addOnCompleteListener(OnCompleteListener { task ->
+            //Thêm Thông Tin Cho Người Nhận
+            FriendsRequest.child("Nhận " + receiverUserid).child("Gửi " + userNguoiDung.uid)
+                .child("request_type")
+                .setValue("Đã Gửi").addOnCompleteListener(OnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        FriendsRequest.child(userNguoiDung.uid).child(receiverUserid)
+                        //Thêm Tên Người Gửi vào Friend Request Của Người Nhận
+                        FriendsRequest.child("Nhận " + receiverUserid)
+                            .child("Gửi " + userNguoiDung.uid)
+                            .child("Name").setValue(userNguoiDung.displayName)
+                            .addOnCompleteListener(
+                                OnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d("New Message", "Đã Thêm Tên Người Gửi")
+                                        //Thêm Ảnh Người Gửi vào Friend Request Của Người Nhận
+                                        if (userNguoiDung.photoUrl == null) {
+                                            val IMGURL =
+                                                "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
+                                                        "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
+                                                        "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
+                                                        "&pid=ImgRaw&r=0"
+                                            FriendsRequest.child("Nhận " + receiverUserid)
+                                                .child("Gửi " + userNguoiDung.uid)
+                                                .child("UrlPhoto").setValue(IMGURL)
+                                                .addOnCompleteListener(
+                                                    OnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+
+                                                        }
+                                                    })
+                                        } else {
+                                            FriendsRequest.child("Nhận " + receiverUserid)
+                                                .child("Gửi " + userNguoiDung.uid)
+                                                .child("UrlPhoto").setValue(userNguoiDung.photoUrl.toString())
+                                                .addOnCompleteListener(
+                                                    OnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+
+                                                        }
+                                                    })
+                                        }
+                                    }
+                                })
+                        //Thêm Thông Tin Cho Người Gửi
+                        FriendsRequest.child("Gửi " + userNguoiDung.uid)
+                            .child("Nhận " + receiverUserid)
                             .child("request_type")
-                            .setValue("received").addOnCompleteListener(OnCompleteListener { task ->
+                            .setValue("Đã Nhận").addOnCompleteListener(OnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Type = "Đã Gửi"
                                     btnSendRequestFriends.setText("Hủy Yêu Cầu")

@@ -1,6 +1,11 @@
 package fragment
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -9,28 +14,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
 import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_account.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AccountFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AccountFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -58,13 +56,9 @@ class AccountFragment : Fragment() {
         if (userdata != null) {
             if (userdata.photoUrl != null) {
                 readata(userdata.uid)
+                CheckRequestFriend(userdata.uid)
             }
         }
-
-        //btnSua.setOnClickListener{
-        //   startActivity(Intent(UserProfile(), UserProfile::class.java))
-        //}
-
     }
 
     private fun readata(uid: String) {
@@ -99,6 +93,7 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_account, container, false)
+        var imgThongBao: ImageView = view.findViewById(R.id.ImgThongBao)
         var btnUpdate: Button = view.findViewById(R.id.btnSua)
         btnUpdate.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, UserProfile::class.java)
@@ -107,16 +102,38 @@ class AccountFragment : Fragment() {
         return view
     }
 
+    @IgnoreExtraProperties
+    data class User(val username: String? = null, val email: String? = null) {
+        // Null default values create a no-argument default constructor, which is needed
+        // for deserialization from a DataSnapshot.
+    }
+
+    private fun CheckRequestFriend(uid: String) {
+        val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
+        FirebaseDb.child("Nhận $uid")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.value != null) {
+                        snapshot.children.forEach() {
+                            val binding: DialogFriendRequestBinding
+                            val name = it.child("Name").value
+                            Log.d("New Message", name.toString())
+                        }
+                        val dialog = Dialog(context!!)
+                        dialog.setContentView(R.layout.dialog_friend_request)
+                        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.show()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AccountFragment.
-         */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
