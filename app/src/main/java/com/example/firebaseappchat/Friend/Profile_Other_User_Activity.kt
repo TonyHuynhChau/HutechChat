@@ -58,7 +58,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     }
 
     private fun HuyKetBan(receiverUserid: String) {
-
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
             FriendsRequest.child("Nhận " + receiverUserid).child("Gửi " + userNguoiDung.uid)
@@ -81,25 +80,17 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private fun KnowSent(receiverUserid: String) {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
-
             FriendsRequest.child("Gửi " + userNguoiDung.uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.hasChild("Nhận " + receiverUserid)) {
-
                             var Request_type =
                                 snapshot.child("Nhận " + receiverUserid).child("request_type").value
-
                             if (Request_type != null) {
                                 if (Request_type.equals("Đã Nhận")) {
                                     Type = "Đã Gửi"
                                     btnSendRequestFriends.setText("Hủy Yêu Cầu")
                                 }
-                                //if (Request_type.equals("Người Gửi Đã Thu Hồi")) {
-                                //    Type = "Đã Hủy"
-                                //    btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
-                                //    Log.d("New Message", "Đã Hủy")
-                                // }
                             }
                         }
                     }
@@ -115,7 +106,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
     // "Đã Hủy Kết Bạn"
     private fun sendrequestfriends(receiverUserid: String) {
-
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
             //Thêm Thông Tin Cho Người Nhận
@@ -150,7 +140,8 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                                         } else {
                                             FriendsRequest.child("Nhận " + receiverUserid)
                                                 .child("Gửi " + userNguoiDung.uid)
-                                                .child("UrlPhoto").setValue(userNguoiDung.photoUrl.toString())
+                                                .child("UrlPhoto")
+                                                .setValue(userNguoiDung.photoUrl.toString())
                                                 .addOnCompleteListener(
                                                     OnCompleteListener { task ->
                                                         if (task.isSuccessful) {

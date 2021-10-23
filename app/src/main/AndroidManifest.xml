@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseAppChat">
         <activity
+            android:name=".PageProfile.ThongBaoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

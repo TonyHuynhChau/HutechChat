@@ -69,11 +69,7 @@ class SearchUserActivity : AppCompatActivity() {
                     val userNguoiDung = FirebaseAuth.getInstance().currentUser
                     if (userNguoiDung != null) {
                         if (user != null && name != "") {
-                            if (userNguoiDung.uid != user.uid && user.name.contains(
-                                    name.toString(),
-                                    true
-                                )
-                            ) {
+                            if (userNguoiDung.uid != user.uid && user.name.contains(name.toString(),true)) {
                                 adapter.add(UItem(user))
                             }
                         }

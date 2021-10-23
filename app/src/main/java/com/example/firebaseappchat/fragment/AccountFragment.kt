@@ -15,7 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
 import com.example.firebaseappchat.messages.MainActivity
@@ -99,13 +101,14 @@ class AccountFragment : Fragment() {
             val intent = Intent(activity, UserProfile::class.java)
             startActivity(intent)
         })
+        var btnthongbao: LinearLayout = view.findViewById(R.id.btn_Notification)
+        btnthongbao.setOnClickListener(View.OnClickListener {
+            val intent = Intent(activity, ThongBaoActivity::class.java)
+            if (userdata != null) {
+                startActivity(intent)
+            }
+        })
         return view
-    }
-
-    @IgnoreExtraProperties
-    data class User(val username: String? = null, val email: String? = null) {
-        // Null default values create a no-argument default constructor, which is needed
-        // for deserialization from a DataSnapshot.
     }
 
     private fun CheckRequestFriend(uid: String) {
@@ -114,11 +117,6 @@ class AccountFragment : Fragment() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.value != null) {
-                        snapshot.children.forEach() {
-                            val binding: DialogFriendRequestBinding
-                            val name = it.child("Name").value
-                            Log.d("New Message", name.toString())
-                        }
                         val dialog = Dialog(context!!)
                         dialog.setContentView(R.layout.dialog_friend_request)
                         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
