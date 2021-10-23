@@ -20,7 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 
@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.xwray:groupie:2.9.0'
     implementation "com.xwray:groupie-viewbinding:2.9.0"
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.9.0'
-    implementation ("io.coil-kt:coil:0.11.0")
+    implementation("io.coil-kt:coil:0.11.0")
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
@@ -70,7 +70,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
-
+    //Import Support gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     //
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 }
