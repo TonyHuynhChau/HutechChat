@@ -1,5 +1,6 @@
 package com.example.firebaseappchat.Friend
 
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,14 +10,28 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.example.firebaseappchat.PageProfile.ThongBaoActivity
+import com.example.firebaseappchat.NewMessActivity
+import com.example.firebaseappchat.Notification.FirebaseService
+import com.example.firebaseappchat.Notification.NotificationData
+import com.example.firebaseappchat.Notification.PushNotification
+import com.example.firebaseappchat.Notification.RetrofitInstance
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.UItem
+import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+const val TOPIC = "/topics/myTopic"
 
 class Profile_Other_User_Activity : AppCompatActivity() {
     private lateinit var img: ImageView
@@ -48,20 +63,20 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             } else {
                 Picasso.get().load(user.Urlphoto).into(img)
             }
+
             Ten.setText(user.name)
             Email.setText(user.email)
             KnowSent(user.uid)
+            FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+
             btnSendRequestFriends.setOnClickListener(View.OnClickListener {
                 if (Type.equals("Đã Yêu Cầu")) {
-                    btnSendRequestFriends.setText("Đồng Ý Kết Bạn")
                     DongYFriends(user.uid)
                 } else {
                     if (Type == "Đã Hủy") {
-                        btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
                         sendrequestfriends(user.uid)
                     }
                     if (Type == "Đã Gửi") {
-                        btnSendRequestFriends.setText("Hủy Yêu Cầu")
                         HuyKetBan(user.uid)
                     }
                 }
@@ -69,6 +84,20 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             })
         }
     }
+
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d("ProfileOtherUseActivity", "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e("ProfileOtherUseActivity", response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e("ProfileOtherUseActivity", e.toString())
+            }
+        }
 
     private fun DongYFriends(uid: String) {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
@@ -230,7 +259,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
     }
 
-    // "Đã Hủy Kết Bạn"
     private fun sendrequestfriends(receiverUserid: String) {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
@@ -282,8 +310,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                             .child("uid").setValue(userNguoiDung.uid)
                             .addOnCompleteListener(OnCompleteListener { task ->
                                 if (task.isSuccessful) {
-
-
                                 }
                             })
                         //Thêm Thông Tin Cho Người Gửi
@@ -294,10 +320,34 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                                 if (task.isSuccessful) {
                                     Type = "Đã Gửi"
                                     btnSendRequestFriends.setText("Hủy Yêu Cầu")
+                                    FindToken(receiverUserid, userNguoiDung.displayName.toString())
                                 }
                             })
                     }
                 })
         }
+    }
+
+    private fun FindToken(uid: String, displayName: String) {
+        val ref = FirebaseDatabase.getInstance().getReference("/user")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val token = snapshot.child("$uid/Token").value
+                Log.d("TOKENNNNNN", token.toString())
+                val Title = "Lời Mời Kết Bạn"
+                val Message =
+                    "$displayName Đã Gửi Yêu Cầu Kết Bạn"
+                PushNotification(
+                    NotificationData(Title, Message),
+                    token.toString()
+                ).also { sendNotification(it) }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }

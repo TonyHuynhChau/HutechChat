@@ -1,6 +1,10 @@
 package com.example.firebaseappchat.messages
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -25,12 +29,14 @@ import fragment.AccountFragment
 import fragment.DashboardFragment
 import fragment.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_friend_request.*
 
 
 class MainActivity : AppCompatActivity() {
-    companion object{
-        var currentUser : SignUpActivity.getUser? = null
+    companion object {
+        var currentUser: SignUpActivity.getUser? = null
     }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var data: FirebaseAuth
 
@@ -38,7 +44,6 @@ class MainActivity : AppCompatActivity() {
     private val dashboardFragment = DashboardFragment()
     private val homeFragment = HomeFragment()
     private val accountFragment = AccountFragment()
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,29 +55,55 @@ class MainActivity : AppCompatActivity() {
         verifyUserLoggedIn()
 
         val user = FirebaseAuth.getInstance().currentUser
-
+        if (user != null) {
+            CheckRequestFriend(user.uid)
+        }
         //Bottom nav
         replaceFrag(homeFragment)
         bottom_nav.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.home -> replaceFrag(homeFragment)
                 R.id.dashboard -> replaceFrag(dashboardFragment)
                 R.id.account -> replaceFrag(accountFragment)
             }
             true
         }
-
-
     }
 
-    private fun fecthCurrentUser(){
-        val uid =FirebaseAuth.getInstance().uid
-        val ref =FirebaseDatabase.getInstance().getReference("/user/$uid")
+    fun CheckRequestFriend(uid: String) {
+        val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
+        FirebaseDb.child("Nhận $uid")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.value != null) {
+                        var i = 0
+                        snapshot.children.forEach() {
+                            i++
+                        }
+                        val dialog = Dialog(this@MainActivity)
+                        dialog.setContentView(R.layout.dialog_friend_request)
+                        dialog.Text_Dialog.setText("Bạn có $i lời mời kết bạn")
+                        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dialog.show()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+    private fun fecthCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/user/$uid")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 currentUser = snapshot.getValue(SignUpActivity.getUser::class.java)
-                Log.d("lastes mesager","current user ${currentUser?.Urlphoto}")
+                Log.d("lastes mesager", "current user ${currentUser?.Urlphoto}")
             }
+
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -80,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFrag(fragment: Fragment) {
-        if(fragment != null){
+        if (fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, fragment)
             transaction.commit()
@@ -105,15 +136,6 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_new_mess -> {
                 startActivity(Intent(this, NewMessActivity::class.java))
             }
-            //R.id.menu_user_profile -> {
-            //    startActivity(Intent(this, UserProfile::class.java))
-            //}
-            //R.id.menu_sign_out -> {
-            //    FirebaseAuth.getInstance().signOut()
-            //   val intent = Intent(this, LoginActivity::class.java)
-            //    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            //    startActivity(intent)
-            //}
         }
 
         return super.onOptionsItemSelected(item)

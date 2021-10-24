@@ -57,7 +57,6 @@ class AccountFragment : Fragment() {
         if (userdata != null) {
             if (userdata.photoUrl != null) {
                 readata(userdata.uid)
-                CheckRequestFriend(userdata.uid)
             }
         }
     }
@@ -109,33 +108,6 @@ class AccountFragment : Fragment() {
         })
         return view
     }
-
-    private fun CheckRequestFriend(uid: String) {
-        val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
-        FirebaseDb.child("Nhận $uid")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                @SuppressLint("SetTextI18n")
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.value != null) {
-                        var i = 0
-                        snapshot.children.forEach() {
-                            i++
-                        }
-                        val dialog = Dialog(context!!)
-                        dialog.setContentView(R.layout.dialog_friend_request)
-                        dialog.Text_Dialog.setText("Bạn có $i lời mời kết bạn")
-                        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                        dialog.show()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-    }
-
-
     companion object {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
