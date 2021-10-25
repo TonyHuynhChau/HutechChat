@@ -12,13 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/background_edittext"
+        android:background="@drawable/button_background"
+        android:textStyle="bold"
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text=" tin nhan tin nhantin nhan tin nhan v"
         app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
         app:layout_constraintTop_toTopOf="@+id/imageView_chat_from_row" />
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView_chat_from_row"
         app:civ_border_width="2dp"

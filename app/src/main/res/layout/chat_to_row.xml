@@ -12,9 +12,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="10dp"
+        android:textStyle="bold"
         android:text=" tin nhan tin nhantin nhan tin nhan v"
         android:padding="16dp"
-        android:background="@drawable/background_edittext"
+        android:background="@drawable/button_background"
         android:maxWidth="240dp"
         app:layout_constraintStart_toEndOf="@+id/imageViewchat_to_row"
         app:layout_constraintTop_toTopOf="@+id/imageViewchat_to_row" />
