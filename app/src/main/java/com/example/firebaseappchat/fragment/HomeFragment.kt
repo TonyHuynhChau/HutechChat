@@ -1,11 +1,29 @@
 package fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.model.ChatMessage
+import com.example.firebaseappchat.model.UserProfile
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.latest_message_row.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,9 +51,68 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        val view: View = inflater.inflate(R.layout.fragment_home, container, false)
+        view.recyclerview_latest_messages.adapter = adapter
+        //testdata(view)
+        ListenForlatesMessages(view)
+        return  view
+
+    }
+    val latestMessagesMap = HashMap<String, ChatMessage>()
+
+    private fun refreshRecyclerViewMessages(){
+        adapter.clear()
+        latestMessagesMap.values.forEach {
+            adapter.add(LateMessagesRow(it))
+        }
+    }
+
+    private  fun ListenForlatesMessages(view: View){
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+        ref.addChildEventListener(object : ChildEventListener {
+
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+
+                latestMessagesMap[snapshot.key!!] =chatMessage
+                refreshRecyclerViewMessages()
+
+                //adapter.add(HomeFragment.LateMessagesRow(chatMessage))
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+
+                latestMessagesMap[snapshot.key!!] =chatMessage
+                refreshRecyclerViewMessages()
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+    val adapter = GroupAdapter<GroupieViewHolder>()
+
+    class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() {
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            viewHolder.itemView.message_textview_latest_messages.text =chatMessage.text
+        }
+
+        override fun getLayout(): Int {
+            return R.layout.latest_message_row
+        }
+    }
+    private fun testdata(view: View) {
+        //val adapter = GroupAdapter<GroupieViewHolder>()
+        //adapter.add(HomeFragment.LateMessagesRow())
+        //view.recyclerview_latest_messages.adapter = adapter
     }
 
     companion object {

@@ -128,10 +128,12 @@ class ChatLogActivity : AppCompatActivity() {
                 recyclerview_chat_log.scrollToPosition(adapter.itemCount -1)
             }
         toReference.setValue(chatMessage)
+
+        val latestMessagesRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessagesRef.setValue(chatMessage)
+        val latestMessagesToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestMessagesToRef.setValue(chatMessage)
     }
-
-
-
 }
 class ChatFromItem (val text:String,val user: SignUpActivity.getUser):Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
