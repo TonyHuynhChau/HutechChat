@@ -17,6 +17,7 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.UItem
 import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.messages.LateMessagesRow
+import com.example.firebaseappchat.VideoCall.VideoChatActivity
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -28,6 +29,7 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.latest_message_row.*
 import kotlinx.android.synthetic.main.latest_message_row.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -53,6 +55,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Lấy uid Của Người Dùng Từ Authentication gồm (Email,Pass,Display,.....)
+    val userdata = FirebaseAuth.getInstance().currentUser
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,6 +73,13 @@ class HomeFragment : Fragment() {
         //testdata(view)
         ListenForlatesMessages(view)
         return view
+        //btn_videocall.setOnClickListener(View.OnClickListener {
+        //    val intent = Intent(activity, VideoChatActivity::class.java)
+        //    if (userdata != null) {
+        //        startActivity(intent)
+        //    }
+        //})
+        return  view
 
     }
 
