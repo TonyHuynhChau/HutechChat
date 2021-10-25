@@ -2,6 +2,7 @@ package fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.UItem
+import com.example.firebaseappchat.messages.ChatLogActivity
+import com.example.firebaseappchat.messages.LateMessagesRow
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -54,22 +59,35 @@ class HomeFragment : Fragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
         view.recyclerview_latest_messages.adapter = adapter
-        view.recyclerview_latest_messages.addItemDecoration(DividerItemDecoration(context ,DividerItemDecoration.VERTICAL))
+        view.recyclerview_latest_messages.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         //testdata(view)
         ListenForlatesMessages(view)
-        return  view
+        return view
 
     }
+
     val latestMessagesMap = HashMap<String, ChatMessage>()
 
-    private fun refreshRecyclerViewMessages(){
+    private fun refreshRecyclerViewMessages() {
         adapter.clear()
         latestMessagesMap.values.forEach {
             adapter.add(LateMessagesRow(it))
+            adapter.setOnItemClickListener { item, view ->
+                val row = item as LateMessagesRow
+                Log.d("Latest Message:", NewMessActivity.USER_KEY)
+                val intent = Intent(view.context, ChatLogActivity::class.java)
+                intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
+                startActivity(intent)
+            }
         }
     }
 
-    private  fun ListenForlatesMessages(view: View){
+    private fun ListenForlatesMessages(view: View) {
         val fromId = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
         ref.addChildEventListener(object : ChildEventListener {
@@ -77,64 +95,36 @@ class HomeFragment : Fragment() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
 
-                latestMessagesMap[snapshot.key!!] =chatMessage
+                latestMessagesMap[snapshot.key!!] = chatMessage
                 refreshRecyclerViewMessages()
 
                 //adapter.add(HomeFragment.LateMessagesRow(chatMessage))
             }
+
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
 
-                latestMessagesMap[snapshot.key!!] =chatMessage
+                latestMessagesMap[snapshot.key!!] = chatMessage
                 refreshRecyclerViewMessages()
             }
+
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
                 TODO("Not yet implemented")
             }
+
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 TODO("Not yet implemented")
             }
+
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
     }
+
     val adapter = GroupAdapter<GroupieViewHolder>()
 
-    class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() {
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            viewHolder.itemView.message_textview_latest_messages.text =chatMessage.text
 
-            val chatPartnerId :String
-            if(chatMessage.formId ==FirebaseAuth.getInstance().uid){
-
-                chatPartnerId =chatMessage.toId
-            }else{
-                chatPartnerId = chatMessage.formId
-            }
-
-            val ref = FirebaseDatabase.getInstance().getReference("/user/$chatPartnerId")
-            ref.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val user = snapshot.getValue((SignUpActivity.getUser::class.java))
-
-                    val targetImageView = viewHolder.itemView.imageview_lastest_messages
-                    viewHolder.itemView.username_textView_latestmessage.text = user?.name
-                    Picasso.get().load(user?.Urlphoto).into(targetImageView)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-
-
-        }
-
-        override fun getLayout(): Int {
-            return R.layout.latest_message_row
-        }
-    }
     private fun testdata(view: View) {
         //val adapter = GroupAdapter<GroupieViewHolder>()
         //adapter.add(HomeFragment.LateMessagesRow())

@@ -19,16 +19,18 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class ChatLogActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         val TAG = "chat log"
     }
-    val adapter =GroupAdapter<GroupieViewHolder>()
 
-    var toUser: SignUpActivity.getUser? =null
+    val adapter = GroupAdapter<GroupieViewHolder>()
+
+    var toUser: SignUpActivity.getUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
@@ -37,7 +39,7 @@ class ChatLogActivity : AppCompatActivity() {
         //val username = intent.getStringExtra(NewMessActivity.USER_KEY)
         //supportActionBar?.title = username
 
-        recyclerview_chat_log.adapter =adapter
+        recyclerview_chat_log.adapter = adapter
 
         toUser = intent.getParcelableExtra<SignUpActivity.getUser>(NewMessActivity.USER_KEY)
 
@@ -49,29 +51,29 @@ class ChatLogActivity : AppCompatActivity() {
 
         nhantinnhan()
 
-        gui_button_chat_log.setOnClickListener{
-            Log.d(TAG,"attempt to send message...")
+        gui_button_chat_log.setOnClickListener {
+            Log.d(TAG, "attempt to send message...")
             performsendMessage()
         }
     }
-    private fun nhantinnhan(){
+
+    private fun nhantinnhan() {
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
-        ref.addChildEventListener(object :ChildEventListener{
+        ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 chatMessage?.text?.let { Log.d(TAG, it) }
                 if (chatMessage != null) {
-                    if (chatMessage.formId== FirebaseAuth.getInstance().uid) {
-                        val currentUser = MainActivity.currentUser ?:return
-                        adapter.add(ChatFromItem(chatMessage.text,currentUser))
-                    }
-                    else{
+                    if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
+                        val currentUser = MainActivity.currentUser ?: return
+                        adapter.add(ChatFromItem(chatMessage.text, currentUser))
+                    } else {
                         adapter.add(ChatToItem(chatMessage.text, toUser!!))
                     }
                 }
-
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
 
             }
 
@@ -94,9 +96,7 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
 
-
-
-    private fun performsendMessage(){
+    private fun performsendMessage() {
         // gui du lieu vao firebase
 
         editText_chat_log.text.toString()
@@ -110,52 +110,62 @@ class ChatLogActivity : AppCompatActivity() {
 
         val toId = user?.uid
 
-        if(fromId == null ) return
+        if (fromId == null) return
 
         //val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
         // tin nhan tu nguoi gui
-        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val reference =
+            FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         //tin nhan tu nguoi nhan
-        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+        val toReference =
+            FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
         val chatMessage = toId?.let {
-            ChatMessage(reference.key!!,text,fromId!!,
-                it,System.currentTimeMillis()/1000)
+            ChatMessage(
+                reference.key!!, text, fromId!!,
+                it, System.currentTimeMillis() / 1000
+            )
         }
         reference.setValue(chatMessage)
             .addOnSuccessListener {
-                Log.d(TAG,"luu thong tin: ${reference.key}")
+                Log.d(TAG, "luu thong tin: ${reference.key}")
                 editText_chat_log.text.clear()
-                recyclerview_chat_log.scrollToPosition(adapter.itemCount -1)
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
         toReference.setValue(chatMessage)
 
-        val latestMessagesRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        val latestMessagesRef =
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
         latestMessagesRef.setValue(chatMessage)
-        val latestMessagesToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        val latestMessagesToRef =
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
         latestMessagesToRef.setValue(chatMessage)
     }
 }
-class ChatFromItem (val text:String,val user: SignUpActivity.getUser):Item<GroupieViewHolder>(){
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.textviewfrom_chat_from_row.text =text
 
-        val url =user.Urlphoto
+class ChatFromItem(val text: String, val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.textviewfrom_chat_from_row.text = text
+
+        val url = user.Urlphoto
         val targetImageView = viewHolder.itemView.imageView_chat_from_row
         Picasso.get().load(url).into(targetImageView)
     }
+
     override fun getLayout(): Int {
         return R.layout.chat_from_row
     }
 }
-class ChatToItem (val text:String,val user: SignUpActivity.getUser):Item<GroupieViewHolder>(){
+
+class ChatToItem(val text: String, val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.textviewfrom_chat_to_row.text = text
 
-        val url =user.Urlphoto
+        val url = user.Urlphoto
         val targetImageView = viewHolder.itemView.imageViewchat_to_row
         Picasso.get().load(url).into(targetImageView)
 
     }
+
     override fun getLayout(): Int {
         return R.layout.chat_to_row
     }
