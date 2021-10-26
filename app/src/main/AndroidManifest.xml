@@ -22,15 +22,14 @@
         android:theme="@style/Theme.FirebaseAppChat"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity
-            android:name=".Friend.FriendRequestActivity"
-            android:exported="false" />
+
         <activity
             android:name=".VideoCall.Outcoming"
             android:exported="true" />
         <activity
             android:name=".VideoCall.VideoChatActivity"
-            android:exported="true" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <service
             android:name=".Notification.FirebaseService"
@@ -46,10 +45,6 @@
             android:name=".VideoCall.IncomingCall"
             android:exported="true" />
         <activity
-            android:name=".PageProfile.ThongBaoActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>
@@ -61,10 +56,6 @@
         <activity
             android:name=".Friend.Profile_Other_User_Activity"
             android:exported="false" />
-        <activity
-            android:name=".PageProfile.ProfilePageActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".SearchUser.SearchUserActivity"
             android:exported="false"

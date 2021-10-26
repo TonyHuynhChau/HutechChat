@@ -15,6 +15,7 @@ import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.SearchUser.SearchUserActivity
+import com.example.firebaseappchat.VideoCall.VideoChatActivity
 import com.example.firebaseappchat.databinding.ActivityMainBinding
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -137,9 +138,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, NewMessActivity::class.java))
             }
 
-            //R.id.menu_new_mess -> {
-            //    startActivity(Intent(this, VideoChatActivity::class.java))
-            //}
+            R.id.menu_new_call -> {
+                startActivity(Intent(this, VideoChatActivity::class.java))
+            }
             //R.id.menu_sign_out -> {
             //    FirebaseAuth.getInstance().signOut()
             //   val intent = Intent(this, LoginActivity::class.java)

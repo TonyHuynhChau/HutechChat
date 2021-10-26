@@ -11,4 +11,9 @@
         android:title="Tạo Tin Mới"
         android:icon="@drawable/ic_baseline_add_comment_24"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_new_call"
+        android:title="Tạo Cuộc Gọi"
+        android:icon="@drawable/ic_baseline_videocam_24"
+        app:showAsAction="ifRoom"/>
 </menu>

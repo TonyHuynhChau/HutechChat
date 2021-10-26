@@ -14,6 +14,7 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.latest_message_row.view.*
 
+
 class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() {
     var chatPartnerUser: SignUpActivity.getUser? = null
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
@@ -44,11 +45,13 @@ class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() 
                 TODO("Not yet implemented")
             }
         })
-
-
     }
 
     override fun getLayout(): Int {
         return R.layout.latest_message_row
+    }
+
+    private fun initiateVideoMeeting(){
+
     }
 }
