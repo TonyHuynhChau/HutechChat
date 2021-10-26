@@ -43,24 +43,20 @@ class NewMessActivity : AppCompatActivity() {
             val Friends = FirebaseDatabase.getInstance().getReference("Friends")
             Friends.child(userNguoiDung.uid).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    val adapter = GroupAdapter<GroupieViewHolder>()
                     snapshot.children.forEach() {
                         val FriendUID = it.child("uid").value
-                        Log.d("FriendsUID",FriendUID.toString())
+                        Log.d("FriendsUID", FriendUID.toString())
                         val ref = FirebaseDatabase.getInstance().getReference("user")
                         ref.addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
-                                val adapter = GroupAdapter<GroupieViewHolder>()
                                 snapshot.children.forEach() {
                                     val user = it.getValue(SignUpActivity.getUser::class.java)
-
-                                    if (userNguoiDung != null) {
                                         if (user != null) {
-                                            if (userNguoiDung.uid != user.uid && user.uid==FriendUID) {
+                                            if (userNguoiDung.uid != user.uid && FriendUID == user.uid) {
                                                 adapter.add(UItem(user))
                                             }
                                         }
-                                    }
-
                                 }
                                 adapter.setOnItemClickListener { item, view ->
                                     val userItem = item as UItem
@@ -70,14 +66,17 @@ class NewMessActivity : AppCompatActivity() {
                                     startActivity(intent)
                                     finish()
                                 }
-                                binding.recyclerviewnewmess.adapter = adapter
+
                             }
+
                             override fun onCancelled(error: DatabaseError) {
                                 TODO("Not yet implemented")
                             }
                         })
                     }
+                    binding.recyclerviewnewmess.adapter = adapter
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }

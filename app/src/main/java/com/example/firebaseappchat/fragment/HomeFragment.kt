@@ -13,7 +13,6 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.messages.LateMessagesRow
 import com.example.firebaseappchat.model.ChatMessage
-import com.example.firebaseappchat.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
@@ -49,11 +48,8 @@ class HomeFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        //testdata(view)
         ListenForlatesMessages(view)
         return view
-        return  view
-
     }
 
     val latestMessagesMap = HashMap<String, ChatMessage>()

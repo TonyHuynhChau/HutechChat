@@ -70,17 +70,12 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
             btnSendRequestFriends.setOnClickListener(View.OnClickListener {
-                if (Type.equals("Đã Yêu Cầu")) {
-                    DongYFriends(user.uid)
-                } else {
-                    if (Type == "Đã Hủy") {
-                        sendrequestfriends(user.uid)
-                    }
-                    if (Type == "Đã Gửi") {
-                        HuyKetBan(user.uid)
-                    }
+                if (Type == "Đã Hủy") {
+                    sendrequestfriends(user.uid)
                 }
-
+                if (Type == "Đã Gửi") {
+                    HuyKetBan(user.uid)
+                }
             })
         }
     }
@@ -98,76 +93,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                 Log.e("ProfileOtherUseActivity", e.toString())
             }
         }
-
-    private fun DongYFriends(uid: String) {
-        val userNguoiDung = FirebaseAuth.getInstance().currentUser
-        if (userNguoiDung != null) {
-            //Them Ban
-            val Friends = FirebaseDatabase.getInstance().getReference("Friends")
-            Friends.child(userNguoiDung.uid).child(uid).setValue("Bạn")
-                .addOnCompleteListener(
-                    OnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            //Them Ban
-                            Friends.child(uid).child(userNguoiDung.uid).setValue("Bạn")
-                                .addOnCompleteListener(
-                                    OnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            //
-                                            btnSendRequestFriends.isVisible = false
-                                            btnMessage.isEnabled = true
-                                            Type = "Bạn"
-                                            //
-                                            FriendsRequest.child("Nhận " + userNguoiDung.uid)
-                                                .child("Gửi " + uid)
-                                                .removeValue().addOnCompleteListener(
-                                                    OnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-                                                            Log.d(
-                                                                "Message:",
-                                                                "Đã Xóa Thành Công {Gửi ${userNguoiDung.uid}}"
-                                                            )
-                                                        }
-                                                    })
-                                            FriendsRequest.child("Gửi " + uid)
-                                                .child("Nhận " + userNguoiDung.uid)
-                                                .removeValue()
-                                                .addOnCompleteListener(OnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        Log.d(
-                                                            "Message:",
-                                                            "Đã Xóa Thành Công {Gửi $uid}"
-                                                        )
-                                                    }
-                                                })
-                                            FriendsRequest.child("Gửi " + userNguoiDung.uid)
-                                                .child("Nhận " + uid)
-                                                .removeValue().addOnCompleteListener(
-                                                    OnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-                                                            Log.d(
-                                                                "Message:",
-                                                                "Đã Xóa Thành Công {Gửi ${userNguoiDung.uid}}"
-                                                            )
-                                                        }
-                                                    })
-                                            FriendsRequest.child("Nhận " + uid)
-                                                .child("Gửi " + userNguoiDung.uid)
-                                                .removeValue()
-                                                .addOnCompleteListener(OnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        Log.d(
-                                                            "Message:",
-                                                            "Đã Xóa Thành Công {Gửi $uid}"
-                                                        )
-                                                    }
-                                                })
-                                        }
-                                    })
-                        }
-                    })
-        }
-    }
 
     private fun HuyKetBan(receiverUserid: String) {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
@@ -192,23 +117,21 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private fun KnowSent(receiverUserid: String) {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
-            if (userNguoiDung.uid != null) {
-                val Friends = FirebaseDatabase.getInstance().getReference("/Friends")
-                Friends.child(userNguoiDung.uid)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            var Request_type = snapshot.child(receiverUserid).value
-                            if (Request_type != null) {
-                                if (Request_type.equals("Bạn")) {
-                                    btnSendRequestFriends.isVisible = false
-                                    btnMessage.isEnabled = true
-                                }
+            val Friends = FirebaseDatabase.getInstance().getReference("/Friends")
+            Friends.child(userNguoiDung.uid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var Request_type = snapshot.child(receiverUserid).value
+                        if (Request_type != null) {
+                            if (Request_type.equals("Bạn")) {
+                                btnSendRequestFriends.isVisible = false
+                                btnMessage.isEnabled = true
                             }
                         }
+                    }
 
-                        override fun onCancelled(error: DatabaseError) {}
-                    })
-            }
+                    override fun onCancelled(error: DatabaseError) {}
+                })
         }
 
         if (userNguoiDung != null) {
@@ -216,7 +139,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.hasChild("Nhận " + receiverUserid)) {
-                            var Request_type =
+                            val Request_type =
                                 snapshot.child("Nhận " + receiverUserid)
                                     .child("request_type").value
                             if (Request_type != null) {

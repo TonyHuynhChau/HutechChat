@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
@@ -17,13 +17,14 @@
         android:layout_marginStart="16dp"
         android:text="UserName"
         android:textColor="@color/black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/IVUser_Thong_Bao"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/IVUser_Thong_Bao"
-        app:layout_constraintTop_toTopOf="@+id/IVUser_Thong_Bao" />
+        app:layout_constraintTop_toTopOf="@+id/IVUser_Thong_Bao"
+        app:layout_constraintVertical_bias="0.0" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/IVUser_Thong_Bao"
@@ -46,4 +47,28 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IVUser_Thong_Bao" />
+
+    <Button
+        android:id="@+id/BtnDongY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_forget_password"
+        android:text="Đồng Ý"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/IVUser_Thong_Bao" />
+
+    <Button
+        android:id="@+id/BtnTuchoi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_forget_password"
+        android:backgroundTint="@color/white"
+        android:text="Từ Chối"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BtnDongY"
+        app:strokeColor="#FFFFFF" />
 </androidx.constraintlayout.widget.ConstraintLayout>
