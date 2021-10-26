@@ -1,14 +1,15 @@
-package com.example.firebaseappchat.PageProfile
+package fragment
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseappchat.Friend.Profile_Other_User_Activity
 import com.example.firebaseappchat.R
-import com.example.firebaseappchat.SearchUser.SearchUserActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -19,18 +20,39 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.layout_list_find.view.*
-import kotlinx.android.synthetic.main.layout_list_find.view.IVUser
 import kotlinx.android.synthetic.main.layout_thong_bao.view.*
 
-class ThongBaoActivity : AppCompatActivity() {
-    private lateinit var recyclervew: RecyclerView
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [DashboardFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class FriendRequestFragment : Fragment() {
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_thong_bao)
-        recyclervew = findViewById(R.id.List_Thong_Bao)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
+    private lateinit var recyclervew:RecyclerView
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_friendsrequest, container, false)
+         recyclervew = view.findViewById(R.id.Notification_Friends_Request)
         RequesrFriend()
+        return view
     }
 
     private fun RequesrFriend() {
@@ -55,13 +77,12 @@ class ThongBaoActivity : AppCompatActivity() {
                             Log.d("New Message", userItem.user.name)
                             intent.putExtra("USER_KEY", userItem.user)
                             startActivity(intent)
-                            finish()
                         }
                         recyclervew.adapter = adapter
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-                        Log.d("Error: ", "${error.message}")
+                        Log.d("Error: ", error.message)
                     }
                 })
         }
@@ -88,5 +109,15 @@ class ThongBaoActivity : AppCompatActivity() {
                 Log.d("New Message :", "User Name : ${user.name} \n PhotoUrl : ${user.Urlphoto}")
             }
         }
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            DashboardFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
     }
 }

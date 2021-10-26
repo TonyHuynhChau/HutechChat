@@ -38,41 +38,51 @@ class NewMessActivity : AppCompatActivity() {
 
     // Get user name and images then show in user_row
     private fun LayUser() {
-        val ref = FirebaseDatabase.getInstance().getReference("/user")
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val adapter = GroupAdapter<GroupieViewHolder>()
-                snapshot.children.forEach() {
-                    val user = it.getValue(SignUpActivity.getUser::class.java)
-                    val userNguoiDung = FirebaseAuth.getInstance().currentUser
-                    if (userNguoiDung != null) {
-                        if (user != null) {
-                            if (userNguoiDung.uid != user.uid) {
-                                adapter.add(UItem(user))
+        val userNguoiDung = FirebaseAuth.getInstance().currentUser
+        if (userNguoiDung != null) {
+            val Friends = FirebaseDatabase.getInstance().getReference("Friends")
+            Friends.child(userNguoiDung.uid).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach() {
+                        val FriendUID = it.child("uid").value
+                        Log.d("FriendsUID",FriendUID.toString())
+                        val ref = FirebaseDatabase.getInstance().getReference("user")
+                        ref.addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val adapter = GroupAdapter<GroupieViewHolder>()
+                                snapshot.children.forEach() {
+                                    val user = it.getValue(SignUpActivity.getUser::class.java)
+
+                                    if (userNguoiDung != null) {
+                                        if (user != null) {
+                                            if (userNguoiDung.uid != user.uid && user.uid==FriendUID) {
+                                                adapter.add(UItem(user))
+                                            }
+                                        }
+                                    }
+
+                                }
+                                adapter.setOnItemClickListener { item, view ->
+                                    val userItem = item as UItem
+                                    val intent = Intent(view.context, ChatLogActivity::class.java)
+                                    Log.d("New Message:", USER_KEY)
+                                    intent.putExtra(USER_KEY, userItem.user)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                binding.recyclerviewnewmess.adapter = adapter
                             }
-                        }
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+                        })
                     }
-
                 }
-                adapter.setOnItemClickListener { item, view ->
-
-                    val userItem = item as UItem
-
-                    val intent = Intent(view.context, ChatLogActivity::class.java)
-                    //intent.putExtra(USER_KEY,userItem.user.name)
-                    Log.d("New Message:", USER_KEY)
-                    intent.putExtra(USER_KEY, userItem.user)
-                    startActivity(intent)
-                    finish()
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
                 }
-                binding.recyclerviewnewmess.adapter = adapter
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
+            })
+        }
     }
 
 

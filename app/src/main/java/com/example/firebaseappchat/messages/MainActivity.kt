@@ -13,11 +13,8 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
-import com.example.firebaseappchat.PageProfile.ProfilePageActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.SearchUser.SearchUserActivity
-import com.example.firebaseappchat.VideoCall.VideoChatActivity
-import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.databinding.ActivityMainBinding
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -25,9 +22,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import fragment.AccountFragment
 import fragment.DashboardFragment
+import fragment.FriendRequestFragment
 import fragment.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_friend_request.*
@@ -45,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val dashboardFragment = DashboardFragment()
     private val homeFragment = HomeFragment()
     private val accountFragment = AccountFragment()
+    private val friendFragment = FriendRequestFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         bottom_nav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFrag(homeFragment)
+                R.id.notification_friend_request->replaceFrag(friendFragment)
                 R.id.dashboard -> replaceFrag(dashboardFragment)
                 R.id.account -> replaceFrag(accountFragment)
             }

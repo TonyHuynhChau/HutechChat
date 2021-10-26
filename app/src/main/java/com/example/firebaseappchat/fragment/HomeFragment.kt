@@ -7,43 +7,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.firebaseappchat.NewMessActivity
-import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
-import com.example.firebaseappchat.UItem
 import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.messages.LateMessagesRow
-import com.example.firebaseappchat.VideoCall.VideoChatActivity
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile
-import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.latest_message_row.*
-import kotlinx.android.synthetic.main.latest_message_row.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -54,9 +36,6 @@ class HomeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
-    //Lấy uid Của Người Dùng Từ Authentication gồm (Email,Pass,Display,.....)
-    val userdata = FirebaseAuth.getInstance().currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,12 +52,6 @@ class HomeFragment : Fragment() {
         //testdata(view)
         ListenForlatesMessages(view)
         return view
-        //btn_videocall.setOnClickListener(View.OnClickListener {
-        //    val intent = Intent(activity, VideoChatActivity::class.java)
-        //    if (userdata != null) {
-        //        startActivity(intent)
-        //    }
-        //})
         return  view
 
     }
@@ -110,7 +83,6 @@ class HomeFragment : Fragment() {
                 latestMessagesMap[snapshot.key!!] = chatMessage
                 refreshRecyclerViewMessages()
 
-                //adapter.add(HomeFragment.LateMessagesRow(chatMessage))
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -135,13 +107,6 @@ class HomeFragment : Fragment() {
     }
 
     val adapter = GroupAdapter<GroupieViewHolder>()
-
-
-    private fun testdata(view: View) {
-        //val adapter = GroupAdapter<GroupieViewHolder>()
-        //adapter.add(HomeFragment.LateMessagesRow())
-        //view.recyclerview_latest_messages.adapter = adapter
-    }
 
     companion object {
         @JvmStatic

@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.example.firebaseappchat.PageProfile.ThongBaoActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
 import com.example.firebaseappchat.messages.MainActivity
@@ -93,18 +92,10 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_account, container, false)
-        var imgThongBao: ImageView = view.findViewById(R.id.ImgThongBao)
         val btnUpdate: Button = view.findViewById(R.id.btnSua)
         btnUpdate.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, UserProfile::class.java)
             startActivity(intent)
-        })
-        val btnthongbao: LinearLayout = view.findViewById(R.id.btn_Notification)
-        btnthongbao.setOnClickListener(View.OnClickListener {
-            val intent = Intent(activity, ThongBaoActivity::class.java)
-            if (userdata != null) {
-                startActivity(intent)
-            }
         })
         return view
     }

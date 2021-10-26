@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_baseline_home"
         android:title="Trang Chủ" />
+    <item
+        android:id="@+id/notification_friend_request"
+        android:icon="@android:drawable/ic_popup_reminder"
+        android:title="Thông Báo" />
     <item
         android:id="@+id/dashboard"
         android:icon="@drawable/ic_baseline_dashboard"

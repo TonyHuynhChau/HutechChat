@@ -24,6 +24,12 @@ import kotlinx.android.synthetic.main.activity_user_profile.*
 import java.util.*
 
 class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+    companion object{
+        val IMGURL = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
+                "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
+                "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
+                "&pid=ImgRaw&r=0"
+    }
     private lateinit var binding: ActivityUserProfileBinding
     var year = 0
     var month = 0
@@ -59,10 +65,6 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             if (!ifn.equals("null")) {
                 saveUserToRealtimeold()
             } else {
-                val IMGURL = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                        "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                        "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                        "&pid=ImgRaw&r=0"
                 saveUserToRealtimeForNoIMG(IMGURL)
             }
         }

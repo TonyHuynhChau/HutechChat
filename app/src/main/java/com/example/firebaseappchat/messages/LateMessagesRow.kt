@@ -2,6 +2,7 @@ package com.example.firebaseappchat.messages
 
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.model.ChatMessage
+import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -33,7 +34,10 @@ class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() 
 
                 val targetImageView = viewHolder.itemView.imageview_lastest_messages
                 viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
-                Picasso.get().load(chatPartnerUser?.Urlphoto).into(targetImageView)
+                if (chatPartnerUser?.Urlphoto?.isEmpty() == true)
+                    Picasso.get().load(IMGURL).into(targetImageView)
+                else
+                    Picasso.get().load(chatPartnerUser?.Urlphoto).into(targetImageView)
             }
 
             override fun onCancelled(error: DatabaseError) {
