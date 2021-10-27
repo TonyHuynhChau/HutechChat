@@ -27,6 +27,7 @@ import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import fragment.FriendRequestFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,18 +67,42 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
             Ten.setText(user.name)
             Email.setText(user.email)
-            KnowSent(user.uid)
+            AutoLoad(user.uid)
             FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
-            btnSendRequestFriends.setOnClickListener(View.OnClickListener {
+            btnSendRequestFriends.setOnClickListener {
                 if (Type == "Đã Hủy") {
                     sendrequestfriends(user.uid)
                 }
                 if (Type == "Đã Gửi") {
                     HuyKetBan(user.uid)
                 }
-            })
+            }
         }
+    }
+
+    private fun AutoLoad(uid: String) {
+        FirebaseDatabase.getInstance().getReference("FriendsRequest")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    KnowSentRequest(uid)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        FirebaseDatabase.getInstance().getReference("Friends")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    KnowSentFriend(uid)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     private fun sendNotification(notification: PushNotification) =
@@ -98,23 +123,23 @@ class Profile_Other_User_Activity : AppCompatActivity() {
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
             FriendsRequest.child("Nhận " + receiverUserid).child("Gửi " + userNguoiDung.uid)
-                .removeValue().addOnCompleteListener(OnCompleteListener { task ->
+                .removeValue().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         FriendsRequest.child("Gửi " + userNguoiDung.uid)
                             .child("Nhận " + receiverUserid)
                             .removeValue()
-                            .addOnCompleteListener(OnCompleteListener { task ->
+                            .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Type = "Đã Hủy"
-                                    btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
                                 }
-                            })
+                            }
                     }
-                })
+                }
         }
     }
 
-    private fun KnowSent(receiverUserid: String) {
+    private fun KnowSentFriend(receiverUserid: String) {
+        Type = "Đã Hủy"
         btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
@@ -134,7 +159,12 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                     override fun onCancelled(error: DatabaseError) {}
                 })
         }
+    }
 
+    private fun KnowSentRequest(receiverUserid: String) {
+        Type = "Đã Hủy"
+        btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
+        val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
             FriendsRequest.child("Gửi " + userNguoiDung.uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -179,8 +209,6 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                     }
                 })
         }
-
-
     }
 
     private fun sendrequestfriends(receiverUserid: String) {
@@ -189,66 +217,48 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             //Thêm Thông Tin Cho Người Nhận
             FriendsRequest.child("Nhận " + receiverUserid).child("Gửi " + userNguoiDung.uid)
                 .child("request_type")
-                .setValue("Đã Gửi").addOnCompleteListener(OnCompleteListener { task ->
+                .setValue("Đã Gửi").addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         //Thêm Tên Người Gửi vào Friend Request Của Người Nhận
                         FriendsRequest.child("Nhận " + receiverUserid)
                             .child("Gửi " + userNguoiDung.uid)
                             .child("name").setValue(userNguoiDung.displayName)
-                            .addOnCompleteListener(
-                                OnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Log.d("New Message", "Đã Thêm Tên Người Gửi")
-                                        //Thêm Ảnh Người Gửi vào Friend Request Của Người Nhận
-                                        if (userNguoiDung.photoUrl == null) {
-                                            val IMGURL =
-                                                "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                                                        "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                                                        "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                                                        "&pid=ImgRaw&r=0"
-                                            FriendsRequest.child("Nhận " + receiverUserid)
-                                                .child("Gửi " + userNguoiDung.uid)
-                                                .child("Urlphoto").setValue(IMGURL)
-                                                .addOnCompleteListener(
-                                                    OnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-
-                                                        }
-                                                    })
-                                        } else {
-                                            FriendsRequest.child("Nhận " + receiverUserid)
-                                                .child("Gửi " + userNguoiDung.uid)
-                                                .child("Urlphoto")
-                                                .setValue(userNguoiDung.photoUrl.toString())
-                                                .addOnCompleteListener(
-                                                    OnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-
-                                                        }
-                                                    })
-                                        }
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d("New Message", "Đã Thêm Tên Người Gửi")
+                                    //Thêm Ảnh Người Gửi vào Friend Request Của Người Nhận
+                                    if (userNguoiDung.photoUrl == null) {
+                                        val IMGURL =
+                                            "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
+                                                    "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
+                                                    "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
+                                                    "&pid=ImgRaw&r=0"
+                                        FriendsRequest.child("Nhận " + receiverUserid)
+                                            .child("Gửi " + userNguoiDung.uid)
+                                            .child("Urlphoto").setValue(IMGURL)
+                                    } else {
+                                        FriendsRequest.child("Nhận " + receiverUserid)
+                                            .child("Gửi " + userNguoiDung.uid)
+                                            .child("Urlphoto")
+                                            .setValue(userNguoiDung.photoUrl.toString())
                                     }
-                                })
+                                }
+                            }
                         FriendsRequest.child("Nhận " + receiverUserid)
                             .child("Gửi " + userNguoiDung.uid)
                             .child("uid").setValue(userNguoiDung.uid)
-                            .addOnCompleteListener(OnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                }
-                            })
                         //Thêm Thông Tin Cho Người Gửi
                         FriendsRequest.child("Gửi " + userNguoiDung.uid)
                             .child("Nhận " + receiverUserid)
                             .child("request_type")
-                            .setValue("Đã Nhận").addOnCompleteListener(OnCompleteListener { task ->
+                            .setValue("Đã Nhận").addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Type = "Đã Gửi"
-                                    btnSendRequestFriends.setText("Hủy Yêu Cầu")
                                     FindToken(receiverUserid, userNguoiDung.displayName.toString())
                                 }
-                            })
+                            }
                     }
-                })
+                }
         }
     }
 
