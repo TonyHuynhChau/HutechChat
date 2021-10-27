@@ -10,15 +10,16 @@
         android:id="@+id/textviewfrom_chat_from_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/button_background"
-        android:textStyle="bold"
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text=" tin nhan tin nhantin nhan tin nhan v"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
         app:layout_constraintTop_toTopOf="@+id/imageView_chat_from_row" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView_chat_from_row"
         app:civ_border_width="2dp"
@@ -30,5 +31,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/password" />
+
+    <TextView
+        android:id="@+id/Txt_time_From"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/textviewfrom_chat_from_row"
+        app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

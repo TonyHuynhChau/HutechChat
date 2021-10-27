@@ -1,5 +1,7 @@
 package com.example.firebaseappchat.messages
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
@@ -13,18 +15,26 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.latest_message_row.view.*
+import java.text.SimpleDateFormat
 
 
 class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() {
     var chatPartnerUser: SignUpActivity.getUser? = null
+
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.message_textview_latest_messages.text = chatMessage.text
-
+        val sdf = SimpleDateFormat("hh:mm")
         val chatPartnerId: String
+        if(chatMessage.text.length>7){
+            chatMessage.text = "Đã gửi 1 tin nhắn"
+        }
         if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
-
+            viewHolder.itemView.message_textview_latest_messages.text =
+                "Bạn: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
             chatPartnerId = chatMessage.toId
         } else {
+            viewHolder.itemView.message_textview_latest_messages.text =
+                "$-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
             chatPartnerId = chatMessage.formId
         }
 
@@ -51,7 +61,7 @@ class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() 
         return R.layout.latest_message_row
     }
 
-    private fun initiateVideoMeeting(){
-
+    private fun initiateVideoMeeting() {
     }
+
 }
