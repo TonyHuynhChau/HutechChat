@@ -19,6 +19,7 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
 import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.UserProfile
+import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
@@ -70,8 +71,11 @@ class AccountFragment : Fragment() {
                 val phonenumber = dataSnapshot.child("$uid/Phone").value
                 val Sex = dataSnapshot.child("$uid/Sex").value
                 val photo = dataSnapshot.child("$uid/Urlphoto").value
-
-                Picasso.get().load(photo.toString()).into(avatar2)
+                if (photo == null) {
+                    Picasso.get().load(IMGURL).into(avatar2)
+                } else {
+                    Picasso.get().load(photo.toString()).into(avatar2)
+                }
                 txtPassWord.text = Editable.Factory.getInstance().newEditable(date.toString())
                 name2.text = Editable.Factory.getInstance().newEditable(name.toString())
                 email2.text = Editable.Factory.getInstance().newEditable(emailU.toString())
@@ -99,6 +103,7 @@ class AccountFragment : Fragment() {
         })
         return view
     }
+
     companion object {
         // TODO: Rename and change types and number of parameters
         @JvmStatic

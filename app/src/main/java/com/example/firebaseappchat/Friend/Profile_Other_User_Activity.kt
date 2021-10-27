@@ -115,15 +115,16 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     }
 
     private fun KnowSent(receiverUserid: String) {
+        btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
-            val Friends = FirebaseDatabase.getInstance().getReference("/Friends")
+            val Friends = FirebaseDatabase.getInstance().getReference("Friends")
             Friends.child(userNguoiDung.uid)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        var Request_type = snapshot.child(receiverUserid).value
+                        var Request_type = snapshot.child(receiverUserid).child("uid").value
                         if (Request_type != null) {
-                            if (Request_type.equals("Bạn")) {
+                            if (Request_type == receiverUserid) {
                                 btnSendRequestFriends.isVisible = false
                                 btnMessage.isEnabled = true
                             }

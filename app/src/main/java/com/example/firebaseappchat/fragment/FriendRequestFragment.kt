@@ -51,6 +51,7 @@ class FriendRequestFragment : Fragment() {
         FirebaseDatabase.getInstance().getReference("FriendsRequest")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d("CHẠYYYYYYYYYYY","Được")
                     val userNguoiDung = FirebaseAuth.getInstance().currentUser
                     val adapter = GroupAdapter<GroupieViewHolder>()
                     val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
