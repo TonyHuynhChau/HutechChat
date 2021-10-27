@@ -34,7 +34,7 @@ class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() 
             chatPartnerId = chatMessage.toId
         } else {
             viewHolder.itemView.message_textview_latest_messages.text =
-                "$-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
+                "-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
             chatPartnerId = chatMessage.formId
         }
 

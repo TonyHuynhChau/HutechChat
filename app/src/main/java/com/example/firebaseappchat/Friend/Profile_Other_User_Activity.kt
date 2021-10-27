@@ -70,6 +70,12 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             AutoLoad(user.uid)
             FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
+            btnMessage.setOnClickListener{
+                val intent = Intent(this, ChatLogActivity::class.java)
+                intent.putExtra(NewMessActivity.USER_KEY, user)
+                startActivity(intent)
+                finish()
+            }
             btnSendRequestFriends.setOnClickListener {
                 if (Type == "Đã Hủy") {
                     sendrequestfriends(user.uid)
