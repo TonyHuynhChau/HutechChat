@@ -14,6 +14,6 @@
     <item
         android:id="@+id/menu_new_call"
         android:title="Tạo Cuộc Gọi"
-        android:icon="@drawable/ic_baseline_videocam_24"
+        android:icon="@drawable/ic_baseline_call"
         app:showAsAction="ifRoom"/>
 </menu>
