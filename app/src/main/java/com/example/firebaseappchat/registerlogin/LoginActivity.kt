@@ -1,5 +1,6 @@
 package com.example.firebaseappchat.registerlogin
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var data: FirebaseAuth
     private lateinit var uid: String
+    private lateinit var Loading:ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,10 @@ class LoginActivity : AppCompatActivity() {
         data = FirebaseAuth.getInstance()
 
         binding.BtnDangNhap.setOnClickListener {
+            Loading = ProgressDialog(this)
+            Loading.setTitle("Đang Đăng Nhập")
+            Loading.setMessage("Xin Đợi Trong Giây Lát")
+            Loading.show()
             login()
         }
 
@@ -83,6 +89,7 @@ class LoginActivity : AppCompatActivity() {
                     uid = FirebaseAuth.getInstance().uid.toString()
                     TOKEN()
                     Toast.makeText(this, "Đăng Nhập Thành Công", Toast.LENGTH_SHORT).show()
+                    Loading.dismiss()
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
