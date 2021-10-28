@@ -22,7 +22,12 @@
         android:theme="@style/Theme.FirebaseAppChat"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity
+            android:name=".Loading.LoadingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Post.PostActivity"
+            android:exported="false" />
         <activity
             android:name=".VideoCall.Outcoming"
             android:exported="true" />

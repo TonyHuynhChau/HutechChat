@@ -265,6 +265,7 @@
             android:id="@+id/btnSua"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="60dp"
             android:background="@drawable/button_background"
             android:gravity="center"

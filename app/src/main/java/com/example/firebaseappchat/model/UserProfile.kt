@@ -151,7 +151,6 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             Toast.makeText(this, "Vui Lòng Chọn Ảnh", Toast.LENGTH_SHORT).show()
             return
         }
-
         //code thành công tới lưu vào storage images
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/Images/$filename")
@@ -177,8 +176,6 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         val phone = binding.TxtSDT.text.toString()
         val userIMG = profileImageUrl
         updateuser(fullName, birth, sex, phone, userIMG)
-
-
     }
 
     private fun saveUserToRealtimeold() {
