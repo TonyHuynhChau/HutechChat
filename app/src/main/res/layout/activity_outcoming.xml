@@ -21,12 +21,12 @@
         android:id="@+id/txt_Incomingcall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:gravity="center"
         android:layout_marginTop="16dp"
-        android:textSize="32dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="Đang Gọi"
         android:textColor="@color/white"
-        android:text="Đang Gọi Cho"
+        android:textSize="32dp"
         app:layout_constraintTop_toBottomOf="@+id/img_Incomingcall"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -34,16 +34,15 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Incomingcall"
-        app:layout_constraintVertical_bias="0.226"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Incomingcall">
 
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_userIncomingCall"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -60,31 +59,39 @@
             android:textColor="@color/white"
             android:textSize="32dp" />
 
-        <TextView
-            android:id="@+id/txtEmail_incomingCall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="Email@gmail.com"
-            android:textColor="@color/white"
-            android:textSize="24dp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/btn_rejectcall"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="64dp"
-        android:background="@drawable/background_btncall_no"
-        android:contentDescription="@string/app_name"
-        android:padding="8dp"
-        android:src="@drawable/ic_baseline_call_end_24"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="124dp"
+        android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.15">
+
+        <ImageView
+            android:id="@+id/btn_accpetcall"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/background_btncall_yes"
+            android:contentDescription="@string/app_name"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_call_end_24"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/btn_rejectcall"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/background_btncall_no"
+            android:contentDescription="@string/app_name"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_call_end_24" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

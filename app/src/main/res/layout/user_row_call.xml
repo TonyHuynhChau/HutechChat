@@ -31,7 +31,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/btn_VideoCall"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,4 +39,17 @@
         app:layout_constraintStart_toEndOf="@+id/TxtUserName_call"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_videocam_24" />
+
+    <View
+        android:id="@+id/divider_call"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iVUser_call" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
