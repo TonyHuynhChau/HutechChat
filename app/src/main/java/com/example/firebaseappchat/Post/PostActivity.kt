@@ -1,5 +1,6 @@
 package com.example.firebaseappchat.Post
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
@@ -84,11 +85,12 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun pushPostToDB(image: String) {
         val user = FirebaseAuth.getInstance().currentUser
         val calendar = System.currentTimeMillis()
         val sdf1 = SimpleDateFormat("dd MMM yyyy")
-        val sdf2 = SimpleDateFormat("hh:mm")
+        val sdf2 = SimpleDateFormat("hh:mm:ss")
 
         if (user != null) {
             updateuser(
@@ -110,7 +112,7 @@ class PostActivity : AppCompatActivity() {
         fullname: String,
         image: String
     ) {
-        var user = mapOf<String, String>(
+        val user = mapOf<String, String>(
             "uid" to uid,
             "date" to date,
             "time" to time,
@@ -118,20 +120,12 @@ class PostActivity : AppCompatActivity() {
             "name" to fullname,
             "Urlphoto" to image
         )
-        var database = FirebaseDatabase.getInstance().getReference("Post")
+        val database = FirebaseDatabase.getInstance().getReference("Post")
         val userdata = FirebaseAuth.getInstance().currentUser
-        database.child(userdata?.uid.toString()).updateChildren(user).addOnSuccessListener {
-            Loading.dismiss()
-            val dashboardFragment = DashboardFragment()
-            replaceFrag(dashboardFragment)
-        }
-    }
-
-    private fun replaceFrag(fragment: Fragment) {
-        if (fragment != null) {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, fragment)
-            transaction.commit()
-        }
+        database.child(userdata?.uid.toString() + date + time).updateChildren(user)
+            .addOnSuccessListener {
+                Loading.dismiss()
+                val dashboardFragment = DashboardFragment()
+            }
     }
 }

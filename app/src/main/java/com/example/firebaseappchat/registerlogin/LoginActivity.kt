@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var data: FirebaseAuth
     private lateinit var uid: String
-    private lateinit var Loading:ProgressDialog
+    private lateinit var Loading: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,12 +93,12 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Đăng Nhập Thất Bại. Vui Lòng Đăng Ký Tại Tài Khoản Mới",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                } else {//Đăng Nhập Thất Bại.
+                    Loading.dismiss()
+                    Loading = ProgressDialog(this)
+                    Loading.setTitle("Đăng Nhập Thất Bại")
+                    Loading.setMessage("Vui Lòng Đăng Ký Tại Tài Khoản Mới")
+                    Loading.show()
                 }
             }
         } catch (e: Exception) {

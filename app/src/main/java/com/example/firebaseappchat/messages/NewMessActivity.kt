@@ -1,5 +1,6 @@
 package com.example.firebaseappchat
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -103,20 +104,8 @@ class UItem(val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
         return R.layout.user_row
     }
 
+    @SuppressLint("SetTextI18n")
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-
-        if (user == null) {
-            Log.d("Error Message", "User Name = ${user.name}")
-            return
-        } else if (user.Urlphoto.toString().isEmpty()) {
-            val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                    "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                    "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                    "&pid=ImgRaw&r=0"
-            viewHolder.itemView.TxtUserName.text = user.name + "(Need Update Profile)"
-            Picasso.get().load(ImgDefault).into(viewHolder.itemView.iVUser)
-        }
-
         if (user.equals("null")) {
             Log.d("Error Message", "User Name = ${user.name}")
             return
