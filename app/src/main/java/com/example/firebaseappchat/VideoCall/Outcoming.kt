@@ -2,8 +2,10 @@ package com.example.firebaseappchat.VideoCall
 
 
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -13,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintSet.VISIBLE
 import androidx.core.view.isVisible
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -32,6 +35,7 @@ class Outcoming : AppCompatActivity() {
     private lateinit var btnCancell: ImageView
     private lateinit var btnAccept: ImageView
     private lateinit var avatar: CircleImageView
+    private lateinit var mediaPlayer: MediaPlayer
 
     var toUser: SignUpActivity.getUser? = null
     private lateinit var ocuRef: DatabaseReference
@@ -60,6 +64,7 @@ class Outcoming : AppCompatActivity() {
         btnCancell = findViewById(R.id.btn_rejectcall)
         btnAccept = findViewById(R.id.btn_accpetcall)
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.Ringing)
         checker = "clicked"
 
         if (toUser != null) {
@@ -69,6 +74,7 @@ class Outcoming : AppCompatActivity() {
 
         btnCancell.setOnClickListener(){
             checker = "clicked"
+            mediaPlayer.stop()
             cancelCalling()
         }
     }
@@ -102,7 +108,7 @@ class Outcoming : AppCompatActivity() {
         })
 
         //Reciveder
-        ocuRef.child(senderUid).child("ringing").addListenerForSingleValueEvent(object : ValueEventListener{
+        ocuRef.child(senderUid).child("Ringing").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists() && snapshot.hasChild("ringing")) {
                     callingUid = snapshot.child("ringing").value.toString()
@@ -117,7 +123,7 @@ class Outcoming : AppCompatActivity() {
                     }
                 }
                 else{
-                    startActivity(Intent(this@Outcoming, HomeFragment::class.java))
+                    startActivity(Intent(this@Outcoming, MainActivity::class.java))
                     finish()
                 }
             }
@@ -139,6 +145,8 @@ class Outcoming : AppCompatActivity() {
         ocuRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!checker.equals("clicked") && !snapshot.hasChild("calling") && !snapshot.hasChild("ringing")){
+                    mediaPlayer.start()
+
                     var callingInfo: HashMap<String, Any> = HashMap()
 
                     callingInfo.put("calling", reciverUid)

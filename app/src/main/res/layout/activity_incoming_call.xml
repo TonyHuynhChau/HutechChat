@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="VideoCall.IncomingCall">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/sub_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#7B9261">
+
+            <FrameLayout
+                android:id="@+id/pub_container"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_gravity="bottom|end"
+                android:background="#FF4CAF50"
+                android:layout_margin="12dp">
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/close_video_btn"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:background="@drawable/background_btncall_no"
+        android:src="@drawable/ic_baseline_videocam_off_24"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"/>
+</RelativeLayout>
