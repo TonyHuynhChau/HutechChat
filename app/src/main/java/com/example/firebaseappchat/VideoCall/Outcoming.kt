@@ -56,7 +56,7 @@ class Outcoming : AppCompatActivity() {
         val user: SignUpActivity.getUser
         toUser = intent.getParcelableExtra(VideoChatActivity.USER_KEY)
 
-        reciverUid = intent.extras?.get(VideoChatActivity.USER_KEY).toString()
+        reciverUid = toUser?.uid.toString()
         senderUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
         username= findViewById(R.id.txtUsername_incomingCall)
@@ -64,10 +64,9 @@ class Outcoming : AppCompatActivity() {
         btnCancell = findViewById(R.id.btn_rejectcall)
         btnAccept = findViewById(R.id.btn_accpetcall)
 
-
+        ocuRef = FirebaseDatabase.getInstance().getReference("/user-call/$senderUid/$reciverUid")
         mediaPlayer = MediaPlayer.create(this, R.raw.ringing)
 
-      //  mediaPlayer = MediaPlayer.create(this, R.raw.Ringing)
 
         checker = "clicked"
 
@@ -112,7 +111,7 @@ class Outcoming : AppCompatActivity() {
                     }
                 }
                 else{
-                    startActivity(Intent(this@Outcoming, HomeFragment::class.java))
+                    startActivity(Intent(this@Outcoming, MainActivity::class.java))
                     finish()
                 }
             }
@@ -157,15 +156,16 @@ class Outcoming : AppCompatActivity() {
         val toId = toUser?.uid
 
         mediaPlayer.start()
+
+        var callingInfo: HashMap<String, Any> = HashMap()
+
+        callingInfo.put("calling", reciverUid)
+        ocuRef.setValue(callingInfo)
+
         //Call Event
-        ocuRef = FirebaseDatabase.getInstance().getReference("/user-call/$fromId/$toId")
         ocuRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!checker.equals("clicked") && !snapshot.hasChild("calling") && !snapshot.hasChild("ringing")){
-
-                    var callingInfo: HashMap<String, Any> = HashMap()
-
-                    callingInfo.put("calling", reciverUid)
 
                         ocuRef.child(senderUid).child("calling")
                         .updateChildren(callingInfo as Map<String, Any>)
@@ -193,7 +193,7 @@ class Outcoming : AppCompatActivity() {
         //Cancal button
         ocuRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child(senderUid).hasChild("ringing") && snapshot.child(senderUid).hasChild("calling")){
+                if (snapshot.child(senderUid).hasChild("ringing") || snapshot.child(senderUid).hasChild("calling")){
                     btnAccept.visibility = View.VISIBLE
                 }
                 if(snapshot.child(reciverUid).child("Ringing").hasChild("picked")){
