@@ -77,6 +77,18 @@ class Outcoming : AppCompatActivity() {
             mediaPlayer.stop()
             cancelCalling()
         }
+
+        btnAccept.setOnClickListener {
+            mediaPlayer.stop()
+            var callPickUp: HashMap<String, Any> = HashMap()
+
+            callPickUp.put("picked","picked")
+
+            ocuRef.child(senderUid).child("Ringing").updateChildren(callPickUp)
+                .addOnCompleteListener {
+                    startActivity(Intent(this@Outcoming,IncomingCall::class.java))
+                }
+        }
     }
 
     private fun cancelCalling() {
@@ -140,12 +152,12 @@ class Outcoming : AppCompatActivity() {
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid
 
+        mediaPlayer.start()
         //Call Event
         ocuRef = FirebaseDatabase.getInstance().getReference("/user-call/$fromId/$toId")
         ocuRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!checker.equals("clicked") && !snapshot.hasChild("calling") && !snapshot.hasChild("ringing")){
-                    mediaPlayer.start()
 
                     var callingInfo: HashMap<String, Any> = HashMap()
 
@@ -179,6 +191,10 @@ class Outcoming : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.child(senderUid).hasChild("ringing") && snapshot.child(senderUid).hasChild("calling")){
                     btnAccept.visibility = View.VISIBLE
+                }
+                if(snapshot.child(reciverUid).child("Ringing").hasChild("picked")){
+                    mediaPlayer.stop()
+                    startActivity(Intent(this@Outcoming,IncomingCall::class.java))
                 }
             }
 

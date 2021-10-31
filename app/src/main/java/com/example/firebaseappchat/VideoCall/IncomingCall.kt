@@ -21,6 +21,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.jar.Manifest
 
+const val RC_VIDEO_APP_PERM: Int = 124
 class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.PublisherListener{
     private lateinit var btnClose: ImageView
     private lateinit var userRef: DatabaseReference
@@ -33,12 +34,12 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
     lateinit var mPublisher: Publisher
     lateinit var mSubscriber: Subscriber
 
-    private lateinit var API_KEY: String = "47367941"
-    private lateinit var SESSION_ID: String = "1_MX40NzM2Nzk0MX5-MTYzNTU4NzM4MTQyN34vYytyMUJjekhyZGQ3RDl0WWdXWVFoSFR-fg"
-    private lateinit var TOKEN: String = "T1==cGFydG5lcl9pZD00NzM2Nzk0MSZzaWc9NmM5ODlhYTI1NmFlOTc3ZjI3ZWUzMWMxYmZiNWI1MzMyYWI2MDEwOTpzZXNzaW9uX2lkPTFfTVg0ME56TTJOemswTVg1LU1UWXpOVFU0TnpNNE1UUXlOMzR2WXl0eU1VSmpla2h5WkdRM1JEbDBXV2RYV1ZGb1NGUi1mZyZjcmVhdGVfdGltZT0xNjM1NTg3NDI1Jm5vbmNlPTAuNDY5MDAwMzc1MTQ3ODQxNzYmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTYzODE3OTQyNCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="
+    private var API_KEY: String = "47367941"
+    private var SESSION_ID: String = "1_MX40NzM2Nzk0MX5-MTYzNTU4NzM4MTQyN34vYytyMUJjekhyZGQ3RDl0WWdXWVFoSFR-fg"
+    private var TOKEN: String = "T1==cGFydG5lcl9pZD00NzM2Nzk0MSZzaWc9NmM5ODlhYTI1NmFlOTc3ZjI3ZWUzMWMxYmZiNWI1MzMyYWI2MDEwOTpzZXNzaW9uX2lkPTFfTVg0ME56TTJOemswTVg1LU1UWXpOVFU0TnpNNE1UUXlOMzR2WXl0eU1VSmpla2h5WkdRM1JEbDBXV2RYV1ZGb1NGUi1mZyZjcmVhdGVfdGltZT0xNjM1NTg3NDI1Jm5vbmNlPTAuNDY5MDAwMzc1MTQ3ODQxNzYmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTYzODE3OTQyNCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="
     private lateinit var LOG_TAG: String
 
-    private val RC_VIDEO_APP_PERM = 124
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +86,7 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
 
             })
         }
+        requestPermission()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -92,17 +94,21 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults,this@IncomingCall)
     }
 
+
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private fun requestPermission(){
-        var perf: String = (Manifest.permissopn.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
 
-        if(EasyPermissions.hasPermissions(this.perf)){
+        val perf: String = (INTERNET)
+        val perf1: String = (CAMERA)
+        val perf2: String = (RECORD_AUDIO)
+
+        if(EasyPermissions.hasPermissions(this,perf,perf1,perf2)){
             pubController = findViewById(R.id.pub_container)
             subController = findViewById(R.id.sub_container)
 
             mSession = Session.Builder(this,API_KEY,SESSION_ID).build()
 
-            mSession.setSessionListener(IncomingCall)
+            mSession.setSessionListener(this@IncomingCall)
             mSession.connect(TOKEN)
         }
         else{
@@ -111,15 +117,15 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
     }
 
     override fun onConnected(p0: Session?) {
-        Log.i(LOG_TAG,"Session Connect")
-        mPublisher  = Publisher.Builder(this).build()
+        Log.i(LOG_TAG, "Session Connect")
+        mPublisher = Publisher.Builder(this).build()
+        mPublisher.setPublisherListener(this)
 
         pubController.addView(mPublisher.view)
 
 
-
-        if(mPublisher.view instranceof GLSurfaceView){
-            ((GLSurfaceView) mPublisher.view.setZOrderOnTop(true))
+        if (mPublisher.view is GLSurfaceView) {
+            (mPublisher.view as GLSurfaceView).setZOrderOnTop(true) as GLSurfaceView
         }
 
         mSession.publish(mPublisher)
@@ -132,7 +138,7 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
     override fun onStreamReceived(p0: Session?, p1: Stream?) {
         Log.i(LOG_TAG,"Stream Receiced")
         if(mSubscriber == null){
-            mSubscriber = Subscriber.Builder(this).build()
+            mSubscriber = Subscriber.Builder(this@IncomingCall,p1).build()
             mSession.subscribe(mSubscriber)
             subController.addView(mSubscriber.view)
         }
