@@ -82,7 +82,6 @@ dependencies {
     //Swipe Refesh Layout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     //Video Call
-
     implementation 'pub.devrel:easypermissions:2.0.1'
     implementation 'com.opentok.android:opentok-android-sdk:2.21.1'
 }
