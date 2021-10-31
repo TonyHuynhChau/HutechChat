@@ -64,11 +64,11 @@ class Outcoming : AppCompatActivity() {
         btnCancell = findViewById(R.id.btn_rejectcall)
         btnAccept = findViewById(R.id.btn_accpetcall)
 
-<<<<<<< Updated upstream
+
         mediaPlayer = MediaPlayer.create(this, R.raw.ringing)
-=======
+
       //  mediaPlayer = MediaPlayer.create(this, R.raw.Ringing)
->>>>>>> Stashed changes
+
         checker = "clicked"
 
         if (toUser != null) {
