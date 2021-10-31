@@ -48,9 +48,8 @@ class ClickPost : AppCompatActivity() {
         Anh = intent.getStringExtra("Anh Nguoi Dung")
         Find()
         load()
-        AddAnh.isVisible = false
-        var BtnSua = findViewById<Button>(R.id.BtnSuaBai)
-        var BtnXoa = findViewById<Button>(R.id.BtnXoaBai)
+        val BtnSua = findViewById<Button>(R.id.BtnSuaBai)
+        val BtnXoa = findViewById<Button>(R.id.BtnXoaBai)
         var type = ""
         XoaAnh.setOnClickListener {
             type = "Xoa Anh"
@@ -199,12 +198,19 @@ class ClickPost : AppCompatActivity() {
         Post_image = findViewById(R.id.click_post_image)
         XoaAnh = findViewById(R.id.XoaAnh)
         AddAnh = findViewById(R.id.AddAnh)
+        AddAnh.isVisible = false
     }
 
     private fun load() {
         Post_username.text = toUser?.name
         Picasso.get().load(Anh).into(ImgUser)
         Description.text = Editable.Factory.getInstance().newEditable(toUser?.status.toString())
-        Picasso.get().load(toUser?.Urlphoto).into(Post_image)
+        if (toUser?.Urlphoto?.isEmpty() == true) {
+            Post_image.isVisible = false
+            AddAnh.isVisible = true
+        } else {
+            Picasso.get().load(toUser?.Urlphoto).into(Post_image)
+        }
+
     }
 }
