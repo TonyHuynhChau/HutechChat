@@ -101,6 +101,7 @@ class PostActivity : AppCompatActivity() {
                 user.displayName.toString(),
                 image
             )
+            Toast.makeText(this, "Đăng Bài Thành Công. Hãy Quay Lại Để Xem Bài Viết", Toast.LENGTH_SHORT).show()
         }
     }
 

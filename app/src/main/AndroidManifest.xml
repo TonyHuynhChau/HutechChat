@@ -31,7 +31,8 @@
             android:exported="false" />
         <activity
             android:name=".VideoCall.Outcoming"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".VideoCall.VideoChatActivity"
             android:exported="false"
@@ -49,7 +50,8 @@
 
         <activity
             android:name=".VideoCall.IncomingCall"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".SplashScreen"
             android:exported="true">
