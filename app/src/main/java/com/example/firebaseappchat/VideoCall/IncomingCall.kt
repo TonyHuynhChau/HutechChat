@@ -21,8 +21,12 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.jar.Manifest
 
+<<<<<<< Updated upstream
 const val RC_VIDEO_APP_PERM: Int = 124
 class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.PublisherListener{
+=======
+class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.PublisherListener {
+>>>>>>> Stashed changes
     private lateinit var btnClose: ImageView
     private lateinit var userRef: DatabaseReference
     private lateinit var pubController: FrameLayout
@@ -35,8 +39,15 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
     lateinit var mSubscriber: Subscriber
 
     private var API_KEY: String = "47367941"
+<<<<<<< Updated upstream
     private var SESSION_ID: String = "1_MX40NzM2Nzk0MX5-MTYzNTU4NzM4MTQyN34vYytyMUJjekhyZGQ3RDl0WWdXWVFoSFR-fg"
     private var TOKEN: String = "T1==cGFydG5lcl9pZD00NzM2Nzk0MSZzaWc9NmM5ODlhYTI1NmFlOTc3ZjI3ZWUzMWMxYmZiNWI1MzMyYWI2MDEwOTpzZXNzaW9uX2lkPTFfTVg0ME56TTJOemswTVg1LU1UWXpOVFU0TnpNNE1UUXlOMzR2WXl0eU1VSmpla2h5WkdRM1JEbDBXV2RYV1ZGb1NGUi1mZyZjcmVhdGVfdGltZT0xNjM1NTg3NDI1Jm5vbmNlPTAuNDY5MDAwMzc1MTQ3ODQxNzYmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTYzODE3OTQyNCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="
+=======
+    private var SESSION_ID: String =
+        "1_MX40NzM2Nzk0MX5-MTYzNTU4NzM4MTQyN34vYytyMUJjekhyZGQ3RDl0WWdXWVFoSFR-fg"
+    private var TOKEN: String =
+        "T1==cGFydG5lcl9pZD00NzM2Nzk0MSZzaWc9NmM5ODlhYTI1NmFlOTc3ZjI3ZWUzMWMxYmZiNWI1MzMyYWI2MDEwOTpzZXNzaW9uX2lkPTFfTVg0ME56TTJOemswTVg1LU1UWXpOVFU0TnpNNE1UUXlOMzR2WXl0eU1VSmpla2h5WkdRM1JEbDBXV2RYV1ZGb1NGUi1mZyZjcmVhdGVfdGltZT0xNjM1NTg3NDI1Jm5vbmNlPTAuNDY5MDAwMzc1MTQ3ODQxNzYmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTYzODE3OTQyNCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="
+>>>>>>> Stashed changes
     private lateinit var LOG_TAG: String
 
 
@@ -55,13 +66,13 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
         btnClose.setOnClickListener {
             userRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.child(userId).hasChild("Ringing")){
+                    if (snapshot.child(userId).hasChild("Ringing")) {
                         userRef.child(userId).child("Ringing").removeValue()
 
-                        if(mPublisher != null){
+                        if (mPublisher != null) {
                             mPublisher.destroy()
                         }
-                        if(mSubscriber != null){
+                        if (mSubscriber != null) {
                             mSubscriber.destroy()
                         }
 
@@ -69,13 +80,11 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
                         finish()
                     }
 
-                    if (snapshot.child(userId).hasChild("Calling")){
+                    if (snapshot.child(userId).hasChild("Calling")) {
                         userRef.child(userId).child("Calling").removeValue()
                         startActivity(Intent(this@IncomingCall, MainActivity::class.java))
                         finish()
-                    }
-
-                    else{
+                    } else {
                         startActivity(Intent(this@IncomingCall, LoginActivity::class.java))
                     }
                 }
@@ -89,11 +98,21 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
         requestPermission()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults,this@IncomingCall)
+        EasyPermissions.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            this@IncomingCall
+        )
     }
 
+<<<<<<< Updated upstream
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private fun requestPermission(){
@@ -105,9 +124,19 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
         if(EasyPermissions.hasPermissions(this,perf,perf1,perf2)){
             pubController = findViewById(R.id.pub_container)
             subController = findViewById(R.id.sub_container)
+=======
+    //   @AfterPermissionGranted(RC_VIDEO_APP_PERM)
+    //  private fun requestPermission(){
+    //      var perf: String = (an, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
 
-            mSession = Session.Builder(this,API_KEY,SESSION_ID).build()
+    //    if(EasyPermissions.hasPermissions(this.perf)){
+    //        pubController = findViewById(R.id.pub_container)
+    //        subController = findViewById(R.id.sub_container)
+>>>>>>> Stashed changes
 
+    //      mSession = Session.Builder(this,API_KEY,SESSION_ID).build()
+
+<<<<<<< Updated upstream
             mSession.setSessionListener(this@IncomingCall)
             mSession.connect(TOKEN)
         }
@@ -115,18 +144,36 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
             EasyPermissions.requestPermissions(this,"Head Camera and Mic Permisson...",RC_VIDEO_APP_PERM)
         }
     }
+=======
+    //      mSession.setSessionListener(IncomingCall)
+    //       mSession.connect(TOKEN)
+    //  }
+    //  else{
+    //      EasyPermissions.requestPermissions(this,"Head Camera and Mic Permisson...",RC_VIDEO_APP_PERM)
+    //   }
+    // }
+>>>>>>> Stashed changes
 
     override fun onConnected(p0: Session?) {
         Log.i(LOG_TAG, "Session Connect")
         mPublisher = Publisher.Builder(this).build()
+<<<<<<< Updated upstream
         mPublisher.setPublisherListener(this)
+=======
+>>>>>>> Stashed changes
 
         pubController.addView(mPublisher.view)
 
 
+<<<<<<< Updated upstream
         if (mPublisher.view is GLSurfaceView) {
             (mPublisher.view as GLSurfaceView).setZOrderOnTop(true) as GLSurfaceView
         }
+=======
+        //   if(mPublisher.view instranceof GLSurfaceView){
+        //      ((GLSurfaceView) mPublisher.view.setZOrderOnTop(true))
+        //  }
+>>>>>>> Stashed changes
 
         mSession.publish(mPublisher)
     }
@@ -136,25 +183,30 @@ class IncomingCall : AppCompatActivity(), Session.SessionListener, PublisherKit.
     }
 
     override fun onStreamReceived(p0: Session?, p1: Stream?) {
+<<<<<<< Updated upstream
         Log.i(LOG_TAG,"Stream Receiced")
         if(mSubscriber == null){
             mSubscriber = Subscriber.Builder(this@IncomingCall,p1).build()
+=======
+        Log.i(LOG_TAG, "Stream Receiced")
+        if (mSubscriber == null) {
+            //    mSubscriber = Subscriber.Builder(this).build()
+>>>>>>> Stashed changes
             mSession.subscribe(mSubscriber)
             subController.addView(mSubscriber.view)
         }
     }
 
     override fun onStreamDropped(p0: Session?, p1: Stream?) {
-        Log.i(LOG_TAG,"Stream Dropped")
-        if (mSubscriber != null)
-        {
+        Log.i(LOG_TAG, "Stream Dropped")
+        if (mSubscriber != null) {
             mSubscriber == null
             subController.removeAllViews()
         }
     }
 
     override fun onError(p0: Session?, p1: OpentokError?) {
-        Log.i(LOG_TAG,"Stream Receiced")
+        Log.i(LOG_TAG, "Stream Receiced")
     }
 
     override fun onStreamCreated(p0: PublisherKit?, p1: Stream?) {

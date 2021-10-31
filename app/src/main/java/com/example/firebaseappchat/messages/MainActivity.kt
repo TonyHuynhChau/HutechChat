@@ -1,10 +1,6 @@
 package com.example.firebaseappchat.messages
 
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +24,6 @@ import fragment.DashboardFragment
 import fragment.FriendRequestFragment
 import fragment.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_friend_request.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var data: FirebaseAuth
 
     //Fragment
     private val dashboardFragment = DashboardFragment()
@@ -55,9 +49,6 @@ class MainActivity : AppCompatActivity() {
         verifyUserLoggedIn()
 
         val user = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            CheckRequestFriend(user.uid)
-        }
         //Bottom nav
         replaceFrag(homeFragment)
         bottom_nav.setOnNavigationItemSelectedListener {
@@ -70,32 +61,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
-    fun CheckRequestFriend(uid: String) {
-        val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
-        FirebaseDb.child("Nhận $uid")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                @SuppressLint("SetTextI18n")
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.value != null) {
-                        var i = 0
-                        snapshot.children.forEach() {
-                            i++
-                        }
-                        val dialog = Dialog(this@MainActivity)
-                        dialog.setContentView(R.layout.dialog_friend_request)
-                        dialog.Text_Dialog.setText("Bạn có $i lời mời kết bạn")
-                        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                        dialog.show()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-    }
-
     private fun fecthCurrentUser() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/user/$uid")
@@ -141,12 +106,6 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_new_call -> {
                 startActivity(Intent(this, VideoChatActivity::class.java))
             }
-            //R.id.menu_sign_out -> {
-            //    FirebaseAuth.getInstance().signOut()
-            //   val intent = Intent(this, LoginActivity::class.java)
-            //    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            //    startActivity(intent)
-            //}
         }
 
         return super.onOptionsItemSelected(item)

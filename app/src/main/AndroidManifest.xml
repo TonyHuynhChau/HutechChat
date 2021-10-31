@@ -23,7 +23,9 @@
         android:theme="@style/Theme.FirebaseAppChat"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity
+            android:name=".Post.ClickPost"
+            android:exported="false" />
         <activity
             android:name=".Post.PostActivity"
             android:exported="false" />

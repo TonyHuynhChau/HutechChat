@@ -1,12 +1,6 @@
 package fragment
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -16,15 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.firebaseappchat.R
-import com.example.firebaseappchat.databinding.DialogFriendRequestBinding
-import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.UserProfile
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.dialog_friend_request.*
-import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_account.*
 
 private const val ARG_PARAM1 = "param1"

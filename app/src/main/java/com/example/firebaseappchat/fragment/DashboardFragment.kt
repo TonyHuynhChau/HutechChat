@@ -10,12 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseappchat.NewMessActivity
+import com.example.firebaseappchat.Post.ClickPost
 import com.example.firebaseappchat.Post.PostActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.model.Post
+import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -24,6 +29,7 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.android.synthetic.main.layou_post.view.*
 import java.text.SimpleDateFormat
@@ -50,20 +56,39 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val BtnPost: Button = view.findViewById(R.id.button)
+        val NguoiDung = FirebaseAuth.getInstance().currentUser
+        if (NguoiDung != null) {
+            if (NguoiDung.photoUrl == null) {
+                Picasso.get().load(IMGURL).into(view.ImgUser)
+            } else {
+                Picasso.get().load(NguoiDung.photoUrl).into(view.ImgUser)
+            }
+        }
+        val BtnPost: TextView = view.findViewById(R.id.TxtDangBai)
         BtnPost.setOnClickListener {
             val intent = Intent(view.context, PostActivity::class.java)
             startActivity(intent)
         }
-        LayPost(view.recyclerView_Post)
+        AutoLoad(view.recyclerView_Post)
         return view
     }
+    fun AutoLoad(recyclerviewPost: RecyclerView){
+        val ref= FirebaseDatabase.getInstance().getReference("Post")
+        ref.addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                LayPost(recyclerviewPost)
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
     @SuppressLint("SimpleDateFormat")
     private fun LayPost(recyclerviewPost: RecyclerView) {
-        val sdf2 = SimpleDateFormat("hh:mm:ss")
         val adapter = GroupAdapter<GroupieViewHolder>()
         val ref = FirebaseDatabase.getInstance().getReference("Post")
+        ref.orderByChild("date")
         ref.orderByChild("time")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -85,11 +110,16 @@ class DashboardFragment : Fragment() {
                     }
                 }
                 adapter.setOnItemClickListener { item, view ->
-                    val userItem = item as com.example.firebaseappchat.UItem
-                    val intent = Intent(view.context, ChatLogActivity::class.java)
-                    Log.d("New Message:", NewMessActivity.USER_KEY)
-                    intent.putExtra(NewMessActivity.USER_KEY, userItem.user)
-                    startActivity(intent)
+                    val NguoiDung = FirebaseAuth.getInstance().currentUser
+                    val userItem = item as UItem
+                    if (NguoiDung != null) {
+                        if (userItem.user.uid == NguoiDung.uid) {
+                            val intent = Intent(view.context, ClickPost::class.java)
+                            intent.putExtra(NewMessActivity.USER_KEY, userItem.user)
+                            intent.putExtra("Anh Nguoi Dung", userItem.Anh_Profile_Post)
+                            startActivity(intent)
+                        }
+                    }
                 }
             }
 
@@ -98,6 +128,7 @@ class DashboardFragment : Fragment() {
             }
         })
         recyclerviewPost.adapter = adapter
+        recyclerviewPost.scrollToPosition(0)
     }
 
     class UItem(val user: Post, val Anh_Profile_Post: String) : Item<GroupieViewHolder>() {
@@ -120,7 +151,11 @@ class DashboardFragment : Fragment() {
             viewHolder.itemView.post_description.text = user.status
             viewHolder.itemView.post_date.text = " " + user.date
             viewHolder.itemView.post_time.text = "-" + user.time
-            Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.post_image)
+            if (user.Urlphoto.isEmpty()) {
+                viewHolder.itemView.post_image.isVisible = false
+            } else {
+                Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.post_image)
+            }
         }
     }
 

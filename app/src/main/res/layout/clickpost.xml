@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,7 +23,7 @@
             android:padding="5dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/post_profile_image"
+                android:id="@+id/click_post_profile_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="4dp"
@@ -35,7 +36,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/post_username"
+                    android:id="@+id/click_post_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -54,7 +55,7 @@
                     android:padding="2dp">
 
                     <TextView
-                        android:id="@+id/Text"
+                        android:id="@+id/click_Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Has been update a post"
@@ -62,45 +63,55 @@
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/post_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Date"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/post_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Time"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
                 </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/post_description"
+        <EditText
+            android:id="@+id/click_post_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
+            android:minHeight="48dp"
             android:padding="3dp"
             android:text="Post description.........."
             android:textColor="@color/black"
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/post_image"
+            android:id="@+id/XoaAnh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/AddAnh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_input_add" />
+
+        <ImageView
+            android:id="@+id/click_post_image"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_margin="3dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
+
+        <Button
+            android:id="@+id/BtnXoaBai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xóa Bài" />
+
+        <Button
+            android:id="@+id/BtnSuaBai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sửa Bài" />
 
     </LinearLayout>
 
