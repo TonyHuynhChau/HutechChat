@@ -39,6 +39,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private lateinit var Ten: TextView
     private lateinit var btnSendRequestFriends: Button
     private lateinit var btnMessage: Button
+    private lateinit var BtnHuyKetBan: Button
     private lateinit var Email: TextView
     private lateinit var FriendsRequest: DatabaseReference
     private var Type = "Đã Hủy"
@@ -51,7 +52,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
         Email = findViewById(R.id.TxtEmail_Other_User)
         btnSendRequestFriends = findViewById(R.id.btnSendRequest)
         btnMessage = findViewById(R.id.btnMessage)
-        btnMessage.isEnabled = false
+        BtnHuyKetBan = findViewById(R.id.BtnHuyKetBan)
         FriendsRequest = FirebaseDatabase.getInstance().getReference("FriendsRequest")
         val user = intent.getParcelableExtra<SignUpActivity.getUser>("USER_KEY")
         if (user != null) {
@@ -70,7 +71,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             AutoLoad(user.uid)
             FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
-            btnMessage.setOnClickListener{
+            btnMessage.setOnClickListener {
                 val intent = Intent(this, ChatLogActivity::class.java)
                 intent.putExtra(NewMessActivity.USER_KEY, user)
                 startActivity(intent)
@@ -84,7 +85,24 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                     HuyKetBan(user.uid)
                 }
             }
+            BtnHuyKetBan.setOnClickListener {
+                XoaBan(user.uid)
+            }
         }
+    }
+
+    private fun XoaBan(receiverUserid: String) {
+        val NguoiDung = FirebaseAuth.getInstance().currentUser
+        val Friends = FirebaseDatabase.getInstance().getReference("Friends")
+        Friends.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Friends.child(receiverUserid).child(NguoiDung?.uid.toString()).removeValue()
+                Friends.child(NguoiDung?.uid.toString()).child(receiverUserid).removeValue()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     private fun AutoLoad(uid: String) {
@@ -147,6 +165,8 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private fun KnowSentFriend(receiverUserid: String) {
         Type = "Đã Hủy"
         btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
+        btnMessage.isEnabled = false
+        BtnHuyKetBan.isVisible = false
         val userNguoiDung = FirebaseAuth.getInstance().currentUser
         if (userNguoiDung != null) {
             val Friends = FirebaseDatabase.getInstance().getReference("Friends")
@@ -158,6 +178,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
                             if (Request_type == receiverUserid) {
                                 btnSendRequestFriends.isVisible = false
                                 btnMessage.isEnabled = true
+                                BtnHuyKetBan.isVisible = true
                             }
                         }
                     }
