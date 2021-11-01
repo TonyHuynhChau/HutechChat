@@ -193,7 +193,7 @@ class Outcoming : AppCompatActivity() {
         //Cancal button
         ocuRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child(senderUid).hasChild("ringing") || snapshot.child(senderUid).hasChild("calling")){
+                if (snapshot.child(senderUid).hasChild("ringing") && !snapshot.child(senderUid).hasChild("calling")){
                     btnAccept.visibility = View.VISIBLE
                 }
                 if(snapshot.child(reciverUid).child("Ringing").hasChild("picked")){
