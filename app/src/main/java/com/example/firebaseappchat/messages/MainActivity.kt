@@ -1,11 +1,16 @@
 package com.example.firebaseappchat.messages
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CompoundButton
+import android.widget.Switch
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
@@ -48,17 +53,42 @@ class MainActivity : AppCompatActivity() {
         fecthCurrentUser()
         verifyUserLoggedIn()
 
+        val btnDarkMode: Switch = findViewById(R.id.btnDarkMode)
         val user = FirebaseAuth.getInstance().currentUser
         //Bottom nav
         replaceFrag(homeFragment)
         bottom_nav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFrag(homeFragment)
-                R.id.notification_friend_request->replaceFrag(friendFragment)
+                R.id.notification_friend_request -> replaceFrag(friendFragment)
                 R.id.dashboard -> replaceFrag(dashboardFragment)
                 R.id.account -> replaceFrag(accountFragment)
             }
             true
+        }
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPref", 0)
+        val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("Night Mode",false)
+
+        if(isNightModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        btnDarkMode.setOnCheckedChangeListener{ compoundButton: CompoundButton, b: Boolean ->
+            if(btnDarkMode.isChecked){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("Night Mode", true)
+                sharedPrefsEdit.apply()
+                Toast.makeText(this,"Chuyển Thành Công",Toast.LENGTH_LONG).show()
+            }
+            else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("Night Mode", false)
+                sharedPrefsEdit.apply()
+                Toast.makeText(this,"Chuyển Thành Công",Toast.LENGTH_LONG).show()
+            }
         }
     }
     private fun fecthCurrentUser() {
@@ -106,6 +136,10 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_new_call -> {
                 startActivity(Intent(this, VideoChatActivity::class.java))
             }
+            /*
+            R.id.menu_DarkMode ->{
+
+            }*/
         }
 
         return super.onOptionsItemSelected(item)

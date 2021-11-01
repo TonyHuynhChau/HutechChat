@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="?attr/colorPrimary"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +15,9 @@
             android:id="@+id/ImgUser"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
             android:src="@drawable/profile"
             app:layout_constraintBottom_toTopOf="@+id/recyclerView_Post"
@@ -24,9 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_Post"
             android:layout_width="match_parent"
-            android:layout_height="650dp"
+            android:layout_height="640dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +41,8 @@
             android:layout_width="288dp"
             android:layout_height="41dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/post"
             android:text="Bạn Đang Nghĩ Gì"
             android:textAlignment="center"
