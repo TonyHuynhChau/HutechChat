@@ -94,8 +94,8 @@ class DashboardFragment : Fragment() {
     private fun LayPost(recyclerviewPost: RecyclerView) {
         val adapter = GroupAdapter<GroupieViewHolder>()
         val ref = FirebaseDatabase.getInstance().getReference("Post")
-        ref.orderByChild("date")
-        ref.orderByChild("time")
+      //  ref.orderByChild("time")
+      //  ref.orderByChild("date")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach() {

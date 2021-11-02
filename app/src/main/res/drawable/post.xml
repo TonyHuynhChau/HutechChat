@@ -2,13 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-<<<<<<< Updated upstream
             <solid android:color="@color/dark_gray_post" />
             <corners android:radius="6dp" />
-=======
-            <solid android:color="@color/white" />
-            <corners android:radius="16dp" />
->>>>>>> Stashed changes
         </shape>
     </item>
 </layer-list>
