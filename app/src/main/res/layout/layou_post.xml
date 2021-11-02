@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/mainBackgroup"
     tools:context="fragment.DashboardFragment">
 
     <LinearLayout
@@ -102,6 +103,39 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <ImageButton
+                android:id="@+id/Like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dislike"
+                tools:ignore="SpeakableTextPresentCheck" />
+            <TextView
+                android:id="@+id/TxtLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 like"
+                android:padding="15dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <ImageButton
+                android:id="@+id/Comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="200dp"
+                android:baselineAlignBottom="false"
+                android:src="@drawable/comment"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

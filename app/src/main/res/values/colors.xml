@@ -5,7 +5,8 @@
     
     <color name="dark_gray">#999999</color>
     <color name="dark_gray_post">#DDDDDD</color>
-    
+    <color name="mainBackgroup">#D7D7D7</color>
+
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     

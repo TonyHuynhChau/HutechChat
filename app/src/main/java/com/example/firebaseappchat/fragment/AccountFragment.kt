@@ -43,15 +43,17 @@ class AccountFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-        if (userdata != null) {
-            if (userdata.photoUrl != null) {
-                readata(userdata.uid)
-            }
-        }
     }
 
-    private fun readata(uid: String) {
+    private fun readata(
+        uid: String,
+        avatar: ImageView,
+        txtPassWord: TextView,
+        name2: TextView,
+        email: TextView,
+        TxtSex_Profile: TextView,
+        txtPhone_Profile: TextView
+    ) {
         var database = FirebaseDatabase.getInstance().getReference("user")
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -62,16 +64,15 @@ class AccountFragment : Fragment() {
                 val Sex = dataSnapshot.child("$uid/Sex").value
                 val photo = dataSnapshot.child("$uid/Urlphoto").value
                 if (photo == null) {
-                    Picasso.get().load(IMGURL).into(avatar2)
+                    Picasso.get().load(IMGURL).into(avatar)
                 } else {
-                    Picasso.get().load(photo.toString()).into(avatar2)
+                    Picasso.get().load(photo.toString()).into(avatar)
                 }
-                txtPassWord.text = Editable.Factory.getInstance().newEditable(date.toString())
-                name2.text = Editable.Factory.getInstance().newEditable(name.toString())
-                email2.text = Editable.Factory.getInstance().newEditable(emailU.toString())
-                TxtSex_Profile.text = Editable.Factory.getInstance().newEditable(Sex.toString())
-                txtPhone_Profile.text =
-                    Editable.Factory.getInstance().newEditable(phonenumber.toString())
+                txtPassWord.text = date.toString()
+                name2.text = name.toString()
+                email.text = emailU.toString()
+                TxtSex_Profile.text = Sex.toString()
+                txtPhone_Profile.text = phonenumber.toString()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -87,6 +88,25 @@ class AccountFragment : Fragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_account, container, false)
         val btnUpdate: Button = view.findViewById(R.id.btnSua)
+        val avatar: ImageView = view.findViewById(R.id.avatar2)
+        val txtPassWord: TextView = view.findViewById(R.id.txtPassWord)
+        val name: TextView = view.findViewById(R.id.name2)
+        val email: TextView = view.findViewById(R.id.email2)
+        val TxtSex_Profile: TextView = view.findViewById(R.id.TxtSex_Profile)
+        val txtPhone_Profile: TextView = view.findViewById(R.id.txtPhone_Profile)
+        if (userdata != null) {
+            if (userdata.photoUrl != null) {
+                readata(
+                    userdata.uid,
+                    avatar,
+                    txtPassWord,
+                    name,
+                    email,
+                    TxtSex_Profile,
+                    txtPhone_Profile
+                )
+            }
+        }
         btnUpdate.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, UserProfile::class.java)
             startActivity(intent)
