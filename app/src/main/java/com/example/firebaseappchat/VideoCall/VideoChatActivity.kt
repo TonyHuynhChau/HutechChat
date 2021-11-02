@@ -73,7 +73,7 @@ class VideoChatActivity : AppCompatActivity() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild("ringing")) {
-                        calledBy = snapshot.child("ringing").getValue().toString()
+                        calledBy = snapshot.child("ringing").value.toString()
                         val intent = Intent(this@VideoChatActivity, Outcoming::class.java)
                         intent.putExtra(USER_KEY, calledBy)
                         startActivity(intent)

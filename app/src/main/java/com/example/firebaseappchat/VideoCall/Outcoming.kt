@@ -38,6 +38,7 @@ class Outcoming : AppCompatActivity() {
     private lateinit var mediaPlayer: MediaPlayer
 
     var toUser: SignUpActivity.getUser? = null
+
     private lateinit var ocuRef: DatabaseReference
 
     private lateinit var reciverUid: String
@@ -53,7 +54,6 @@ class Outcoming : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outcoming)
-        val user: SignUpActivity.getUser
         toUser = intent.getParcelableExtra(VideoChatActivity.USER_KEY)
 
         reciverUid = toUser?.uid.toString()
@@ -76,34 +76,95 @@ class Outcoming : AppCompatActivity() {
         }
 
         btnCancell.setOnClickListener(){
-            checker = "clicked"
             mediaPlayer.stop()
+            checker = "clicked"
             cancelCalling()
         }
 
         btnAccept.setOnClickListener {
             mediaPlayer.stop()
-            var callPickUp: HashMap<String, Any> = HashMap()
 
-            callPickUp.put("picked","picked")
+            val callPickUp: HashMap<String, Any> = HashMap()
 
-            ocuRef.child(senderUid).child("Ringing").updateChildren(callPickUp)
+            callPickUp["picked"] = "picked"
+
+            ocuRef.child(senderUid).child("ringing").updateChildren(callPickUp)
                 .addOnCompleteListener {
                     startActivity(Intent(this@Outcoming,IncomingCall::class.java))
                 }
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        mediaPlayer.start()
+
+        val callingInfo: HashMap<String, Any> = HashMap()
+
+        callingInfo["calling"] = reciverUid
+        ocuRef.setValue(callingInfo)
+
+        //Call Event
+        ocuRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(checker != "clicked" && !snapshot.hasChild("calling") && !snapshot.hasChild("ringing")){
+
+                        ocuRef.child(senderUid).child("calling")
+                        .updateChildren(callingInfo as Map<String, Any>)
+                        .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    val ringingInfo: HashMap<String, Any> = HashMap()
+
+                                    ringingInfo["ringing"] = senderUid
+
+                                    ocuRef.child(reciverUid).child("ringing")
+                                        .updateChildren(ringingInfo as Map<String, Any>)
+                                }
+                        }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        //Cancal button
+        ocuRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.child(senderUid).hasChild("ringing") && !snapshot.child(senderUid).hasChild("calling")){
+                    btnAccept.visibility = View.VISIBLE
+                }
+                if(snapshot.child(reciverUid).child("ringing").hasChild("picked")){
+                    mediaPlayer.stop()
+                    startActivity(Intent(this@Outcoming,IncomingCall::class.java))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     private fun cancelCalling() {
         //Sender
-        ocuRef.child(senderUid).child("calling").addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists() && snapshot.hasChild("calling")) {
-                    callingUid = snapshot.child("calling").value.toString()
+        ocuRef.child(senderUid)
+            .child("calling")
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists() && snapshot.hasChild("calling")) {
+                        callingUid = snapshot.child("calling").value.toString()
 
-                    ocuRef.child(callingUid).child("ringing").removeValue().addOnCompleteListener {
-                        if (it.isSuccessful){
-                            ocuRef.child(senderUid).child("calling").removeValue().addOnCompleteListener {
+                        ocuRef.child(callingUid)
+                            .child("ringing")
+                            .removeValue()
+                            .addOnCompleteListener {
+                            if (it.isSuccessful){
+                                ocuRef.child(senderUid).child("calling").removeValue().addOnCompleteListener {
                                 startActivity(Intent(this@Outcoming, IncomingCall::class.java))
                                 finish()
                             }
@@ -123,14 +184,14 @@ class Outcoming : AppCompatActivity() {
         })
 
         //Reciveder
-        ocuRef.child(senderUid).child("Ringing").addListenerForSingleValueEvent(object : ValueEventListener{
+        ocuRef.child(senderUid).child("ringing").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists() && snapshot.hasChild("ringing")) {
                     callingUid = snapshot.child("ringing").value.toString()
 
                     ocuRef.child(ringingUid).child("calling").removeValue().addOnCompleteListener {
                         if (it.isSuccessful){
-                            ocuRef.child(senderUid).child("calling").removeValue().addOnCompleteListener {
+                            ocuRef.child(senderUid).child("ringing").removeValue().addOnCompleteListener {
                                 startActivity(Intent(this@Outcoming, IncomingCall::class.java))
                                 finish()
                             }
@@ -150,63 +211,5 @@ class Outcoming : AppCompatActivity() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        val fromId = FirebaseAuth.getInstance().uid
-        val toId = toUser?.uid
-
-        mediaPlayer.start()
-
-        var callingInfo: HashMap<String, Any> = HashMap()
-
-        callingInfo.put("calling", reciverUid)
-        ocuRef.setValue(callingInfo)
-
-        //Call Event
-        ocuRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(!checker.equals("clicked") && !snapshot.hasChild("calling") && !snapshot.hasChild("ringing")){
-
-                        ocuRef.child(senderUid).child("calling")
-                        .updateChildren(callingInfo as Map<String, Any>)
-                        .addOnCompleteListener {
-                            fun onComplete(@NonNull task: Task<Void>) {
-                                if(task.isSuccessful()){
-                                    var ringingInfo: HashMap<String, Any> = HashMap()
-
-                                    ringingInfo.put("ringing", senderUid)
-
-                                    ocuRef.child(reciverUid).child("ringing")
-                                        .updateChildren(ringingInfo as Map<String, Any>)
-                                }
-                            }
-                        }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-        //Cancal button
-        ocuRef.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child(senderUid).hasChild("ringing") && !snapshot.child(senderUid).hasChild("calling")){
-                    btnAccept.visibility = View.VISIBLE
-                }
-                if(snapshot.child(reciverUid).child("Ringing").hasChild("picked")){
-                    mediaPlayer.stop()
-                    startActivity(Intent(this@Outcoming,IncomingCall::class.java))
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-    }
 }
 
