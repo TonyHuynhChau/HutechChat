@@ -1,196 +1,190 @@
 package com.example.firebaseappchat.VideoCall
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.firebaseappchat.R
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.view.SurfaceView;
 import android.view.View
-import java.util.*
-import android.content.Intent
-import android.net.Uri
 import android.os.Handler
 import android.util.Log
 import android.widget.*
-import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat.startActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.firebaseappchat.NewMessActivity
-import com.example.firebaseappchat.UItem
-import com.example.firebaseappchat.messages.ChatLogActivity
-import com.example.firebaseappchat.messages.MainActivity
-import com.example.firebaseappchat.registerlogin.LoginActivity
-import com.example.firebaseappchat.registerlogin.SignUpActivity
-import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.example.firebaseappchat.databinding.ActivityNewMessBinding
+import com.example.firebaseappchat.databinding.ActivityVideoChatBinding
+import com.example.firebaseappchat.model.UserProfile
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
 import de.hdodenhof.circleimageview.CircleImageView
-import fragment.HomeFragment
-import kotlinx.android.synthetic.main.activity_video_chat.*
-import kotlinx.android.synthetic.main.user_row.view.*
-import kotlinx.android.synthetic.main.user_row_call.*
-import kotlinx.android.synthetic.main.user_row_call.view.*
-import kotlin.jvm.internal.Ref
+import us.zoom.sdk.*
 
 
 class VideoChatActivity : AppCompatActivity() {
-
-    private lateinit var swipeCall: SwipeRefreshLayout
-    private lateinit var currentUserId: String
-    private lateinit var ref: DatabaseReference
-    private lateinit var calledBy: String
+    private lateinit var binding: ActivityVideoChatBinding
+    private lateinit var btnJoin: Button
+    private lateinit var btnCreate: Button
+    private lateinit var avatar: CircleImageView
+    private lateinit var txtName: TextView
+    private lateinit var txtNumRoom: EditText
+    private lateinit var txtPassRoom: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.firebaseappchat.R.layout.activity_video_chat)
-        this.swipeCall = findViewById<View>(R.id.swipeRefresh_call) as SwipeRefreshLayout
+        binding = ActivityVideoChatBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
-        swipeCall.setOnRefreshListener {
-            Handler().postDelayed(Runnable {
-                swipeCall.isRefreshing = false
-            }, 4000)
+        val currentData = FirebaseAuth.getInstance().currentUser
+
+        btnJoin = findViewById(R.id.btn_join)
+        avatar = findViewById(R.id.iv_userCall_zoom)
+        txtName = findViewById(R.id.txtName_Call)
+        txtNumRoom = findViewById(R.id.txtMeetingNumber)
+        txtPassRoom = findViewById(R.id.txtMeetingPassword)
+        btnCreate = findViewById(R.id.btn_createRoom)
+
+        if(currentData != null){
+            readata(currentData.uid, avatar, txtName)
         }
-        //Load Friend User
-        verifyUserLoggedIn()
-        LayUser()
+        initializeZoom(this)
+        initViews()
 
-        //Call Event
-        validateUser()
-        checkForReceivingCall()
     }
 
-    private fun checkForReceivingCall() {
-        ref.child(currentUserId).child("ringing")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild("ringing")) {
-                        calledBy = snapshot.child("ringing").value.toString()
-                        val intent = Intent(this@VideoChatActivity, Outcoming::class.java)
-                        intent.putExtra(USER_KEY, calledBy)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
+    private fun initViews() {
+        btnJoin.setOnClickListener {
+            val roomOwner: String = txtName.text.toString()
+            val meetingNumber: String = txtNumRoom.text.toString()
+            val meetingPassword: String = txtPassRoom.text.toString()
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+            if (roomOwner.trim().isNotEmpty() && meetingNumber.trim().isNotEmpty() && meetingPassword.trim().isNotEmpty()){
+                joinMeeting(this, meetingNumber, meetingPassword, roomOwner)
+            } else {
+                Toast.makeText(this, "Gọi Thất Bại", Toast.LENGTH_SHORT).show()
+            }
+        }
 
-            })
+        btnCreate.setOnClickListener {
+            if (ZoomSDK.getInstance().isLoggedIn) {
+                startMeeting(this)
+            } else {
+                createLoginDialog()
+            }
+        }
     }
 
-    private fun validateUser() {
-        ref = FirebaseDatabase.getInstance().getReference()
-
-        ref.child("user").child(currentUserId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // TODO: 10/28/2021
+    private fun readata(uid: String, avatar: ImageView, name2: TextView) {
+        var database = FirebaseDatabase.getInstance().getReference("user")
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val name = dataSnapshot.child("$uid/name").value
+                val photo = dataSnapshot.child("$uid/Urlphoto").value
+                if (photo == null) {
+                    Picasso.get().load(UserProfile.IMGURL).into(avatar)
+                } else {
+                    Picasso.get().load(photo.toString()).into(avatar)
+                }
+                name2.text = name.toString()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                val intent = Intent(this@VideoChatActivity, VideoChatActivity::class.java)
-                startActivity(intent)
-                finish()
-                Toast.makeText(this@VideoChatActivity, "Gọi Thất Bại", Toast.LENGTH_SHORT).show()
+                Log.w("loadPost:onCancelled", error.toException())
             }
-
-        })
+        }
+        database.addValueEventListener(postListener)
     }
 
 
-    private fun verifyUserLoggedIn() {
-        val uid = FirebaseAuth.getInstance().uid
-        if (uid == null) {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+    private fun initializeZoom(context: Context) {
+        val sdk = ZoomSDK.getInstance()
+
+        // TODO: Do not use hard-coded values for your key/secret in your app in production!
+        val params = ZoomSDKInitParams().apply {
+            appKey = "gkUUKbKwgb4fcf5rt59aRpxLvs2emUeGDkL6" // TODO: Retrieve your SDK key and enter it here
+            appSecret = "uDkHzi9iUJ42wJStUZfphnPC0fQ2grXw5ylr" // TODO: Retrieve your SDK secret and enter it here
+            domain = "zoom.us"
+            enableLog = true // Optional: enable logging for debugging
+        }
+        // TODO (optional): Add functionality to this listener (e.g. logs for debugging)
+        val listener = object : ZoomSDKInitializeListener {
+            /**
+             * If the [errorCode] is [ZoomError.ZOOM_ERROR_SUCCESS], the SDK was initialized and can
+             * now be used to join/start a meeting.
+             */
+            override fun onZoomSDKInitializeResult(errorCode: Int, internalErrorCode: Int) = Unit
+            override fun onZoomAuthIdentityExpired() = Unit
+        }
+
+        sdk.initialize(context, listener, params)
+    }
+
+    private fun joinMeeting(context: Context, meetingNumber: String, pw: String, userName: String) {
+        val meetingService = ZoomSDK.getInstance().meetingService
+        val options = JoinMeetingOptions()
+        val params = JoinMeetingParams().apply {
+            displayName = userName // TODO: Enter your name
+            meetingNo = meetingNumber
+            password = pw
+        }
+        meetingService.joinMeetingWithParams(context, params, options)
+    }
+
+    private fun login(username: String, password: String) {
+        val result = ZoomSDK.getInstance().loginWithZoom(username, password)
+        if (result == ZoomApiError.ZOOM_API_ERROR_SUCCESS) {
+            //  listen for authentication result before starting a meeting
+            ZoomSDK.getInstance().addAuthenticationListener(authListener)
         }
     }
 
-    companion object {
-        var USER_KEY = "USER_KEY"
+    private val authListener = object : ZoomSDKAuthenticationListener {
+        /**
+         * This callback is invoked when a result from the SDK's request to the auth server is
+         * received.
+         */
+        override fun onZoomSDKLoginResult(result: Long) {
+            if (result.toInt() == ZoomAuthenticationError.ZOOM_AUTH_ERROR_SUCCESS) {
+                // Once we verify that the request was successful, we may start the meeting
+                startMeeting(this@VideoChatActivity)
+            }
+        }
+        override fun onZoomIdentityExpired() = Unit
+        override fun onZoomSDKLogoutResult(p0: Long) = Unit
+        override fun onZoomAuthIdentityExpired() = Unit
     }
 
-    // Get user name and images then show in user_row
-    private fun LayUser() {
-        val userNguoiDung = FirebaseAuth.getInstance().currentUser
-        if (userNguoiDung != null) {
-            val Friends = FirebaseDatabase.getInstance().getReference("Friends")
-            Friends.child(userNguoiDung.uid).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val adapter = GroupAdapter<GroupieViewHolder>()
-                    snapshot.children.forEach() {
-                        val FriendUID = it.child("uid").value
-                        Log.d("FriendsUID", FriendUID.toString())
-                        val ref = FirebaseDatabase.getInstance().getReference("user")
-                        ref.addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                snapshot.children.forEach() {
-                                    val user = it.getValue(SignUpActivity.getUser::class.java)
-                                    if (user != null) {
-                                        if (userNguoiDung.uid != user.uid && FriendUID == user.uid) {
-                                            adapter.add(CallItem(user))
-                                        }
-                                    }
-                                }
-                            }
+    private fun startMeeting(context: Context) {
+        val zoomSdk = ZoomSDK.getInstance()
+        if (zoomSdk.isLoggedIn) {
+            val meetingService = zoomSdk.meetingService
+            val options = StartMeetingOptions()
+            meetingService.startInstantMeeting(context, options)
+        }
+    }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                Toast.makeText(
-                                    this@VideoChatActivity,
-                                    "Gọi Thất Bại",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
+    private fun createLoginDialog() {
+        AlertDialog.Builder(this)
+            .setView(R.layout.activity_outcoming)
+            .setPositiveButton("Log in") { dialog, _ ->
+                dialog as AlertDialog
+                val emailInput = dialog.findViewById<TextInputEditText>(R.id.email_input)
+                val passwordInput = dialog.findViewById<TextInputEditText>(R.id.pw_input)
+                val email = emailInput?.text?.toString()
+                val password = passwordInput?.text?.toString()
+                email?.takeIf { it.isNotEmpty() }?.let { emailAddress ->
+                    password?.takeIf { it.isNotEmpty() }?.let { pw ->
+                        login(emailAddress, pw)
                     }
-                    recyclerview_latest_messages_call.adapter = adapter
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-        }
+                dialog.dismiss()
+            }.show()
     }
 
-    //Connect user_row to recycler view
-    class CallItem(val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
-        override fun getLayout(): Int {
-            return R.layout.user_row_call
-        }
-
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            if (user.equals("null")) {
-                Log.d("Error Call", "User Name = ${user.name}")
-                return
-            } else if (user.Urlphoto.isEmpty()) {
-                val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                        "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                        "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                        "&pid=ImgRaw&r=0"
-                viewHolder.itemView.TxtUserName_call.text = user.name + "(Need Update Profile)"
-                Picasso.get().load(ImgDefault).into(viewHolder.itemView.iVUser_call)
-            } else {
-                viewHolder.itemView.TxtUserName_call.text = user.name
-                Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.iVUser_call)
-            }
-            viewHolder.itemView.btn_VideoCall.setOnClickListener() {
-                val intent = Intent(viewHolder.itemView.context, Outcoming::class.java)
-                intent.putExtra(USER_KEY, user)
-                viewHolder.itemView.context.startActivity(intent)
-            }
-        }
-    }
 }
 
 
