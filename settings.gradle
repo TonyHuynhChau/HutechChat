@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "FirebaseAppChat"
 include ':app'
+include 'mobilertc'
+include 'commonlib'
