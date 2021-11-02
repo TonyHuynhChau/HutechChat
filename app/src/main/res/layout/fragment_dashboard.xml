@@ -4,8 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+<<<<<<< Updated upstream
     android:background="?attr/colorSecondaryVariant"
     android:layout_height="match_parent">
+=======
+    android:layout_height="match_parent"
+    android:background="@color/mainBackgroup"
+    android:fillViewport="true">
+>>>>>>> Stashed changes
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

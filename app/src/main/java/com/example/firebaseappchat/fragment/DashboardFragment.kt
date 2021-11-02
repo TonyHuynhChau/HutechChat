@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.android.synthetic.main.layou_post.view.*
+import java.sql.Ref
 import java.text.SimpleDateFormat
 
 private const val ARG_PARAM1 = "param1"
@@ -50,6 +52,8 @@ class DashboardFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+
+    var LikeChecker: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,9 +76,10 @@ class DashboardFragment : Fragment() {
         AutoLoad(view.recyclerView_Post)
         return view
     }
-    fun AutoLoad(recyclerviewPost: RecyclerView){
-        val ref= FirebaseDatabase.getInstance().getReference("Post")
-        ref.addValueEventListener(object :ValueEventListener{
+
+    fun AutoLoad(recyclerviewPost: RecyclerView) {
+        val ref = FirebaseDatabase.getInstance().getReference("Post")
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 LayPost(recyclerviewPost)
             }
@@ -84,6 +89,7 @@ class DashboardFragment : Fragment() {
             }
         })
     }
+
     @SuppressLint("SimpleDateFormat")
     private fun LayPost(recyclerviewPost: RecyclerView) {
         val adapter = GroupAdapter<GroupieViewHolder>()
@@ -100,7 +106,9 @@ class DashboardFragment : Fragment() {
                             .addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
                                     AnhProfile_Post = snapshot.child("Urlphoto").value.toString()
-                                    adapter.add(0, UItem(user, AnhProfile_Post))
+                                    adapter.add(
+                                        0, UItem(user, AnhProfile_Post, LikeChecker)
+                                    )
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
@@ -128,16 +136,43 @@ class DashboardFragment : Fragment() {
             }
         })
         recyclerviewPost.adapter = adapter
-        recyclerviewPost.scrollToPosition(0)
     }
 
-    class UItem(val user: Post, val Anh_Profile_Post: String) : Item<GroupieViewHolder>() {
+
+    class UItem(val user: Post, val Anh_Profile_Post: String, var LikeChecker: Boolean) :
+        Item<GroupieViewHolder>() {
+        val LikeRef = FirebaseDatabase.getInstance().getReference("Likes")
+        val NguoiDungID = FirebaseAuth.getInstance().uid
+        var CountLike = 0
+
         override fun getLayout(): Int {
             return R.layout.layou_post
         }
 
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        fun DemLuotLike(viewHolder: GroupieViewHolder) {
+            val PostKey = user.uid + user.date + user.time
+            val LikeRef = FirebaseDatabase.getInstance().getReference("Likes")
+            LikeRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.child(PostKey).hasChild(NguoiDungID.toString())) {
+                        CountLike = snapshot.child(PostKey).childrenCount.toInt()
+                        viewHolder.itemView.Like.setImageResource(R.drawable.like)
+                        viewHolder.itemView.TxtLike.text = CountLike.toString() + "Like"
+                    } else {
+                        CountLike = snapshot.child(PostKey).childrenCount.toInt()
+                        viewHolder.itemView.Like.setImageResource(R.drawable.dislike)
+                        viewHolder.itemView.TxtLike.text = CountLike.toString() + "Like"
+                    }
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            AutoDemLuotLike(viewHolder)
             if (Anh_Profile_Post.isEmpty()) {
                 val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
                         "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
@@ -156,6 +191,42 @@ class DashboardFragment : Fragment() {
             } else {
                 Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.post_image)
             }
+
+            viewHolder.itemView.Like.setOnClickListener {
+                val PostKey = user.uid + user.date + user.time
+                LikeChecker = true
+
+                LikeRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (LikeChecker.equals(true)) {
+                            if (snapshot.child(PostKey).hasChild(NguoiDungID.toString())) {
+                                LikeRef.child(PostKey).child(NguoiDungID.toString()).removeValue()
+                                LikeChecker = false
+                            } else {
+                                LikeRef.child(PostKey).child(NguoiDungID.toString()).setValue(true)
+                                LikeChecker = false
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
+
+            }
+        }
+
+        private fun AutoDemLuotLike(viewHolder: GroupieViewHolder) {
+            val LikeRef = FirebaseDatabase.getInstance().getReference("Likes")
+            LikeRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    DemLuotLike(viewHolder)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
         }
     }
 
