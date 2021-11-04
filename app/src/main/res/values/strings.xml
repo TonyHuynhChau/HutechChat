@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">FirebaseAppChat</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+
+    //Main Layout
+    <string name="darkMode">Dark Mode</string>
+    <string name="home">Home</string>
+    <string name="notfication">Notfication</string>
+    <string name="post">Status</string>
+    <string name="account">Account</string>
+
+    //Search
+    <string name="searching">Search Here</string>
+
+    //New Mess
+    <string name="chooseUser">Choose User</string>
+
+    //Chat log
+    <string name="sendBox">Send some thing…</string>
+    <string name="sendBtn">Send</string>
+
+    //Video Call
+    <string name="roomID">Room ID</string>
+    <string name="roomPass">Room Passcode</string>
+    <string name="joinRoom">Join Room</string>
+    <string name="createRoom">Create Room</string>
+
+
+    //UserProfile
+    <string name="fullName">Full Name</string>
+    <string name="date">Date</string>
+    <string name="sex">Sex</string>
+    <string name="save">Save</string>
+
+
 </resources>
