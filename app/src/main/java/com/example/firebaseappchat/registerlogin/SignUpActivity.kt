@@ -12,7 +12,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.parcel.Parcelize
 import java.lang.Exception
@@ -22,6 +25,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
     private lateinit var data: FirebaseAuth
     private lateinit var Loading: ProgressDialog
+    private var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
@@ -56,6 +60,20 @@ class SignUpActivity : AppCompatActivity() {
         constructor() : this("", "", "")
     }
 
+    private fun STT(uid: String) {
+        val STT = FirebaseDatabase.getInstance().getReference("user")
+        STT.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                count = snapshot.childrenCount.toInt()
+                // STT.child(uid).child("STT").setValue(count + 1)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
     private fun TOKEN(uid: String) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -67,14 +85,12 @@ class SignUpActivity : AppCompatActivity() {
                 return@OnCompleteListener
             }
             val token = task.result
-            // Log and toast
             FirebaseDatabase.getInstance().getReference("/user/$uid").child("Token").setValue(token)
-                .addOnCompleteListener(
-                    OnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("MESSAGE TOKEN", token.toString())
-                        }
-                    })
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("MESSAGE TOKEN", token.toString())
+                    }
+                }
 
         })
     }
@@ -84,9 +100,6 @@ class SignUpActivity : AppCompatActivity() {
             val name = binding.TxtName.text.toString()
             val email = binding.TxtEmail.text.toString()
             val matkhau = binding.TxtMatKhau.text.toString()
-
-
-
 
             if (name.isEmpty()) {
                 Toast.makeText(this, "Vui Lòng Điền UserName", Toast.LENGTH_SHORT).show()
@@ -119,16 +132,27 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     //
                     val ref = FirebaseDatabase.getInstance().getReference("/user/${user.uid}")
-                    TOKEN(user.uid)
                     val Realtime = User(user.uid, user.email.toString(), name);
-                    Loading.dismiss()
                     ref.setValue(Realtime)
+                    STT(user.uid)
+                    Log.d("COUNT", count.toString())
+                    TOKEN(user.uid)
+                    Loading.dismiss()
                     startActivity(Intent(this, LoginActivity::class.java))
+                } else {
+                    Loading.dismiss()
+                    Loading = ProgressDialog(this)
+                    Loading.setTitle("Lỗi")
+                    Loading.setMessage("${task.exception?.message}")
+                    Loading.show()
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "Email Đã Đăng Ký", Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+            Loading.dismiss()
+            Loading = ProgressDialog(this)
+            Loading.setTitle("Lỗi")
+            Loading.setMessage("${e.message}")
+            Loading.show()
             return
         }
     }

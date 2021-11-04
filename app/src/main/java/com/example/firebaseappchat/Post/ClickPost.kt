@@ -38,6 +38,7 @@ class ClickPost : AppCompatActivity() {
     lateinit var Post_username: TextView
     lateinit var Post_image: ImageView
     private lateinit var Loading: ProgressDialog
+    private lateinit var PostKey: String
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +47,7 @@ class ClickPost : AppCompatActivity() {
         supportActionBar?.hide()
         toUser = intent.getParcelableExtra(USER_KEY)
         Anh = intent.getStringExtra("Anh Nguoi Dung")
+        PostKey = intent.getStringExtra("Key").toString()
         Find()
         load()
         val BtnSua = findViewById<Button>(R.id.BtnSuaBai)
@@ -101,8 +103,10 @@ class ClickPost : AppCompatActivity() {
 
     private fun XoaBai() {
         var database = FirebaseDatabase.getInstance().getReference("Post")
-        database.child(userdata?.uid.toString() + toUser?.date + toUser?.time).removeValue()
+        var Like = FirebaseDatabase.getInstance().getReference("Likes")
+        database.child(PostKey).removeValue()
             .addOnSuccessListener {
+                Like.child(PostKey).removeValue()
                 Loading.dismiss()
                 startActivity(Intent(this, MainActivity::class.java))
             }
@@ -168,27 +172,24 @@ class ClickPost : AppCompatActivity() {
         Urlphoto: String
     ) {
         var database = FirebaseDatabase.getInstance().getReference("Post")
-        database.child(userdata?.uid.toString() + toUser?.date + toUser?.time).removeValue()
-            .addOnSuccessListener {
-                //Cách Cập Nhật vào Realtime
-                var user = mapOf(
-                    "name" to Name,
-                    "uid" to uid,
-                    "status" to status,
-                    "date" to date,
-                    "time" to time,
-                    "Urlphoto" to Urlphoto,
-                )
-                database.child(userdata?.uid.toString() + date + time)
-                    .updateChildren(user)
-                    .addOnSuccessListener {
-                        Loading.dismiss()
-                        startActivity(Intent(this, MainActivity::class.java))
-                    }.addOnFailureListener {
-                        Toast.makeText(this, "Lỗi" + it.toString(), Toast.LENGTH_SHORT).show()
-                    }
-            }
 
+        //Cách Cập Nhật vào Realtime
+        var user = mapOf(
+            "name" to Name,
+            "uid" to uid,
+            "status" to status,
+            "newdate" to date,
+            "newtime" to time,
+            "Urlphoto" to Urlphoto,
+        )
+        database.child(PostKey)
+            .updateChildren(user)
+            .addOnSuccessListener {
+                Loading.dismiss()
+                startActivity(Intent(this, MainActivity::class.java))
+            }.addOnFailureListener {
+                Toast.makeText(this, "Lỗi" + it.toString(), Toast.LENGTH_SHORT).show()
+            }
     }
 
     fun Find() {

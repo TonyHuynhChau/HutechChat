@@ -94,8 +94,7 @@ class DashboardFragment : Fragment() {
     private fun LayPost(recyclerviewPost: RecyclerView) {
         val adapter = GroupAdapter<GroupieViewHolder>()
         val ref = FirebaseDatabase.getInstance().getReference("Post")
-      //  ref.orderByChild("time")
-      //  ref.orderByChild("date")
+        ref.orderByChild("date")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach() {
@@ -106,8 +105,7 @@ class DashboardFragment : Fragment() {
                             .addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
                                     AnhProfile_Post = snapshot.child("Urlphoto").value.toString()
-                                    adapter.add(
-                                        0, UItem(user, AnhProfile_Post, LikeChecker)
+                                    adapter.add(UItem(user, AnhProfile_Post, LikeChecker)
                                     )
                                 }
 
@@ -122,9 +120,12 @@ class DashboardFragment : Fragment() {
                     val userItem = item as UItem
                     if (NguoiDung != null) {
                         if (userItem.user.uid == NguoiDung.uid) {
+                            val PostKey =
+                                userItem.user.uid + userItem.user.date + userItem.user.time
                             val intent = Intent(view.context, ClickPost::class.java)
                             intent.putExtra(NewMessActivity.USER_KEY, userItem.user)
                             intent.putExtra("Anh Nguoi Dung", userItem.Anh_Profile_Post)
+                            intent.putExtra("Key", PostKey)
                             startActivity(intent)
                         }
                     }
@@ -157,11 +158,11 @@ class DashboardFragment : Fragment() {
                     if (snapshot.child(PostKey).hasChild(NguoiDungID.toString())) {
                         CountLike = snapshot.child(PostKey).childrenCount.toInt()
                         viewHolder.itemView.Like.setImageResource(R.drawable.like)
-                        viewHolder.itemView.TxtLike.text = CountLike.toString() + "Like"
+                        viewHolder.itemView.TxtLike.text = CountLike.toString() + " Like"
                     } else {
                         CountLike = snapshot.child(PostKey).childrenCount.toInt()
                         viewHolder.itemView.Like.setImageResource(R.drawable.dislike)
-                        viewHolder.itemView.TxtLike.text = CountLike.toString() + "Like"
+                        viewHolder.itemView.TxtLike.text = CountLike.toString() + " Like"
                     }
                 }
 
@@ -184,8 +185,18 @@ class DashboardFragment : Fragment() {
             }
             viewHolder.itemView.post_username.text = user.name
             viewHolder.itemView.post_description.text = user.status
-            viewHolder.itemView.post_date.text = " " + user.date
-            viewHolder.itemView.post_time.text = "-" + user.time
+            if (user.newdate.isEmpty()) {
+                viewHolder.itemView.post_date.text = " " + user.date
+            } else {
+                viewHolder.itemView.post_date.text = " " + user.newdate
+            }
+            if (user.newtime.isEmpty()) {
+                viewHolder.itemView.post_time.text = "-" + user.time
+            } else {
+                viewHolder.itemView.post_time.text = "-" + user.newtime
+            }
+
+
             if (user.Urlphoto.isEmpty()) {
                 viewHolder.itemView.post_image.isVisible = false
             } else {
@@ -223,6 +234,7 @@ class DashboardFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     DemLuotLike(viewHolder)
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }

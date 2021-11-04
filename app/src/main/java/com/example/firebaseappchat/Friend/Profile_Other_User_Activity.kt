@@ -94,16 +94,10 @@ class Profile_Other_User_Activity : AppCompatActivity() {
     private fun XoaBan(receiverUserid: String) {
         val NguoiDung = FirebaseAuth.getInstance().currentUser
         val Friends = FirebaseDatabase.getInstance().getReference("Friends")
-        Friends.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Friends.child(receiverUserid).child(NguoiDung?.uid.toString()).removeValue()
-                Friends.child(NguoiDung?.uid.toString()).child(receiverUserid).removeValue()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+        Friends.child(receiverUserid).child(NguoiDung?.uid.toString()).removeValue()
+        Friends.child(NguoiDung?.uid.toString()).child(receiverUserid).removeValue()
     }
+
 
     private fun AutoLoad(uid: String) {
         FirebaseDatabase.getInstance().getReference("FriendsRequest")
@@ -164,6 +158,7 @@ class Profile_Other_User_Activity : AppCompatActivity() {
 
     private fun KnowSentFriend(receiverUserid: String) {
         Type = "Đã Hủy"
+        btnSendRequestFriends.isVisible = true
         btnSendRequestFriends.setText("Gửi Yêu Cầu Kết Bạn")
         btnMessage.isEnabled = false
         BtnHuyKetBan.isVisible = false

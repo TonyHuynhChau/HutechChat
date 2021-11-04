@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.zipow.videobox.view.mm.VoiceTalkAutoHeightLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtRcdHintText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/zm_height_36dp"
+            android:layout_marginRight="@dimen/zm_height_36dp"
+            android:layout_marginBottom="@dimen/zm_margin_large_minus_size"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:text="@string/zm_mm_msg_rcd_hint_def_171833"
+            android:textColor="@color/zm_v2_txt_secondary"
+            android:textSize="@dimen/zm_ui_kit_text_size_15sp" />
+
+        <ImageView
+            android:id="@+id/imgVoiceRcdHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/zm_mm_msg_rcd_hint_def_acc_171833"
+            android:src="@drawable/ic_voice_talk_def" />
+    </com.zipow.videobox.view.mm.VoiceTalkAutoHeightLinearLayout>
+</merge>

@@ -8,9 +8,11 @@ class Post(
     val uid: String,
     val date: String,
     val time: String,
+    val newdate: String,
+    val newtime: String,
     val status: String,
     val name: String,
     val Urlphoto: String
 ) : Parcelable {
-    constructor() : this("", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "")
 }
