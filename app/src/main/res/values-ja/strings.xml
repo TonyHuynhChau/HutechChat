@@ -1,2 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">FirebaseAppChat</string>
+    <string name = "login">ログイン</string>
+    <string name = "register">登録</string>
+    <string name="languages">他の言語を選択する</string>
+    <string name="deflanguages">デフォルト言語は英語 </string>
+    <string name="btnEN">英語</string>
+    <string name="btnVI">ベトナム語</string>
+    <string name="btnJA">日本 </string>
+
+    //Main Layout
+    <string name = "darkMode">ダークモード</string>
+    <string name = "home">ホーム</string>
+    <string name = "notfication">通知</string>
+    <string name = "post">ステータス</string>
+    <string name = "account">アカウント</string>
+
+    //Search
+    <string name = "searching">ここで検索</string>
+
+    //New Mess
+    <string name = "chooseUser">ユーザーを選択</string>
+
+    //Chat Log
+    <string name = "sendBox">何かを送信…</string>
+    <string name = "sendBtn">送信</string>
+
+    //Video Call
+    <string name = "roomID">部屋ID </string>
+    <string name = "roomPass">ルームパスコード</string>
+    <string name = "joinRoom">部屋に参加</string>
+    <string name = "createRoom">部屋を作成</string>
+
+
+    // UserProfile
+    <string name = "fullName">フルネーム</string>
+    <string name = "date">日付</string>
+    <string name = "sex">性別</string>
+    <string name = "save">保存</string>
+</resources>

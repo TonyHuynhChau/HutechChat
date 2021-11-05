@@ -34,8 +34,6 @@
         android:id="@+id/close_video_btn"
         android:layout_width="90dp"
         android:layout_height="100dp"
-        android:background="@drawable/background_btncall_no"
-        android:src="@drawable/ic_baseline_videocam_off_24"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"/>
 </RelativeLayout>

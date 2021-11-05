@@ -1,2 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">FirebaseAppChat</string>
+    <string name="login">Đăng Nhập</string>
+    <string name="register">Đăng Ký</string>
+    <string name="languages">Chọn Loại Ngôn Ngữ Khác</string>
+    <string name="deflanguages">Ngôn Ngữ Mặc Định Là Tiếng Anh</string>
+    <string name="btnEN">Tiếng Anh</string>
+    <string name="btnVI">Tiếng Việt</string>
+    <string name="btnJA">Tiếng Nhật</string>
+
+    //Main Layout
+    <string name="darkMode">Chế Độ Tối</string>
+    <string name="home">Trang Chủ</string>
+    <string name="notfication">Thông Báo</string>
+    <string name="post">Bài Đăng</string>
+    <string name="account">Tài Khoản</string>
+
+    //Search
+    <string name="searching">Tìm Kiếm</string>
+
+    //New Mess
+    <string name="chooseUser">Chọn Người Nhắn</string>
+
+    //Chat log
+    <string name="sendBox">Nhắn tin…</string>
+    <string name="sendBtn">Gửi</string>
+
+    //Video Call
+    <string name="roomID">Mã Phòng</string>
+    <string name="roomPass">Mật Khẩu Phòng</string>
+    <string name="joinRoom">Vào Phòng</string>
+    <string name="createRoom">Tạo Phòng</string>
+
+
+    //UserProfile
+    <string name="fullName">Full Name</string>
+    <string name="date">Date</string>
+    <string name="sex">Sex</string>
+    <string name="save">Save</string>
+</resources>

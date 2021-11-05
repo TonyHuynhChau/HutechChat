@@ -2,6 +2,12 @@
     <string name="app_name">FirebaseAppChat</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="languages">Select Other Languages</string>
+    <string name="deflanguages">Default languages is English</string>
+    <string name="btnEN">English</string>
+    <string name="btnVI">Vietnamese</string>
+    <string name="btnJA">Japanese</string>
+
 
     //Main Layout
     <string name="darkMode">Dark Mode</string>
@@ -32,6 +38,4 @@
     <string name="date">Date</string>
     <string name="sex">Sex</string>
     <string name="save">Save</string>
-
-
 </resources>

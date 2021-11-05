@@ -48,7 +48,7 @@
             android:id="@+id/BtnDangNhap"
             android:layout_width="350dp"
             android:layout_height="50dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button"
             android:text="Login"
             android:textColor="#FFF"
@@ -60,38 +60,13 @@
             android:id="@+id/BtnDK"
             android:layout_width="350dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button"
             android:text="Register"
             android:textColor="#FFF"
             android:textSize="18dp"
             android:textStyle="bold" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Default languages is English"
-            android:textColor="#006BB3"
-            android:textSize="24dp"
-            android:textStyle="bold"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp"/>
-
-
-            <Button
-                android:id="@+id/BtnLanguages"
-                android:layout_width="320dp"
-                android:layout_height="50dp"
-                android:background="@drawable/button"
-                android:text="Select Other Languages"
-                android:textColor="#FFF"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                tools:ignore="InvalidId" />
-
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
