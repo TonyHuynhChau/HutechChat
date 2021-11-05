@@ -5,11 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.firebaseappchat.NewMessActivity
@@ -19,7 +20,10 @@ import com.example.firebaseappchat.messages.LateMessagesRow
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -72,10 +76,13 @@ class HomeFragment : Fragment() {
         val NguoiDung = FirebaseAuth.getInstance().currentUser
         val MessageFirebase = FirebaseDatabase.getInstance().getReference("latest-messages")
         MessageFirebase.get().addOnSuccessListener {
-            val coutMessages = it.childrenCount
+            var coutMessages: Long = 0
+            if (NguoiDung != null){
+                coutMessages = it.child(NguoiDung.uid).childrenCount
+            }
             UserFirebase.get().addOnSuccessListener {
                 val count = it.childrenCount
-                if (count!=coutMessages){
+                if ((count-1)!=coutMessages){
                     var random: Long = Random.nextLong(1, count + 1)
                     if (NguoiDung != null) {
                         val uidNguoiDung = it.child(NguoiDung.uid).child("STT").value
@@ -140,7 +147,9 @@ class HomeFragment : Fragment() {
                         Log.d("RANDOM", random.toString())
                     }
                 }
-
+                else{
+                    Toast.makeText(context,"Bạn Đã Chat Với Người Bí Ẩn",Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
