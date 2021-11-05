@@ -95,18 +95,17 @@ class AccountFragment : Fragment() {
         val TxtSex_Profile: TextView = view.findViewById(R.id.TxtSex_Profile)
         val txtPhone_Profile: TextView = view.findViewById(R.id.txtPhone_Profile)
         if (userdata != null) {
-            if (userdata.photoUrl != null) {
-                readata(
-                    userdata.uid,
-                    avatar,
-                    txtPassWord,
-                    name,
-                    email,
-                    TxtSex_Profile,
-                    txtPhone_Profile
-                )
-            }
+            readata(
+                userdata.uid,
+                avatar,
+                txtPassWord,
+                name,
+                email,
+                TxtSex_Profile,
+                txtPhone_Profile
+            )
         }
+
         btnUpdate.setOnClickListener(View.OnClickListener {
             val intent = Intent(activity, UserProfile::class.java)
             startActivity(intent)

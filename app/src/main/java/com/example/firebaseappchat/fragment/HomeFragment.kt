@@ -1,5 +1,6 @@
 package fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.firebaseappchat.NewMessActivity
@@ -15,11 +17,13 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.messages.ChatLogActivity
 import com.example.firebaseappchat.messages.LateMessagesRow
 import com.example.firebaseappchat.model.ChatMessage
+import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlin.random.Random
 
 
 private const val ARG_PARAM1 = "param1"
@@ -45,6 +49,10 @@ class HomeFragment : Fragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
         view.recyclerview_latest_messages.adapter = adapter
+        val BtnChatRanDom = view.findViewById<Button>(R.id.BtnRanDomChat)
+        BtnChatRanDom.setOnClickListener {
+            RanDomChat()
+        }
         view.recyclerview_latest_messages.addItemDecoration(
             DividerItemDecoration(
                 context,
@@ -56,6 +64,86 @@ class HomeFragment : Fragment() {
         swipere.setOnRefreshListener(this::refreshRecyclerViewMessages)
         ListenForlatesMessages(view)
         return view
+    }
+
+    @SuppressLint("LongLogTag")
+    private fun RanDomChat() {
+        val UserFirebase = FirebaseDatabase.getInstance().getReference("user")
+        val NguoiDung = FirebaseAuth.getInstance().currentUser
+        val MessageFirebase = FirebaseDatabase.getInstance().getReference("latest-messages")
+        MessageFirebase.get().addOnSuccessListener {
+            val coutMessages = it.childrenCount
+            UserFirebase.get().addOnSuccessListener {
+                val count = it.childrenCount
+                if (count!=coutMessages){
+                    var random: Long = Random.nextLong(1, count + 1)
+                    if (NguoiDung != null) {
+                        val uidNguoiDung = it.child(NguoiDung.uid).child("STT").value
+                        while (random == it.child(NguoiDung.uid).child("STT").value) {
+                            random = Random.nextLong(1, count + 1)
+                        }
+                        UserFirebase.get().addOnSuccessListener {
+                            var uid = ""
+                            var name = ""
+                            var STT = ""
+                            var check = "false"
+                            var user: SignUpActivity.getUser? = null
+                            it.children.forEach() {
+                                if (it.child("STT").value == random) {
+                                    uid = it.child("uid").value.toString()
+                                    name = it.child("name").value.toString()
+                                    STT = it.child("STT").value.toString()
+                                    user = it.getValue(SignUpActivity.getUser::class.java)
+                                }
+                            }
+
+                            MessageFirebase.get().addOnSuccessListener {
+                                if (it.child(NguoiDung.uid).hasChild(uid)) {
+                                    check = "true"
+                                }
+                                if (check == "true") {
+                                    random = Random.nextLong(1, count + 1)
+                                    do {
+                                        random = Random.nextLong(1, count + 1)
+                                        Log.d("RANDOM-TRONG-MessageFirebase", random.toString())
+                                    } while (random == uidNguoiDung || random == STT.toLong())
+                                    UserFirebase.get().addOnSuccessListener {
+                                        var userMessageFirebase: SignUpActivity.getUser? = null
+                                        it.children.forEach() {
+                                            if (it.child("STT").value == random) {
+                                                userMessageFirebase =
+                                                    it.getValue(SignUpActivity.getUser::class.java)
+
+                                            }
+                                        }
+                                        Log.d("UID_TEST", userMessageFirebase?.uid.toString())
+                                        Log.d("NAME_TEST", userMessageFirebase?.name.toString())
+                                        Log.d("STT_TEST", userMessageFirebase?.STT.toString())
+                                        val intent = Intent(context, ChatLogActivity::class.java)
+                                        intent.putExtra("AnDanh", userMessageFirebase)
+                                        intent.putExtra("Check", true)
+                                        startActivity(intent)
+                                    }
+                                } else {
+                                    Log.d("UID_TEST", user?.uid.toString())
+                                    Log.d("NAME_TEST", user?.name.toString())
+                                    Log.d("STT_TEST", user?.STT.toString())
+                                    val intent = Intent(context, ChatLogActivity::class.java)
+                                    intent.putExtra("AnDanh", user)
+                                    intent.putExtra("Check", true)
+                                    startActivity(intent)
+
+                                }
+                                Log.d("CHECK-TEST", check)
+                            }
+                        }
+                        Log.d("RANDOM", random.toString())
+                    }
+                }
+
+            }
+        }
+
     }
 
     val latestMessagesMap = HashMap<String, ChatMessage>()

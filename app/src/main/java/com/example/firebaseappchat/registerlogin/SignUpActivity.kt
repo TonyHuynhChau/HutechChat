@@ -25,7 +25,6 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
     private lateinit var data: FirebaseAuth
     private lateinit var Loading: ProgressDialog
-    private var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
@@ -50,9 +49,10 @@ class SignUpActivity : AppCompatActivity() {
         val email: String,
         val name: String,
         val Urlphoto: String,
-        val Token: String
+        val Token: String,
+        val STT: Long
     ) : Parcelable {
-        constructor() : this("", "", "", "", "")
+        constructor() : this("", "", "", "", "", 0)
     }
 
     @Parcelize
@@ -63,9 +63,17 @@ class SignUpActivity : AppCompatActivity() {
     private fun STT(uid: String) {
         val STT = FirebaseDatabase.getInstance().getReference("user")
         STT.addValueEventListener(object : ValueEventListener {
+
             override fun onDataChange(snapshot: DataSnapshot) {
-                count = snapshot.childrenCount.toInt()
-                // STT.child(uid).child("STT").setValue(count + 1)
+                val user = FirebaseAuth.getInstance().uid
+                Log.d("ID", user.toString())
+                Log.d("UID", uid)
+                var count = snapshot.childrenCount.toInt()
+                var STTuser = snapshot.child(uid).child("STT").value
+                Log.d("STTuser", STTuser.toString())
+                if (snapshot.hasChild(uid) && STTuser == null) {
+                    STT.child(uid).child("STT").setValue(count)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -134,9 +142,8 @@ class SignUpActivity : AppCompatActivity() {
                     val ref = FirebaseDatabase.getInstance().getReference("/user/${user.uid}")
                     val Realtime = User(user.uid, user.email.toString(), name);
                     ref.setValue(Realtime)
-                    STT(user.uid)
-                    Log.d("COUNT", count.toString())
                     TOKEN(user.uid)
+                    STT(user.uid)
                     Loading.dismiss()
                     startActivity(Intent(this, LoginActivity::class.java))
                 } else {
