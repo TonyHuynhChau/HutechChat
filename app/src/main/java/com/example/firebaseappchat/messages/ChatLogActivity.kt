@@ -21,7 +21,6 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 
 
@@ -80,7 +79,8 @@ class ChatLogActivity : AppCompatActivity() {
                                 ChatFromItem(
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
-                                    currentUser
+                                    currentUser,
+                                    check
                                 )
                             )
                         } else {
@@ -88,7 +88,8 @@ class ChatLogActivity : AppCompatActivity() {
                                 ChatToItem(
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
-                                    AnDanh!!
+                                    AnDanh!!,
+                                    check
                                 )
                             )
                         }
@@ -131,7 +132,8 @@ class ChatLogActivity : AppCompatActivity() {
                                 ChatFromItem(
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
-                                    currentUser
+                                    currentUser,
+                                    check
                                 )
                             )
                         } else {
@@ -139,7 +141,8 @@ class ChatLogActivity : AppCompatActivity() {
                                 ChatToItem(
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
-                                    toUser!!
+                                    toUser!!,
+                                    check
                                 )
                             )
                         }
@@ -189,7 +192,7 @@ class ChatLogActivity : AppCompatActivity() {
             val chatMessage = toId?.let {
                 ChatMessage(
                     reference.key!!, text, fromId!!,
-                    it, System.currentTimeMillis()
+                    it, System.currentTimeMillis(), check
                 )
             }
             reference.setValue(chatMessage)
@@ -225,7 +228,7 @@ class ChatLogActivity : AppCompatActivity() {
             val chatMessage = toId?.let {
                 ChatMessage(
                     reference.key!!, text, fromId!!,
-                    it, System.currentTimeMillis()
+                    it, System.currentTimeMillis(), check
                 )
             }
             reference.setValue(chatMessage)
@@ -246,18 +249,38 @@ class ChatLogActivity : AppCompatActivity() {
     }
 }
 
-class ChatFromItem(val text: String, val time: String, val user: SignUpActivity.getUser) :
-    Item<GroupieViewHolder>() {
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.textviewfrom_chat_from_row.text = text
-        viewHolder.itemView.Txt_time_From.text = time
 
-        val url = user.Urlphoto
-        val targetImageView = viewHolder.itemView.imageView_chat_from_row
-        if (url.isEmpty()) {
-            Picasso.get().load(IMGURL).into(targetImageView)
+class ChatFromItem(
+    val text: String,
+    val time: String,
+    val user: SignUpActivity.getUser,
+    val check: Boolean
+) :
+    Item<GroupieViewHolder>() {
+
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        if (check == true) {
+            viewHolder.itemView.textviewfrom_chat_from_row.text = text
+            viewHolder.itemView.Txt_time_From.text = time
+
+            val url = user.Urlphoto
+            val targetImageView = viewHolder.itemView.imageView_chat_from_row
+            if (url.isEmpty()) {
+                Picasso.get().load(IMGURL).into(targetImageView)
+            } else {
+                Picasso.get().load(url).into(targetImageView)
+            }
         } else {
-            Picasso.get().load(url).into(targetImageView)
+            viewHolder.itemView.textviewfrom_chat_from_row.text = text
+            viewHolder.itemView.Txt_time_From.text = time
+
+            val url = user.Urlphoto
+            val targetImageView = viewHolder.itemView.imageView_chat_from_row
+            if (url.isEmpty()) {
+                Picasso.get().load(IMGURL).into(targetImageView)
+            } else {
+                Picasso.get().load(url).into(targetImageView)
+            }
         }
     }
 
@@ -266,18 +289,32 @@ class ChatFromItem(val text: String, val time: String, val user: SignUpActivity.
     }
 }
 
-class ChatToItem(val text: String, val time: String, val user: SignUpActivity.getUser) :
+class ChatToItem(
+    val text: String,
+    val time: String,
+    val user: SignUpActivity.getUser,
+    val check: Boolean
+) :
     Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.textviewfrom_chat_to_row.text = text
-        viewHolder.itemView.Txt_time_To.text = time
+        if (check == true) {
+            viewHolder.itemView.textviewfrom_chat_to_row.text = text
+            viewHolder.itemView.Txt_time_To.text = time
 
-        val url = user.Urlphoto
-        val targetImageView = viewHolder.itemView.imageViewchat_to_row
-        if (url.isEmpty()) {
-            Picasso.get().load(IMGURL).into(targetImageView)
+
+            val targetImageView = viewHolder.itemView.imageViewchat_to_row
+            Picasso.get().load(R.drawable.andanh).into(targetImageView)
         } else {
-            Picasso.get().load(url).into(targetImageView)
+            viewHolder.itemView.textviewfrom_chat_to_row.text = text
+            viewHolder.itemView.Txt_time_To.text = time
+
+            val url = user.Urlphoto
+            val targetImageView = viewHolder.itemView.imageViewchat_to_row
+            if (url.isEmpty()) {
+                Picasso.get().load(IMGURL).into(targetImageView)
+            } else {
+                Picasso.get().load(url).into(targetImageView)
+            }
         }
     }
 

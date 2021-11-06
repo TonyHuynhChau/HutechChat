@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.util.Log
 import com.example.firebaseappchat.messages.ChatLogActivity
+import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.squareup.picasso.Picasso
@@ -53,11 +54,11 @@ class NewMessActivity : AppCompatActivity() {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 snapshot.children.forEach() {
                                     val user = it.getValue(SignUpActivity.getUser::class.java)
-                                        if (user != null) {
-                                            if (userNguoiDung.uid != user.uid && FriendUID == user.uid) {
-                                                adapter.add(UItem(user))
-                                            }
+                                    if (user != null) {
+                                        if (userNguoiDung.uid != user.uid && FriendUID == user.uid) {
+                                            adapter.add(UItem(user))
                                         }
+                                    }
                                 }
                                 adapter.setOnItemClickListener { item, view ->
                                     val userItem = item as UItem
@@ -109,17 +110,13 @@ class UItem(val user: SignUpActivity.getUser) : Item<GroupieViewHolder>() {
         if (user.equals("null")) {
             Log.d("Error Message", "User Name = ${user.name}")
             return
-        } else if (user.Urlphoto.toString().isEmpty()) {
-            val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                    "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                    "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                    "&pid=ImgRaw&r=0"
-            viewHolder.itemView.TxtUserName.text = user.name + "(Need Update Profile)"
-            Picasso.get().load(ImgDefault).into(viewHolder.itemView.iVUser)
+        } else if (user.Urlphoto.isEmpty()) {
+            Picasso.get().load(IMGURL).into(viewHolder.itemView.iVUser)
+            viewHolder.itemView.TxtUserName.text = user.name
         } else {
             viewHolder.itemView.TxtUserName.text = user.name
-
             Picasso.get().load(user.Urlphoto).into(viewHolder.itemView.iVUser)
         }
+
     }
 }

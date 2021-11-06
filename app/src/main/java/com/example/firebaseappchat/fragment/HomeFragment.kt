@@ -77,12 +77,12 @@ class HomeFragment : Fragment() {
         val MessageFirebase = FirebaseDatabase.getInstance().getReference("latest-messages")
         MessageFirebase.get().addOnSuccessListener {
             var coutMessages: Long = 0
-            if (NguoiDung != null){
+            if (NguoiDung != null) {
                 coutMessages = it.child(NguoiDung.uid).childrenCount
             }
             UserFirebase.get().addOnSuccessListener {
                 val count = it.childrenCount
-                if ((count-1)!=coutMessages){
+                if ((count - 1) != coutMessages) {
                     var random: Long = Random.nextLong(1, count + 1)
                     if (NguoiDung != null) {
                         val uidNguoiDung = it.child(NguoiDung.uid).child("STT").value
@@ -146,9 +146,9 @@ class HomeFragment : Fragment() {
                         }
                         Log.d("RANDOM", random.toString())
                     }
-                }
-                else{
-                    Toast.makeText(context,"Bạn Đã Chat Với Người Bí Ẩn",Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Bạn Đã Chat Với Người Bí Ẩn", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -163,13 +163,15 @@ class HomeFragment : Fragment() {
             Handler().postDelayed(Runnable {
                 swipere.isRefreshing = false
             }, 4000)
-            adapter.add(LateMessagesRow(it))
-            adapter.setOnItemClickListener { item, view ->
-                val row = item as LateMessagesRow
-                Log.d("Latest Message:", NewMessActivity.USER_KEY)
-                val intent = Intent(view.context, ChatLogActivity::class.java)
-                intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
-                startActivity(intent)
+            if (!it.check) {
+                adapter.add(LateMessagesRow(it))
+                adapter.setOnItemClickListener { item, view ->
+                    val row = item as LateMessagesRow
+                    Log.d("Latest Message:", NewMessActivity.USER_KEY)
+                    val intent = Intent(view.context, ChatLogActivity::class.java)
+                    intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
+                    startActivity(intent)
+                }
             }
         }
     }
