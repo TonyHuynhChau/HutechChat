@@ -60,6 +60,28 @@ class ChatLogActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (!check) {
+            super.onBackPressed()
+        } else {
+            val fromId = FirebaseAuth.getInstance().uid
+            val user = intent.getParcelableExtra<SignUpActivity.getUser>("AnDanh")
+            val toId = user?.uid
+
+            //Xóa tin nhan tu nguoi gui
+            FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
+                .removeValue()
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+                .removeValue()
+            //Xóa tin nhan tu nguoi nhan
+            FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId")
+                .removeValue()
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+                .removeValue()
+            super.onBackPressed()
+        }
+    }
+
     private fun nhantinnhan() {
         if (check == true) {
             val fromId = FirebaseAuth.getInstance().uid
@@ -110,8 +132,9 @@ class ChatLogActivity : AppCompatActivity() {
                     TODO("Not yet implemented")
                 }
 
+                @SuppressLint("LongLogTag")
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
+                    Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN CHATLOG:","THÀNH CÔNG")
                 }
             })
         } else {

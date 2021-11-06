@@ -196,12 +196,13 @@ class HomeFragment : Fragment() {
                 refreshRecyclerViewMessages()
             }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
 
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+            @SuppressLint("LongLogTag")
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+                Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN HOMEFRAGMENT:","THÀNH CÔNG")
             }
 
             override fun onCancelled(error: DatabaseError) {
