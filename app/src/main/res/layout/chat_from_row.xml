@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/GuiAnhFrom"
         android:layout_width="200dp"
         android:layout_height="wrap_content"

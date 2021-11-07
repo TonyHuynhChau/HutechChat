@@ -3,19 +3,28 @@ package com.example.firebaseappchat.messages
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.databinding.ActivityChatLogBinding
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.SignUpActivity
+import com.giphy.sdk.analytics.GiphyPingbacks.context
+import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.ui.GPHContentType
+import com.giphy.sdk.ui.Giphy
+import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -33,7 +42,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ChatLogActivity : AppCompatActivity() {
+class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
 
     companion object {
         val TAG = "chat log"
@@ -41,7 +50,8 @@ class ChatLogActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<GroupieViewHolder>()
     var selectPhotoUrl: Uri? = null
-    lateinit var GuiAnh: ImageButton
+    lateinit var GuiAnh: ImageView
+    lateinit var GIF: ImageView
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -50,6 +60,9 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
+
+        Giphy.configure(this, "pEUOapu4NFuNtErm4LOfR4VlhXsTioxy")
+        GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         recyclerview_chat_log.adapter = adapter
         check = intent.getBooleanExtra("Check", false)
@@ -58,15 +71,19 @@ class ChatLogActivity : AppCompatActivity() {
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
         AnDanh = intent.getParcelableExtra("AnDanh")
         Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
-        supportActionBar?.title = toUser?.name
+
+        GIF.setOnClickListener {
+            GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
+        }
+
         GuiAnh.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, 0)
             Loading = ProgressDialog(this)
-            Loading?.setTitle("Thông Báo")
-            Loading?.setMessage("Xin Đợi Trong Giây Lát")
-            Loading?.show()
+            Loading!!.setTitle("Thông Báo")
+            Loading!!.setMessage("Xin Đợi Trong Giây Lát")
+            Loading!!.show()
         }
         nhantinnhan()
 
@@ -165,7 +182,7 @@ class ChatLogActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
+                    recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
 
                 }
 
@@ -221,7 +238,7 @@ class ChatLogActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
+                    recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
 
                 }
 
@@ -322,6 +339,18 @@ class ChatLogActivity : AppCompatActivity() {
         }
         Loading?.dismiss()
     }
+
+    override fun didSearchTerm(term: String) {}
+
+    override fun onDismissed(selectedContentType: GPHContentType) {}
+
+    override fun onGifSelected(
+        media: Media,
+        searchTerm: String?,
+        selectedContentType: GPHContentType
+    ) {
+        performsendMessage(media.images.fixedWidth?.gifUrl.toString())
+    }
 }
 
 
@@ -342,7 +371,7 @@ class ChatFromItem(
             } else {
                 viewHolder.itemView.textviewfrom_chat_from_row.isVisible = false
                 viewHolder.itemView.GuiAnhFrom.isVisible = true
-                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhFrom)
+                Glide.with(context).load(Photo).into(viewHolder.itemView.GuiAnhFrom)
             }
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
@@ -361,7 +390,7 @@ class ChatFromItem(
             } else {
                 viewHolder.itemView.textviewfrom_chat_from_row.isVisible = false
                 viewHolder.itemView.GuiAnhFrom.isVisible = true
-                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhFrom)
+                Glide.with(context).load(Photo).into(viewHolder.itemView.GuiAnhFrom)
             }
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
@@ -397,7 +426,7 @@ class ChatToItem(
             } else {
                 viewHolder.itemView.textviewfrom_chat_to_row.isVisible = false
                 viewHolder.itemView.GuiAnhTo.isVisible = true
-                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhTo)
+                Glide.with(context).load(Photo).into(viewHolder.itemView.GuiAnhTo)
             }
             viewHolder.itemView.textviewfrom_chat_to_row.text = text
             viewHolder.itemView.Txt_time_To.text = time
@@ -405,14 +434,15 @@ class ChatToItem(
 
             val targetImageView = viewHolder.itemView.imageViewchat_to_row
             Picasso.get().load(R.drawable.andanh).into(targetImageView)
-        } else {
+        }
+        else {
             if (Photo == "") {
                 viewHolder.itemView.textviewfrom_chat_to_row.isVisible = true
                 viewHolder.itemView.GuiAnhTo.isVisible = false
             } else {
                 viewHolder.itemView.textviewfrom_chat_to_row.isVisible = false
                 viewHolder.itemView.GuiAnhTo.isVisible = true
-                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhTo)
+                Glide.with(context).load(Photo).into(viewHolder.itemView.GuiAnhTo)
             }
             viewHolder.itemView.textviewfrom_chat_to_row.text = text
             viewHolder.itemView.Txt_time_To.text = time

@@ -44,15 +44,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/BtnGuiAnh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
+        android:layout_width="48dp"
+        android:layout_height="59dp"
+        android:layout_marginEnd="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_chat_log"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/zm_ic_filetype_image"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <ImageView
+        android:id="@+id/GIF"
+        android:layout_width="29dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BtnGuiAnh"
+        app:srcCompat="@drawable/gph_ic_gif" />
 </androidx.constraintlayout.widget.ConstraintLayout>
