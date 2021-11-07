@@ -37,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="12dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/textviewfrom_chat_to_row"
@@ -44,12 +45,13 @@
 
     <ImageView
         android:id="@+id/GuiAnhTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
         app:layout_constraintStart_toEndOf="@+id/imageViewchat_to_row"
         app:layout_constraintTop_toBottomOf="@+id/Txt_time_To"
-        app:srcCompat="@drawable/zm_image_placeholder" />
+        app:srcCompat="@drawable/ic_image_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

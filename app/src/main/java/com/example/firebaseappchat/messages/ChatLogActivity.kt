@@ -1,9 +1,16 @@
 package com.example.firebaseappchat.messages
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ProgressDialog
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.core.view.isVisible
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.model.ChatMessage
@@ -14,6 +21,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -22,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -31,14 +40,17 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     val adapter = GroupAdapter<GroupieViewHolder>()
-
+    var selectPhotoUrl: Uri? = null
+    lateinit var GuiAnh: ImageButton
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
+    private lateinit var Loading: ProgressDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
-
+        GuiAnh = findViewById(R.id.BtnGuiAnh)
         recyclerview_chat_log.adapter = adapter
         check = intent.getBooleanExtra("Check", false)
         Log.d("CHECKANDANH", check.toString())
@@ -47,16 +59,51 @@ class ChatLogActivity : AppCompatActivity() {
         AnDanh = intent.getParcelableExtra("AnDanh")
         Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
         supportActionBar?.title = toUser?.name
-
+        GuiAnh.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+            Loading = ProgressDialog(this)
+            Loading.setTitle("Thông Báo")
+            Loading.setMessage("Xin Đợi Trong Giây Lát")
+            Loading.show()
+        }
         nhantinnhan()
 
         gui_button_chat_log.setOnClickListener {
-            performsendMessage()
+            performsendMessage("")
         }
         editText_chat_log.setOnClickListener {
             if (editText_chat_log.text.toString() != "") {
-                performsendMessage()
+                performsendMessage("")
             }
+        }
+    }
+
+
+    private fun updateImages() {
+        if (selectPhotoUrl != null) {
+            //code thành công tới lưu vào storage images
+            val filename = UUID.randomUUID().toString()
+            val ref = FirebaseStorage.getInstance().getReference("ImagesMessage/$filename")
+            ref.putFile(selectPhotoUrl!!).addOnSuccessListener {
+                //Lấy URL Của Ảnh
+                ref.downloadUrl.addOnSuccessListener {
+                    performsendMessage(it.toString())
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Lỗi :" + it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+            selectPhotoUrl = data.data
+            updateImages()
         }
     }
 
@@ -102,7 +149,8 @@ class ChatLogActivity : AppCompatActivity() {
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
                                     currentUser,
-                                    check
+                                    check,
+                                    chatMessage.anh
                                 )
                             )
                         } else {
@@ -111,7 +159,8 @@ class ChatLogActivity : AppCompatActivity() {
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
                                     AnDanh!!,
-                                    check
+                                    check,
+                                    chatMessage.anh
                                 )
                             )
                         }
@@ -134,7 +183,7 @@ class ChatLogActivity : AppCompatActivity() {
 
                 @SuppressLint("LongLogTag")
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN CHATLOG:","THÀNH CÔNG")
+                    Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN CHATLOG:", "THÀNH CÔNG")
                 }
             })
         } else {
@@ -156,7 +205,8 @@ class ChatLogActivity : AppCompatActivity() {
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
                                     currentUser,
-                                    check
+                                    check,
+                                    chatMessage.anh
                                 )
                             )
                         } else {
@@ -165,7 +215,8 @@ class ChatLogActivity : AppCompatActivity() {
                                     chatMessage.text,
                                     sdf.format(chatMessage.timestamp),
                                     toUser!!,
-                                    check
+                                    check,
+                                    chatMessage.anh
                                 )
                             )
                         }
@@ -194,8 +245,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     }
 
-
-    private fun performsendMessage() {
+    private fun performsendMessage(photoUrl: String) {
         if (check == true) {
             // gui du lieu vao firebase
             editText_chat_log.text.toString()
@@ -215,9 +265,10 @@ class ChatLogActivity : AppCompatActivity() {
             val chatMessage = toId?.let {
                 ChatMessage(
                     reference.key!!, text, fromId!!,
-                    it, System.currentTimeMillis(), check
+                    it, System.currentTimeMillis(), check, photoUrl
                 )
             }
+            Log.d("PHOTOURL", photoUrl.toString())
             reference.setValue(chatMessage)
                 .addOnSuccessListener {
                     Log.d(TAG, "luu thong tin: ${reference.key}")
@@ -251,7 +302,7 @@ class ChatLogActivity : AppCompatActivity() {
             val chatMessage = toId?.let {
                 ChatMessage(
                     reference.key!!, text, fromId!!,
-                    it, System.currentTimeMillis(), check
+                    it, System.currentTimeMillis(), check, photoUrl
                 )
             }
             reference.setValue(chatMessage)
@@ -269,6 +320,7 @@ class ChatLogActivity : AppCompatActivity() {
                 FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
             latestMessagesToRef.setValue(chatMessage)
         }
+        Loading.dismiss()
     }
 }
 
@@ -277,12 +329,21 @@ class ChatFromItem(
     val text: String,
     val time: String,
     val user: SignUpActivity.getUser,
-    val check: Boolean
+    val check: Boolean,
+    val Photo: String
 ) :
     Item<GroupieViewHolder>() {
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         if (check == true) {
+            if (Photo == "") {
+                viewHolder.itemView.textviewfrom_chat_from_row.isVisible = true
+                viewHolder.itemView.GuiAnhFrom.isVisible = false
+            } else {
+                viewHolder.itemView.textviewfrom_chat_from_row.isVisible = false
+                viewHolder.itemView.GuiAnhFrom.isVisible = true
+                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhFrom)
+            }
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
 
@@ -294,6 +355,14 @@ class ChatFromItem(
                 Picasso.get().load(url).into(targetImageView)
             }
         } else {
+            if (Photo == "") {
+                viewHolder.itemView.textviewfrom_chat_from_row.isVisible = true
+                viewHolder.itemView.GuiAnhFrom.isVisible = false
+            } else {
+                viewHolder.itemView.textviewfrom_chat_from_row.isVisible = false
+                viewHolder.itemView.GuiAnhFrom.isVisible = true
+                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhFrom)
+            }
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
 
@@ -316,11 +385,20 @@ class ChatToItem(
     val text: String,
     val time: String,
     val user: SignUpActivity.getUser,
-    val check: Boolean
+    val check: Boolean,
+    val Photo: String
 ) :
     Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         if (check == true) {
+            if (Photo == "") {
+                viewHolder.itemView.textviewfrom_chat_to_row.isVisible = true
+                viewHolder.itemView.GuiAnhTo.isVisible = false
+            } else {
+                viewHolder.itemView.textviewfrom_chat_to_row.isVisible = false
+                viewHolder.itemView.GuiAnhTo.isVisible = true
+                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhTo)
+            }
             viewHolder.itemView.textviewfrom_chat_to_row.text = text
             viewHolder.itemView.Txt_time_To.text = time
 
@@ -328,6 +406,14 @@ class ChatToItem(
             val targetImageView = viewHolder.itemView.imageViewchat_to_row
             Picasso.get().load(R.drawable.andanh).into(targetImageView)
         } else {
+            if (Photo == "") {
+                viewHolder.itemView.textviewfrom_chat_to_row.isVisible = true
+                viewHolder.itemView.GuiAnhTo.isVisible = false
+            } else {
+                viewHolder.itemView.textviewfrom_chat_to_row.isVisible = false
+                viewHolder.itemView.GuiAnhTo.isVisible = true
+                Picasso.get().load(Photo).placeholder(R.drawable.ic_image_black).into(viewHolder.itemView.GuiAnhTo)
+            }
             viewHolder.itemView.textviewfrom_chat_to_row.text = text
             viewHolder.itemView.Txt_time_To.text = time
 

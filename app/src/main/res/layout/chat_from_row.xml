@@ -44,12 +44,13 @@
 
     <ImageView
         android:id="@+id/GuiAnhFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
         app:layout_constraintTop_toBottomOf="@+id/Txt_time_From"
-        app:srcCompat="@drawable/zm_image_placeholder" />
+        app:srcCompat="@drawable/ic_image_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
