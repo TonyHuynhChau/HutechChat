@@ -9,8 +9,8 @@
 
     <EditText
         android:id="@+id/editText_chat_log"
-        android:layout_width="232dp"
-        android:layout_height="48dp"
+        android:layout_width="216dp"
+        android:layout_height="64dp"
         android:layout_marginBottom="4dp"
         android:background="@android:color/white"
         android:ems="10"
@@ -48,11 +48,11 @@
         android:id="@+id/BtnGuiAnh"
         android:layout_width="48dp"
         android:layout_height="59dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="44dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_chat_log"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/zm_ic_filetype_image"
         tools:ignore="SpeakableTextPresentCheck" />
 
