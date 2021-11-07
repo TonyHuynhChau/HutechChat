@@ -1,32 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background"
-        tools:context=".VideoCall.VideoChatActivity">
-
-
-        <Button
-            android:id="@+id/btn_createRoom"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/button_background"
-            android:text="Tạo Phòng"
-            android:textColor="@color/white"
-            android:textSize="22dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_join" />
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".VideoCall.VideoChatActivity">
 
         <ImageView
             android:id="@+id/imageView7"
@@ -45,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Video Call"
+            android:text="Video Meeting"
             android:textColor="@color/white"
             android:textSize="34dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -100,21 +79,31 @@
                 android:textColor="@color/white"
                 android:textSize="22dp" />
 
+            <Button
+                android:id="@+id/btn_join"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/button_background"
+                android:text="Vào Phòng"
+                android:textColor="@color/white"
+                android:textSize="22dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+            <Button
+                android:id="@+id/btn_createRoom"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/button_background"
+                android:text="Tạo Phòng"
+                android:textColor="@color/white"
+                android:textSize="22dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_join"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_background"
-            android:text="Vào Phòng"
-            android:textColor="@color/white"
-            android:textSize="22dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

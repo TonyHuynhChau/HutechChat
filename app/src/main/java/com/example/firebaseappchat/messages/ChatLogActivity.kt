@@ -5,11 +5,11 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
@@ -45,7 +45,7 @@ class ChatLogActivity : AppCompatActivity() {
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
-    private lateinit var Loading: ProgressDialog
+    private var Loading: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +64,9 @@ class ChatLogActivity : AppCompatActivity() {
             intent.type = "image/*"
             startActivityForResult(intent, 0)
             Loading = ProgressDialog(this)
-            Loading.setTitle("Thông Báo")
-            Loading.setMessage("Xin Đợi Trong Giây Lát")
-            Loading.show()
+            Loading?.setTitle("Thông Báo")
+            Loading?.setMessage("Xin Đợi Trong Giây Lát")
+            Loading?.show()
         }
         nhantinnhan()
 
@@ -320,7 +320,7 @@ class ChatLogActivity : AppCompatActivity() {
                 FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
             latestMessagesToRef.setValue(chatMessage)
         }
-        Loading.dismiss()
+        Loading?.dismiss()
     }
 }
 
