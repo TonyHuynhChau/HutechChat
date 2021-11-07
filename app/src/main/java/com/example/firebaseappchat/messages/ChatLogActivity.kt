@@ -376,13 +376,7 @@ class ChatFromItem(
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
 
-            val url = user.Urlphoto
-            val targetImageView = viewHolder.itemView.imageView_chat_from_row
-            if (url.isEmpty()) {
-                Picasso.get().load(IMGURL).into(targetImageView)
-            } else {
-                Picasso.get().load(url).into(targetImageView)
-            }
+
         } else {
             if (Photo == "") {
                 viewHolder.itemView.textviewfrom_chat_from_row.isVisible = true
@@ -394,14 +388,6 @@ class ChatFromItem(
             }
             viewHolder.itemView.textviewfrom_chat_from_row.text = text
             viewHolder.itemView.Txt_time_From.text = time
-
-            val url = user.Urlphoto
-            val targetImageView = viewHolder.itemView.imageView_chat_from_row
-            if (url.isEmpty()) {
-                Picasso.get().load(IMGURL).into(targetImageView)
-            } else {
-                Picasso.get().load(url).into(targetImageView)
-            }
         }
     }
 

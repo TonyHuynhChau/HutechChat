@@ -4,55 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="5dp">
 
     <TextView
         android:id="@+id/textviewfrom_chat_from_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/button_background"
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text=" tin nhan tin nhantin nhan tin nhan v"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
-        app:layout_constraintTop_toTopOf="@+id/imageView_chat_from_row" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView_chat_from_row"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@android:color/black"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="8dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/password" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/Txt_time_From"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Txt_time_From"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="80dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/textviewfrom_chat_from_row"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.507" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/GuiAnhFrom"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="4dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_chat_from_row"
-        app:layout_constraintTop_toTopOf="@+id/imageView_chat_from_row"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.822"
+        app:layout_constraintStart_toEndOf="@+id/Txt_time_From"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_image_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
