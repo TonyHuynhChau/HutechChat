@@ -3,20 +3,17 @@ package com.example.firebaseappchat.messages
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
-import com.example.firebaseappchat.databinding.ActivityChatLogBinding
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -32,6 +29,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.EmojiPopup
+import com.vanniktech.emoji.google.GoogleEmojiProvider
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -52,6 +52,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     var selectPhotoUrl: Uri? = null
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
+    lateinit var emoji : ImageView
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -64,6 +65,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         Giphy.configure(this, "pEUOapu4NFuNtErm4LOfR4VlhXsTioxy")
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
+        emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
         recyclerview_chat_log.adapter = adapter
         check = intent.getBooleanExtra("Check", false)
         Log.d("CHECKANDANH", check.toString())
@@ -71,6 +73,13 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
         AnDanh = intent.getParcelableExtra("AnDanh")
         Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
+
+        //Emoji
+        EmojiManager.install(GoogleEmojiProvider())
+        val popup = EmojiPopup.Builder.fromRootView(findViewById(R.id.rootView)).build(editText_chat_log)
+        emoji.setOnClickListener{
+            popup.toggle()
+        }
 
         GIF.setOnClickListener {
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")

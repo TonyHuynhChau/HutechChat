@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".messages.ChatLogActivity">
@@ -9,8 +10,8 @@
 
     <EditText
         android:id="@+id/editText_chat_log"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="191dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="4dp"
         android:background="@android:color/white"
         android:ems="10"
@@ -41,26 +42,48 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/BtnGuiAnh"
-        android:layout_width="48dp"
-        android:layout_height="59dp"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/zm_ic_filetype_image"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageView
         android:id="@+id/GIF"
-        android:layout_width="29dp"
-        android:layout_height="54dp"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/BtnGuiAnh"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/gph_ic_gif" />
+    <ImageView
+        android:id="@+id/emoji"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_chat_log"
-        app:layout_constraintStart_toEndOf="@+id/BtnGuiAnh"
-        app:srcCompat="@drawable/gph_ic_gif" />
+        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintStart_toEndOf="@+id/GIF"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/gph_ic_emoji" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
