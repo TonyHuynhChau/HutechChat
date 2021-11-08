@@ -10,7 +10,7 @@
 
     <EditText
         android:id="@+id/editText_chat_log"
-        android:layout_width="191dp"
+        android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:layout_marginBottom="4dp"
         android:background="@android:color/white"
@@ -42,13 +42,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/BtnGuiAnh"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
@@ -58,26 +59,24 @@
 
     <ImageView
         android:id="@+id/GIF"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/BtnGuiAnh"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/gph_ic_gif" />
     <ImageView
         android:id="@+id/emoji"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_chat_log"
         app:layout_constraintHorizontal_bias="0.222"
