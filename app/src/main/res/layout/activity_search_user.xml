@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorPrimary">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_centerVertical="true"
         android:layout_marginTop="16dp"
-        android:layout_centerVertical="true">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/TxtSearch"
@@ -24,6 +23,7 @@
             android:hint="Search Here...."
             android:singleLine="true"
             android:textAlignment="viewStart"
+            android:textColor="@color/white"
             android:textStyle="bold"
             tools:ignore="SpeakableTextPresentCheck" />
 
@@ -31,10 +31,10 @@
             android:id="@+id/ListSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
 

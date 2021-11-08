@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="UserName"
-        android:textColor="@color/black"
+        android:textColor="?attr/TextColor"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iVUser"

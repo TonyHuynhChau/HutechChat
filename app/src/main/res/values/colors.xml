@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="Primary">#006BB3</color>
-    <color name="PrimaryNight">#FFBB86FC</color>
+    <color name="Primary">#CFC5C5</color>
+    <color name="PrimaryNight">#000000</color>
     
     <color name="dark_gray">#999999</color>
     <color name="dark_gray_post">#DDDDDD</color>
@@ -21,7 +21,10 @@
     
     <color name="black">#FF000000</color>
     <color name="Red">#F44336</color>
-    
+
     <color name="white">#FFFFFF</color>
-    <color name="TextColor">#F6F0F0</color>
+
+
+    <color name="TextColor">#000000</color>
+    <color name="TextColorNight">#FFFFFF</color>
 </resources>

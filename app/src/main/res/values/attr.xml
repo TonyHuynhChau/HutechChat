@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="primaryTitleColor" format="color"/>
+    <attr name="TextColor" format="color"/>
+    <attr name="btnColor" format="color"/>
     <attr name="colorPrimary" format="color"/>
     <attr name="colorSecondaryVariant" format="color"/>
 </resources>

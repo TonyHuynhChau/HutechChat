@@ -47,7 +47,7 @@
                         android:layout_marginTop="8dp"
                         android:text="UserName"
                         android:textAlignment="textStart"
-                        android:textColor="@color/black"
+                        android:textColor="?attr/TextColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
                 android:minHeight="48dp"
                 android:padding="3dp"
                 android:text="Post description.........."
-                android:textColor="@color/black"
+                android:textColor="?attr/TextColor"
                 android:textSize="14sp" />
 
             <ImageView
@@ -107,14 +107,18 @@
 
             <Button
                 android:id="@+id/BtnXoaBai"
+                android:background="@drawable/background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/TextColor"
                 android:text="Xóa Bài" />
 
             <Button
                 android:id="@+id/BtnSuaBai"
+                android:background="@drawable/background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/TextColor"
                 android:text="Sửa Bài" />
 
         </LinearLayout>
