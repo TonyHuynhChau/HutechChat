@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
@@ -53,6 +54,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
+    lateinit var recyclerview_chat_log: RecyclerView
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -66,6 +68,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
+        recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
         check = intent.getBooleanExtra("Check", false)
         Log.d("CHECKANDANH", check.toString())
