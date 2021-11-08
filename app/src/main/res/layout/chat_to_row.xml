@@ -4,23 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:id="@+id/textviewfrom_chat_to_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/button_background"
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text=" tin nhan tin nhantin nhan tin nhan v"
-        android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/Txt_time_To"
         app:layout_constraintStart_toEndOf="@+id/imageViewchat_to_row"
         app:layout_constraintTop_toTopOf="@+id/imageViewchat_to_row" />
 
@@ -30,8 +26,8 @@
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="13dp"
-        app:civ_border_width="2dp"
         app:civ_border_color="@android:color/black"
+        app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -40,23 +36,20 @@
         android:id="@+id/Txt_time_To"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="28dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.564" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewchat_to_row"
+        app:layout_constraintStart_toEndOf="@+id/imageViewchat_to_row" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/GuiAnhTo"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toStartOf="@+id/Txt_time_To"
         app:layout_constraintStart_toEndOf="@+id/imageViewchat_to_row"
         app:layout_constraintTop_toTopOf="@+id/imageViewchat_to_row"
         app:srcCompat="@drawable/ic_image_black" />

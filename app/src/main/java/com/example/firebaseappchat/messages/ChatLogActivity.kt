@@ -52,7 +52,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     var selectPhotoUrl: Uri? = null
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
-    lateinit var emoji : ImageView
+    lateinit var emoji: ImageView
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -74,10 +74,17 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         AnDanh = intent.getParcelableExtra("AnDanh")
         Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
 
+        if (!check) {
+            supportActionBar?.title = toUser!!.name
+        } else {
+            supportActionBar?.title = "Ẩn Danh"
+        }
+
         //Emoji
         EmojiManager.install(GoogleEmojiProvider())
-        val popup = EmojiPopup.Builder.fromRootView(findViewById(R.id.rootView)).build(editText_chat_log)
-        emoji.setOnClickListener{
+        val popup =
+            EmojiPopup.Builder.fromRootView(findViewById(R.id.rootView)).build(editText_chat_log)
+        emoji.setOnClickListener {
             popup.toggle()
         }
 
@@ -191,7 +198,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             )
                         }
                     }
-                    recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
+                    recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
 
                 }
 
@@ -247,7 +254,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             )
                         }
                     }
-                    recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
+                    recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
 
                 }
 
@@ -429,8 +436,7 @@ class ChatToItem(
 
             val targetImageView = viewHolder.itemView.imageViewchat_to_row
             Picasso.get().load(R.drawable.andanh).into(targetImageView)
-        }
-        else {
+        } else {
             if (Photo == "") {
                 viewHolder.itemView.textviewfrom_chat_to_row.isVisible = true
                 viewHolder.itemView.GuiAnhTo.isVisible = false
