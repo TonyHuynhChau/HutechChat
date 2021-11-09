@@ -163,15 +163,20 @@ class HomeFragment : Fragment() {
             Handler().postDelayed(Runnable {
                 swipere.isRefreshing = false
             }, 4000)
-            if (!it.check) {
-                adapter.add(LateMessagesRow(it))
-                adapter.setOnItemClickListener { item, view ->
-                    val row = item as LateMessagesRow
-                    Log.d("Latest Message:", NewMessActivity.USER_KEY)
-                    val intent = Intent(view.context, ChatLogActivity::class.java)
+            adapter.add(LateMessagesRow(it))
+            adapter.setOnItemClickListener { item, view ->
+                val row = item as LateMessagesRow
+                Log.d("Latest Message:", NewMessActivity.USER_KEY)
+                val intent = Intent(view.context, ChatLogActivity::class.java)
+                if (it.check) {
+                    intent.putExtra("AnDanh", row.chatPartnerUser)
+                    intent.putExtra("Check", it.check)
+                } else {
                     intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
-                    startActivity(intent)
+                    intent.putExtra("Check", it.check)
                 }
+
+                startActivity(intent)
             }
         }
     }
@@ -200,9 +205,10 @@ class HomeFragment : Fragment() {
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
 
             }
+
             @SuppressLint("LongLogTag")
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN HOMEFRAGMENT:","THÀNH CÔNG")
+                Log.d("THÔNG BÁO XÓA TIN NHẮN BÊN HOMEFRAGMENT:", "THÀNH CÔNG")
             }
 
             override fun onCancelled(error: DatabaseError) {

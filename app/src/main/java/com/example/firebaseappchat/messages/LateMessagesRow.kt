@@ -23,40 +23,71 @@ class LateMessagesRow(val chatMessage: ChatMessage) : Item<GroupieViewHolder>() 
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-       if (!chatMessage.check){
-           val sdf = SimpleDateFormat("hh:mm")
-           val chatPartnerId: String
-           if(chatMessage.text.length>7){
-               chatMessage.text = "Đã gửi 1 tin nhắn"
-           }
-           if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
-               viewHolder.itemView.message_textview_latest_messages.text =
-                   "Bạn: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
-               chatPartnerId = chatMessage.toId
-           } else {
-               viewHolder.itemView.message_textview_latest_messages.text =
-                   "-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
-               chatPartnerId = chatMessage.formId
-           }
+        if (!chatMessage.check) {
+            val sdf = SimpleDateFormat("hh:mm")
+            val chatPartnerId: String
+            if (chatMessage.text.length > 7) {
+                chatMessage.text = "Đã gửi 1 tin nhắn"
+            }
+            if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
+                viewHolder.itemView.message_textview_latest_messages.text =
+                    "Bạn: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
+                chatPartnerId = chatMessage.toId
+            } else {
+                viewHolder.itemView.message_textview_latest_messages.text =
+                    "-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
+                chatPartnerId = chatMessage.formId
+            }
 
-           val ref = FirebaseDatabase.getInstance().getReference("/user/$chatPartnerId")
-           ref.addListenerForSingleValueEvent(object : ValueEventListener {
-               override fun onDataChange(snapshot: DataSnapshot) {
-                   chatPartnerUser = snapshot.getValue((SignUpActivity.getUser::class.java))
+            val ref = FirebaseDatabase.getInstance().getReference("/user/$chatPartnerId")
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chatPartnerUser = snapshot.getValue((SignUpActivity.getUser::class.java))
 
-                   val targetImageView = viewHolder.itemView.imageview_lastest_messages
-                   viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
-                   if (chatPartnerUser?.Urlphoto?.isEmpty() == true)
-                       Picasso.get().load(IMGURL).into(targetImageView)
-                   else
-                       Picasso.get().load(chatPartnerUser?.Urlphoto).into(targetImageView)
-               }
+                    val targetImageView = viewHolder.itemView.imageview_lastest_messages
+                    viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
+                    if (chatPartnerUser?.Urlphoto?.isEmpty() == true)
+                        Picasso.get().load(IMGURL).into(targetImageView)
+                    else
+                        Picasso.get().load(chatPartnerUser?.Urlphoto).into(targetImageView)
+                }
 
-               override fun onCancelled(error: DatabaseError) {
-                   TODO("Not yet implemented")
-               }
-           })
-       }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        } else {
+            val sdf = SimpleDateFormat("hh:mm")
+            val chatPartnerId: String
+            if (chatMessage.text.length > 7) {
+                chatMessage.text = "Đã gửi 1 tin nhắn"
+            }
+            if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
+                viewHolder.itemView.message_textview_latest_messages.text =
+                    "Bạn: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
+                chatPartnerId = chatMessage.toId
+            } else {
+                viewHolder.itemView.message_textview_latest_messages.text =
+                    "-: ${chatMessage.text}. -${sdf.format(chatMessage.timestamp)}"
+                chatPartnerId = chatMessage.formId
+            }
+
+            val ref = FirebaseDatabase.getInstance().getReference("/user/$chatPartnerId")
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chatPartnerUser = snapshot.getValue((SignUpActivity.getUser::class.java))
+                    //  viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
+                    //   if (chatPartnerUser?.Urlphoto?.isEmpty() == true)
+                    Picasso.get().load(R.drawable.andanh).into(viewHolder.itemView.imageview_lastest_messages)
+                    //  else
+                    //         Picasso.get().load(chatPartnerUser?.Urlphoto).into(targetImageView)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
     }
 
     override fun getLayout(): Int {
