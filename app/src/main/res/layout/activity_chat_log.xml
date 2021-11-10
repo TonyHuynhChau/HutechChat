@@ -17,8 +17,9 @@
         android:background="@android:color/white"
         android:ems="10"
         android:hint="Nhắn tin"
-        android:textColor="?attr/TextColor"
         android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gui_button_chat_log" />
 
@@ -27,9 +28,9 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginBottom="4dp"
+        android:background="@drawable/button_background"
         android:text="Gửi"
         android:textStyle="bold"
-        android:background="@drawable/button_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -44,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/switchAnDanh" />
 
     <ImageView
         android:id="@+id/BtnGuiAnh"
@@ -57,7 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/zm_ic_filetype_image"
+        app:srcCompat="@drawable/ic_baseline_image_24"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageView
@@ -67,11 +68,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
+        android:background="?attr/colorSecondaryVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/BtnGuiAnh"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gph_ic_gif" />
+        app:srcCompat="@drawable/ic_baseline_gif_24" />
 
     <ImageView
         android:id="@+id/emoji"
@@ -87,6 +89,22 @@
         app:layout_constraintStart_toEndOf="@+id/GIF"
         app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gph_ic_emoji" />
+        app:srcCompat="@drawable/ic_baseline_insert_emoticon_24" />
+
+    <Switch
+        android:id="@+id/switchAnDanh"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/cardview_shadow_start_color"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Bỏ Ẩn Danh"
+        android:textColor="?attr/TextColor"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -55,6 +56,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
     lateinit var recyclerview_chat_log: RecyclerView
+    lateinit var switchAnDanh: Switch
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -68,6 +70,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
+        switchAnDanh = findViewById(R.id.switchAnDanh)
         recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
         check = intent.getBooleanExtra("Check", false)
@@ -145,6 +148,10 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
     private fun nhantinnhan() {
         if (check == true) {
+            //Hiện Thanh Đổi Trạng Thái Ẩn Danh
+            switchAnDanh.isVisible = true
+
+
             val fromId = FirebaseAuth.getInstance().uid
             val toId = AnDanh?.uid
             val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
