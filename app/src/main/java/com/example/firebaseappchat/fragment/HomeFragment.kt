@@ -163,7 +163,7 @@ class HomeFragment : Fragment() {
             Handler().postDelayed(Runnable {
                 swipere.isRefreshing = false
             }, 4000)
-            adapter.add(LateMessagesRow(it))
+            adapter.add(LateMessagesRow(it, it.check))
             adapter.setOnItemClickListener { item, view ->
                 val row = item as LateMessagesRow
                 Log.d("Latest Message:", NewMessActivity.USER_KEY)
@@ -175,7 +175,6 @@ class HomeFragment : Fragment() {
                     intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
                     intent.putExtra("Check", it.check)
                 }
-
                 startActivity(intent)
             }
         }
