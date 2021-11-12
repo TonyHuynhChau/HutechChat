@@ -157,24 +157,25 @@ class HomeFragment : Fragment() {
 
     val latestMessagesMap = HashMap<String, ChatMessage>()
 
+    @SuppressLint("LogNotTimber")
     private fun refreshRecyclerViewMessages() {
         adapter.clear()
         latestMessagesMap.values.forEach {
             Handler().postDelayed(Runnable {
                 swipere.isRefreshing = false
             }, 4000)
-            adapter.add(LateMessagesRow(it, it.check))
+            adapter.add(LateMessagesRow(it))
             adapter.setOnItemClickListener { item, view ->
                 val row = item as LateMessagesRow
-                Log.d("Latest Message:", NewMessActivity.USER_KEY)
                 val intent = Intent(view.context, ChatLogActivity::class.java)
-                if (it.check) {
+                if (row.chatMessage.check) {
                     intent.putExtra("AnDanh", row.chatPartnerUser)
-                    intent.putExtra("Check", it.check)
                 } else {
                     intent.putExtra(NewMessActivity.USER_KEY, row.chatPartnerUser)
-                    intent.putExtra("Check", it.check)
                 }
+                Log.d("Latest Message Check:", row.chatMessage.check.toString())
+                Log.d("Latest Message toId:", row.chatMessage.toId)
+                intent.putExtra("Check", row.chatMessage.check)
                 startActivity(intent)
             }
         }

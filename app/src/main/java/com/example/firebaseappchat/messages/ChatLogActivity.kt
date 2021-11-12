@@ -2,15 +2,19 @@ package com.example.firebaseappchat.messages
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,10 +29,7 @@ import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.vanniktech.emoji.EmojiManager
@@ -56,7 +57,6 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
     lateinit var recyclerview_chat_log: RecyclerView
-    lateinit var switchAnDanh: Switch
     var toUser: SignUpActivity.getUser? = null
     var AnDanh: SignUpActivity.getUser? = null
     var check: Boolean = false
@@ -65,27 +65,12 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
+        Load()
+        CheckAnDanh()
+        setOnClickListener()
+    }
 
-        Giphy.configure(this, "pEUOapu4NFuNtErm4LOfR4VlhXsTioxy")
-        GIF = findViewById(R.id.GIF)
-        GuiAnh = findViewById(R.id.BtnGuiAnh)
-        emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
-        switchAnDanh = findViewById(R.id.switchAnDanh)
-        recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
-        recyclerview_chat_log.adapter = adapter
-        check = intent.getBooleanExtra("Check", false)
-        Log.d("CHECKANDANH", check.toString())
-
-        toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
-        AnDanh = intent.getParcelableExtra("AnDanh")
-        Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
-
-        if (!check) {
-            supportActionBar?.title = toUser!!.name
-        } else {
-            supportActionBar?.title = "Ẩn Danh"
-        }
-
+    private fun setOnClickListener() {
         //Emoji
         EmojiManager.install(GoogleEmojiProvider())
         val popup =
@@ -112,10 +97,28 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         gui_button_chat_log.setOnClickListener {
             performsendMessage("")
         }
-        editText_chat_log.setOnClickListener {
-            if (editText_chat_log.text.toString() != "") {
-                performsendMessage("")
-            }
+    }
+
+    private fun Load() {
+        Giphy.configure(this, "pEUOapu4NFuNtErm4LOfR4VlhXsTioxy")
+        GIF = findViewById(R.id.GIF)
+        GuiAnh = findViewById(R.id.BtnGuiAnh)
+        emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
+        recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
+        recyclerview_chat_log.adapter = adapter
+        check = intent.getBooleanExtra("Check", false)
+        Log.d("CHECKANDANH", check.toString())
+
+        toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
+        AnDanh = intent.getParcelableExtra("AnDanh")
+        Log.d("CHECKTHONGTIN", AnDanh?.email.toString())
+    }
+
+    private fun CheckAnDanh() {
+        if (!check) {
+            supportActionBar?.title = toUser!!.name
+        } else {
+            supportActionBar?.title = "Ẩn Danh"
         }
     }
 
@@ -148,10 +151,6 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
     private fun nhantinnhan() {
         if (check == true) {
-            //Hiện Thanh Đổi Trạng Thái Ẩn Danh
-            switchAnDanh.isVisible = true
-
-
             val fromId = FirebaseAuth.getInstance().uid
             val toId = AnDanh?.uid
             val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
@@ -164,7 +163,6 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                     if (chatMessage != null) {
                         if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
                             val currentUser = MainActivity.currentUser ?: return
-
                             adapter.add(
                                 ChatFromItem(
                                     chatMessage.text,
@@ -187,7 +185,6 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                         }
                     }
                     recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
