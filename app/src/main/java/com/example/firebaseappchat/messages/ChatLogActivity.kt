@@ -256,7 +256,6 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
                 }
             })
         }

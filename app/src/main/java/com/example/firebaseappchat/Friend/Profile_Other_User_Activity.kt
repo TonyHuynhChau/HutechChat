@@ -1,6 +1,7 @@
 package com.example.firebaseappchat.Friend
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -123,15 +124,11 @@ class Profile_Other_User_Activity : AppCompatActivity() {
             })
     }
 
+    @SuppressLint("LogNotTimber")
     private fun sendNotification(notification: PushNotification) =
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitInstance.api.postNotification(notification)
-                if (response.isSuccessful) {
-                    Log.d("ProfileOtherUseActivity", "Response: ${Gson().toJson(response)}")
-                } else {
-                    Log.e("ProfileOtherUseActivity", response.errorBody().toString())
-                }
+                RetrofitInstance.api.postNotification(notification)
             } catch (e: Exception) {
                 Log.e("ProfileOtherUseActivity", e.toString())
             }

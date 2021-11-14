@@ -51,7 +51,7 @@ class FriendRequestFragment : Fragment() {
         FirebaseDatabase.getInstance().getReference("FriendsRequest")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("CHẠYYYYYYYYYYY","Được")
+                    Log.d("CHẠYYYYYYYYYYY", "Được")
                     val userNguoiDung = FirebaseAuth.getInstance().currentUser
                     val adapter = GroupAdapter<GroupieViewHolder>()
                     val FirebaseDb = FirebaseDatabase.getInstance().getReference("FriendsRequest")
@@ -64,6 +64,7 @@ class FriendRequestFragment : Fragment() {
                                         adapter.add(UItem(user))
                                     }
                                 }
+
                                 override fun onCancelled(error: DatabaseError) {
                                     Log.d("Error: ", error.message)
                                 }
@@ -126,6 +127,7 @@ class FriendRequestFragment : Fragment() {
 
         fun DongYFriends(uid: String) {
             val userNguoiDung = FirebaseAuth.getInstance().currentUser
+            val latestmessages = FirebaseDatabase.getInstance().getReference("latest-messages")
             if (userNguoiDung != null) {
                 val Friends = FirebaseDatabase.getInstance().getReference("Friends")
                 Friends.child(userNguoiDung.uid).child(uid).child("uid").setValue(uid)
@@ -136,49 +138,39 @@ class FriendRequestFragment : Fragment() {
                                 .setValue(userNguoiDung.uid)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        FriendsRequest.child("Nhận " + userNguoiDung.uid)
-                                            .child("Gửi " + uid)
-                                            .removeValue().addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    Log.d(
-                                                        "Message:",
-                                                        "Đã Xóa Thành Công {Gửi ${userNguoiDung.uid}}"
-                                                    )
+
+                                        //Chuyển Từ Chat Ẩn Danh Sang Chat Thường
+                                        latestmessages.addValueEventListener(object :
+                                            ValueEventListener {
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                if (snapshot.child(userNguoiDung.uid)
+                                                        .hasChild(uid)
+                                                ) {
+                                                    latestmessages.child(userNguoiDung.uid)
+                                                        .child(uid)
+                                                        .child("check").setValue(false)
+                                                    latestmessages.child(uid)
+                                                        .child(userNguoiDung.uid)
+                                                        .child("check").setValue(false)
                                                 }
                                             }
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+                                        })
+                                        //Xóa Các Lời Mời Kết Bạn
+                                        FriendsRequest.child("Nhận " + userNguoiDung.uid)
+                                            .child("Gửi " + uid)
+                                            .removeValue()
                                         FriendsRequest.child("Gửi " + uid)
                                             .child("Nhận " + userNguoiDung.uid)
                                             .removeValue()
-                                            .addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    Log.d(
-                                                        "Message:",
-                                                        "Đã Xóa Thành Công {Gửi $uid}"
-                                                    )
-                                                }
-                                            }
                                         FriendsRequest.child("Gửi " + userNguoiDung.uid)
                                             .child("Nhận " + uid)
-                                            .removeValue().addOnCompleteListener(
-                                                OnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        Log.d(
-                                                            "Message:",
-                                                            "Đã Xóa Thành Công {Gửi ${userNguoiDung.uid}}"
-                                                        )
-                                                    }
-                                                })
+                                            .removeValue()
                                         FriendsRequest.child("Nhận " + uid)
                                             .child("Gửi " + userNguoiDung.uid)
                                             .removeValue()
-                                            .addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    Log.d(
-                                                        "Message:",
-                                                        "Đã Xóa Thành Công {Gửi $uid}"
-                                                    )
-                                                }
-                                            }
                                     }
                                 }
                         }
