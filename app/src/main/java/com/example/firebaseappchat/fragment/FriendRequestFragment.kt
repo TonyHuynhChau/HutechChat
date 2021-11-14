@@ -138,26 +138,6 @@ class FriendRequestFragment : Fragment() {
                                 .setValue(userNguoiDung.uid)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-
-                                        //Chuyển Từ Chat Ẩn Danh Sang Chat Thường
-                                        latestmessages.addValueEventListener(object :
-                                            ValueEventListener {
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                if (snapshot.child(userNguoiDung.uid)
-                                                        .hasChild(uid)
-                                                ) {
-                                                    latestmessages.child(userNguoiDung.uid)
-                                                        .child(uid)
-                                                        .child("check").setValue(false)
-                                                    latestmessages.child(uid)
-                                                        .child(userNguoiDung.uid)
-                                                        .child("check").setValue(false)
-                                                }
-                                            }
-                                            override fun onCancelled(error: DatabaseError) {
-                                                TODO("Not yet implemented")
-                                            }
-                                        })
                                         //Xóa Các Lời Mời Kết Bạn
                                         FriendsRequest.child("Nhận " + userNguoiDung.uid)
                                             .child("Gửi " + uid)

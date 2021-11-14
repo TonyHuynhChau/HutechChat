@@ -6,8 +6,7 @@ class ChatMessage(
     val formId: String,
     val toId: String,
     val timestamp: Long,
-    val check: Boolean,
     val anh: String
 ) {
-    constructor() : this("", "", "", "", -1, false, "")
+    constructor() : this("", "", "", "", -1,"")
 }

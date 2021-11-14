@@ -107,6 +107,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".messages.MainActivity" />
         </activity>
+        <activity
+            android:name=".ChatAnDanh.ChatLogAnDanhActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".messages.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

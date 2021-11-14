@@ -1,4 +1,4 @@
-package com.example.firebaseappchat.messages
+package com.example.firebaseappchat.ChatAnDanh
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.latest_message_row.view.*
 import java.text.SimpleDateFormat
 
 
-class LateMessagesRow(val chatMessage: ChatMessage) :
+class LateMessagesRowAnDanh(val chatMessage: ChatMessage) :
     Item<GroupieViewHolder>() {
     var chatPartnerUser: SignUpActivity.getUser? = null
 
@@ -44,14 +44,10 @@ class LateMessagesRow(val chatMessage: ChatMessage) :
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 chatPartnerUser = snapshot.getValue((SignUpActivity.getUser::class.java))
-                viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
-                if (chatPartnerUser?.Urlphoto?.isEmpty() == true) {
-
-                    Picasso.get().load(IMGURL)
-                        .into(viewHolder.itemView.imageview_lastest_messages)
-                }
+                viewHolder.itemView.username_textView_latestmessage.text = "Ẩn Danh"
+                Picasso.get().load(R.drawable.andanh)
+                    .into(viewHolder.itemView.imageview_lastest_messages)
             }
-
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }

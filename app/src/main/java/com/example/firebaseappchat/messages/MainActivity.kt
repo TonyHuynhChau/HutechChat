@@ -24,10 +24,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import fragment.AccountFragment
-import fragment.DashboardFragment
-import fragment.FriendRequestFragment
-import fragment.HomeFragment
+import fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -40,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     //Fragment
     private val dashboardFragment = DashboardFragment()
+    private val chatandanh = ChatAnDanhFragment()
     private val homeFragment = HomeFragment()
     private val accountFragment = AccountFragment()
     private val friendFragment = FriendRequestFragment()
@@ -60,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         bottom_nav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFrag(homeFragment)
+                R.id.chatandanh -> replaceFrag(chatandanh)
                 R.id.notification_friend_request -> replaceFrag(friendFragment)
                 R.id.dashboard -> replaceFrag(dashboardFragment)
                 R.id.account -> replaceFrag(accountFragment)
@@ -68,29 +67,29 @@ class MainActivity : AppCompatActivity() {
         }
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPref", 0)
         val sharedPrefsEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("Night Mode",false)
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("Night Mode", false)
 
-        if(isNightModeOn){
+        if (isNightModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
-        btnDarkMode.setOnCheckedChangeListener{ compoundButton: CompoundButton, b: Boolean ->
-            if(btnDarkMode.isChecked){
+        btnDarkMode.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+            if (btnDarkMode.isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefsEdit.putBoolean("Night Mode", true)
                 sharedPrefsEdit.apply()
-                Toast.makeText(this,"Chuyển Thành Công",Toast.LENGTH_LONG).show()
-            }
-            else {
+                Toast.makeText(this, "Chuyển Thành Công", Toast.LENGTH_LONG).show()
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPrefsEdit.putBoolean("Night Mode", false)
                 sharedPrefsEdit.apply()
-                Toast.makeText(this,"Chuyển Thành Công",Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Chuyển Thành Công", Toast.LENGTH_LONG).show()
             }
         }
     }
+
     private fun fecthCurrentUser() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/user/$uid")
@@ -136,10 +135,6 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_new_call -> {
                 startActivity(Intent(this, VideoChatActivity::class.java))
             }
-            /*
-            R.id.menu_DarkMode ->{
-
-            }*/
         }
 
         return super.onOptionsItemSelected(item)

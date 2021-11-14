@@ -8,27 +8,38 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="fragment.HomeFragment">
+        tools:context="fragment.ChatAnDanhFragment">
 
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefresh"
+            android:id="@+id/swipeRefreshandanh"
             android:layout_width="match_parent"
             android:layout_height="650dp"
             android:layout_marginBottom="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/BtnRanDomChat">
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_latest_messages"
+                android:id="@+id/recyclerview_latest_messagesandanh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <Button
+            android:id="@+id/BtnRanDomChat"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Chat Ngẫu Nhiên"
+            android:textColor="?attr/TextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

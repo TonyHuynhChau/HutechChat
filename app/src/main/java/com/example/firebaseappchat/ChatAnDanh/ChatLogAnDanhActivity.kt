@@ -1,20 +1,26 @@
-package com.example.firebaseappchat.messages
+package com.example.firebaseappchat.ChatAnDanh
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -40,10 +46,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
+class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
+
     companion object {
         val TAG = "chat log"
     }
+
     val adapter = GroupAdapter<GroupieViewHolder>()
     var selectPhotoUrl: Uri? = null
     lateinit var GuiAnh: ImageView
@@ -93,11 +101,11 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         Giphy.configure(this, "pEUOapu4NFuNtErm4LOfR4VlhXsTioxy")
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
-        emoji = findViewById(R.id.emoji)
+        emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
         recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
-        supportActionBar?.title = toUser!!.name
+        supportActionBar?.title = "Ẩn Danh"
     }
 
 
@@ -130,7 +138,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private fun nhantinnhan() {
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid
-        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages-andanh/$fromId/$toId")
         ref.addChildEventListener(object : ChildEventListener {
             @SuppressLint("SimpleDateFormat")
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -140,6 +148,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 if (chatMessage != null) {
                     if (chatMessage.formId == FirebaseAuth.getInstance().uid) {
                         val currentUser = MainActivity.currentUser ?: return
+
                         adapter.add(
                             ChatFromItem(
                                 chatMessage.text,
@@ -154,6 +163,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                 chatMessage.text,
                                 sdf.format(chatMessage.timestamp),
                                 toUser!!,
+
                                 chatMessage.anh
                             )
                         )
@@ -181,6 +191,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     }
 
     private fun performsendMessage(photoUrl: String) {
+
         // gui du lieu vao firebase
         editText_chat_log.text.toString()
         val text = editText_chat_log.text.toString()
@@ -192,14 +203,16 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         // tin nhan tu nguoi gui
         val reference =
-            FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+            FirebaseDatabase.getInstance().getReference("/user-messages-andanh/$fromId/$toId")
+                .push()
         //tin nhan tu nguoi nhan
         val toReference =
-            FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+            FirebaseDatabase.getInstance().getReference("/user-messages-andanh/$toId/$fromId")
+                .push()
         val chatMessage = toId?.let {
             ChatMessage(
                 reference.key!!, text, fromId!!,
-                it, System.currentTimeMillis(),photoUrl
+                it, System.currentTimeMillis(), photoUrl
             )
         }
         reference.setValue(chatMessage)
@@ -211,12 +224,11 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         toReference.setValue(chatMessage)
 
         val latestMessagesRef =
-            FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+            FirebaseDatabase.getInstance().getReference("/latest-messages-andanh/$fromId/$toId")
         latestMessagesRef.setValue(chatMessage)
         val latestMessagesToRef =
-            FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/latest-messages-andanh/$toId/$fromId")
         latestMessagesToRef.setValue(chatMessage)
-
         Loading?.dismiss()
     }
 
@@ -243,6 +255,7 @@ class ChatFromItem(
     Item<GroupieViewHolder>() {
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+
         if (Photo == "") {
             viewHolder.itemView.textviewfrom_chat_from_row.isVisible = true
             viewHolder.itemView.GuiAnhFrom.isVisible = false
@@ -253,6 +266,7 @@ class ChatFromItem(
         }
         viewHolder.itemView.textviewfrom_chat_from_row.text = text
         viewHolder.itemView.Txt_time_From.text = time
+
     }
 
     override fun getLayout(): Int {
@@ -264,10 +278,12 @@ class ChatToItem(
     val text: String,
     val time: String,
     val user: SignUpActivity.getUser,
+
     val Photo: String
 ) :
     Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+
         if (Photo == "") {
             viewHolder.itemView.textviewfrom_chat_to_row.isVisible = true
             viewHolder.itemView.GuiAnhTo.isVisible = false
@@ -278,14 +294,7 @@ class ChatToItem(
         }
         viewHolder.itemView.textviewfrom_chat_to_row.text = text
         viewHolder.itemView.Txt_time_To.text = time
-
-        val url = user.Urlphoto
-        val targetImageView = viewHolder.itemView.imageViewchat_to_row
-        if (url.isEmpty()) {
-            Picasso.get().load(IMGURL).into(targetImageView)
-        } else {
-            Picasso.get().load(url).into(targetImageView)
-        }
+        Picasso.get().load(R.drawable.andanh).into(viewHolder.itemView.imageViewchat_to_row)
     }
 
     override fun getLayout(): Int {

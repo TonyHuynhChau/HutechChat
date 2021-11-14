@@ -6,6 +6,10 @@
         android:icon="@drawable/ic_baseline_home"
         android:title="Trang Chủ" />
     <item
+        android:id="@+id/chatandanh"
+        android:icon="@drawable/andanh"
+        android:title="Ẩn Danh" />
+    <item
         android:id="@+id/notification_friend_request"
         android:icon="@android:drawable/ic_popup_reminder"
         android:title="Thông Báo" />
