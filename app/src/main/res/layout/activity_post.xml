@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondaryVariant"
+    android:id="@+id/rootPost"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,20 +36,18 @@
 
         <EditText
             android:id="@+id/TxtSatus"
-            android:layout_width="match_parent"
+            android:layout_width="320dp"
             android:layout_height="80dp"
-            android:layout_marginTop="32dp"
             android:layout_margin="16dp"
+            android:layout_marginTop="32dp"
             android:ems="10"
-            android:hint="Name"
-            android:textColor="?attr/TextColor"
-            android:inputType="textPersonName"
+            android:hint="Nội Dung Bài Post"
+            android:inputType="textMultiLine"
             android:minHeight="48dp"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            android:textColor="?attr/TextColor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/BtnDang"
@@ -62,5 +61,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addimag"
             android:layout_margin="16dp"/>
+
+        <ImageView
+            android:id="@+id/btnEmojiPost"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/TxtSatus"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_insert_emoticon_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

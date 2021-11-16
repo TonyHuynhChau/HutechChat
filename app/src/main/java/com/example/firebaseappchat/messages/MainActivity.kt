@@ -2,7 +2,6 @@ package com.example.firebaseappchat.messages
 
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,14 +9,15 @@ import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.SearchUser.SearchUserActivity
 import com.example.firebaseappchat.VideoCall.VideoChatActivity
 import com.example.firebaseappchat.databinding.ActivityMainBinding
+import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -71,8 +71,10 @@ class MainActivity : AppCompatActivity() {
 
         if (isNightModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            btnDarkMode.isChecked = true
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            btnDarkMode.isChecked = false
         }
 
         btnDarkMode.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->

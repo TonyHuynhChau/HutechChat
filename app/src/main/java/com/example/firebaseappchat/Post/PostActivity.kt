@@ -2,28 +2,32 @@ package com.example.firebaseappchat.Post
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.*
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.example.firebaseappchat.R
-import com.example.firebaseappchat.databinding.FragmentDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.EmojiPopup
+import com.vanniktech.emoji.google.GoogleEmojiProvider
 import fragment.DashboardFragment
+import kotlinx.android.synthetic.main.activity_post.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class PostActivity : AppCompatActivity() {
     private lateinit var ImgButton: ImageView
+    private lateinit var EmojiButton: ImageView
     private lateinit var ImgAdd: ImageView
     private lateinit var TxtStatus: TextView
     private lateinit var BtnDang: Button
@@ -34,12 +38,20 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
 
+        EmojiButton = findViewById(R.id.btnEmojiPost)
         ImgButton = findViewById(R.id.addimag)
         TxtStatus = findViewById(R.id.TxtSatus)
         BtnDang = findViewById(R.id.BtnDang)
         ImgAdd = findViewById(R.id.imageAdd)
         ImgButton.setOnClickListener {
             OpenGallery()
+        }
+
+        //Emoji
+        EmojiManager.install(GoogleEmojiProvider())
+        val popup = EmojiPopup.Builder.fromRootView(findViewById(R.id.rootPost)).build(TxtSatus)
+        EmojiButton.setOnClickListener {
+                popup.toggle()
         }
     }
 
