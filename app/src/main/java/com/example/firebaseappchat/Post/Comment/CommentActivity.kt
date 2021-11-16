@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -14,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.model.Comments
+import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
@@ -29,8 +31,6 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.layout_allcomment.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-
-
 
 
 class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
@@ -97,18 +97,8 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         //Send Comment
         btnSendComment.setOnClickListener {
-            usersRef.child(current_user_id).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val userName = snapshot.child("name").value.toString()
-                    validateComment(userName)
-                    txtComment.setText("")
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            validateComment()
+            txtComment.setText("")
         }
 
         AutoLoad(recyclerComment)
@@ -141,7 +131,7 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
     //Add Comment
     @SuppressLint("SimpleDateFormat")
-    private fun validateComment(userName: String) {
+    private fun validateComment() {
         val commentText = txtComment.text.toString()
 
         if (TextUtils.isEmpty(commentText)) {
@@ -155,30 +145,26 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             val currentTime = SimpleDateFormat("hh:mm:ss")
             val saveCurrentTime = currentTime.format(calDate.time)
 
-            RandomKey = current_user_id + saveCurrentDate + saveCurrentTime
             val userName = mAuth.currentUser?.displayName.toString()
 
-            val commentMap = HashMap<String, Any>()
-            commentMap.put("uid", current_user_id)
-            commentMap.put("comment", commentText)
-            commentMap.put("date", saveCurrentDate)
-            commentMap.put("time", saveCurrentTime)
-            commentMap.put("name", userName)
-
-            postRef.child("Comment").child(RandomKey).updateChildren(commentMap)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Bình Luận Thành Công", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Bình Luận Thất Bại", Toast.LENGTH_SHORT).show();
-                    }
+            var commentMap = mapOf<String, String>(
+                "uid" to current_user_id,
+                "comment" to commentText,
+                "date" to saveCurrentDate,
+                "time" to saveCurrentTime,
+                "name" to userName
+            )
+            postRef.child("comment").child(current_user_id + saveCurrentDate + saveCurrentTime)
+                .updateChildren(commentMap)
+                .addOnSuccessListener { task ->
+                    Toast.makeText(this, "Comment Thành Công", Toast.LENGTH_SHORT).show()
                 }
         }
     }
 
     //Load Comment
     fun AutoLoad(recyclerviewComments: RecyclerView) {
-        val ref = FirebaseDatabase.getInstance().getReference("Post/$PostKey/How? 'Or' What")
+        val ref = FirebaseDatabase.getInstance().getReference("Post")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 LayPost(recyclerviewComments)
@@ -193,25 +179,16 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     @SuppressLint("SimpleDateFormat")
     private fun LayPost(recyclerviewComments: RecyclerView) {
         val adapter = GroupAdapter<GroupieViewHolder>()
-        val ref = FirebaseDatabase.getInstance().getReference("Post/$PostKey/How? 'Or' What")
+        val ref =
+            FirebaseDatabase.getInstance().getReference("Post").child(PostKey).child("comment")
         ref.orderByChild("date")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach() {
                     val user = it.getValue(Comments::class.java)
-                    var AnhProfile_Post = ""
                     if (user != null) {
-                        FirebaseDatabase.getInstance().getReference("user").child(user.uid)
-                            .addValueEventListener(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    AnhProfile_Post = snapshot.child("Urlphoto").value.toString()
-                                    adapter.add(UItem(user, AnhProfile_Post))
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-                                    TODO("Not yet implemented")
-                                }
-                            })
+                        Log.d("user", user.uid)
+                        FindIMGUSER(user, adapter)
                     }
                 }
             }
@@ -221,6 +198,23 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             }
         })
         recyclerviewComments.adapter = adapter
+        recyclerviewComments.scrollToPosition(adapter.itemCount - 1)
+    }
+
+    private fun FindIMGUSER(user: Comments, adapter: GroupAdapter<GroupieViewHolder>) {
+        FirebaseDatabase.getInstance().getReference("user")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val AnhProfile_Post =
+                        snapshot.child("${user.uid}/Urlphoto").value.toString()
+                    Log.d("AnhProfile_Post", AnhProfile_Post)
+                    adapter.add(UItem(user, AnhProfile_Post))
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     class UItem(val user: Comments, val Anh_Profile_Post: String) :
@@ -231,20 +225,15 @@ class CommentActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         }
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            if (Anh_Profile_Post.isEmpty()) {
-                val ImgDefault = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
-                        "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
-                        "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
-                        "&pid=ImgRaw&r=0"
-                Picasso.get().load(ImgDefault).into(viewHolder.itemView.comment_profile_image)
+            if (Anh_Profile_Post.isEmpty() || Anh_Profile_Post == "null" || Anh_Profile_Post == "") {
+                Picasso.get().load(IMGURL).into(viewHolder.itemView.comment_profile_image)
             } else {
                 Picasso.get().load(Anh_Profile_Post).into(viewHolder.itemView.comment_profile_image)
             }
-            viewHolder.itemView.comment_username.text = "@"+user.name
+            viewHolder.itemView.comment_username.text = user.name
             viewHolder.itemView.comment_text.text = user.comment
             viewHolder.itemView.comment_date.text = user.date
             viewHolder.itemView.comment_time.text = user.time
-
             if (user.Urlphoto.isEmpty()) {
                 viewHolder.itemView.comment_image.isVisible = false
             } else {

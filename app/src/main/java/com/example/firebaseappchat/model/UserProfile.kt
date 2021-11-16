@@ -24,12 +24,13 @@ import kotlinx.android.synthetic.main.activity_user_profile.*
 import java.util.*
 
 class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
-    companion object{
+    companion object {
         val IMGURL = "https://th.bing.com/th/id/R.502a73beb3f9263ca076457d525087c6?" +
                 "rik=OP8RShVgw6uFhQ&riu=http%3a%2f%2fdvdn247.net%2fwp-content%2fuploads%2f2020%2f07%2" +
                 "favatar-mac-dinh-1.png&ehk=NSFqDdL3jl9cMF3B9A4%2bzgaZX3sddpix%2bp7R%2bmTZHsQ%3d&risl=" +
                 "&pid=ImgRaw&r=0"
     }
+
     private lateinit var binding: ActivityUserProfileBinding
     var year = 0
     var month = 0
@@ -49,9 +50,7 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         supportActionBar?.title = "Profile"
 
         if (userdata != null) {
-            if (userdata.photoUrl != null) {
-                readata(userdata.uid)
-            }
+            readata(userdata.uid)
         }
 
         binding.btnSelectImage.setOnClickListener() {
@@ -88,13 +87,27 @@ class UserProfile : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
                 val phonenumber = dataSnapshot.child("$uid/Phone").value
                 val Sex = dataSnapshot.child("$uid/Sex").value
                 val photo = dataSnapshot.child("$uid/Urlphoto").value
-
-                Picasso.get().load(photo.toString()).into(select_images)
-                binding.TxtName.text = Editable.Factory.getInstance().newEditable(name.toString())
-                binding.TxtDate.text = Editable.Factory.getInstance().newEditable(date.toString())
-                binding.TxtSex.text = Editable.Factory.getInstance().newEditable(Sex.toString())
-                binding.TxtSDT.text = Editable.Factory.getInstance().newEditable(phonenumber.toString())
+                if (photo != null) {
+                    Picasso.get().load(photo.toString()).into(select_images)
+                }
+                if (name != null) {
+                    binding.TxtName.text =
+                        Editable.Factory.getInstance().newEditable(name.toString())
+                }
+                if (date != null) {
+                    binding.TxtDate.text =
+                        Editable.Factory.getInstance().newEditable(date.toString())
+                }
+                if (Sex != null) {
+                    binding.TxtSex.text =
+                        Editable.Factory.getInstance().newEditable(Sex.toString())
+                }
+                if (phonenumber != null) {
+                    binding.TxtSDT.text =
+                        Editable.Factory.getInstance().newEditable(phonenumber.toString())
+                }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.w("loadPost:onCancelled", error.toException())
             }
