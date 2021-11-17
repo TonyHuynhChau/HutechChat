@@ -15,9 +15,10 @@
         <EditText
             android:id="@+id/TxtSearch"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="48dp"
             android:layout_marginRight="48dp"
+            android:padding="10dp"
             android:background="@drawable/edit_text_background_search"
             android:drawableRight="@android:drawable/ic_search_category_default"
             android:hint="Search Here...."
