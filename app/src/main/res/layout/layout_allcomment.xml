@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date"
                         android:layout_marginStart="5dp"
-                        android:textColor="?attr/TextColor"
+                        android:textColor="@color/black"
                         android:textSize="13sp" />
 
                     <TextView
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:text="Time"
                         android:layout_marginStart="5dp"
-                        android:textColor="?attr/TextColor"
+                        android:textColor="@color/black"
                         android:textSize="13sp" />
                 </LinearLayout>
             </LinearLayout>

@@ -45,9 +45,14 @@ class LateMessagesRow(val chatMessage: ChatMessage) :
             override fun onDataChange(snapshot: DataSnapshot) {
                 chatPartnerUser = snapshot.getValue((SignUpActivity.getUser::class.java))
                 viewHolder.itemView.username_textView_latestmessage.text = chatPartnerUser?.name
+
                 if (chatPartnerUser?.Urlphoto?.isEmpty() == true) {
 
                     Picasso.get().load(IMGURL)
+                        .into(viewHolder.itemView.imageview_lastest_messages)
+                }
+                else {
+                    Picasso.get().load(chatPartnerUser?.Urlphoto)
                         .into(viewHolder.itemView.imageview_lastest_messages)
                 }
             }
