@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firebaseappchat.databinding.ActivityWelcomeBinding
+import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.registerlogin.LoginActivity
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -29,11 +30,13 @@ class Welcome : AppCompatActivity() {
 
     private fun btnDN() {
         val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
     private fun btnDK() {
         val intent = Intent(this, SignUpActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 }

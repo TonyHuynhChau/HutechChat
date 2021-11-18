@@ -1,6 +1,7 @@
 package fragment
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -22,10 +23,7 @@ import com.example.firebaseappchat.messages.LateMessagesRow
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.registerlogin.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_andanhchat.view.*
@@ -58,6 +56,12 @@ class ChatAnDanhFragment : Fragment() {
         view.recyclerview_latest_messagesandanh.adapter = adapter
         val BtnChatRanDom = view.findViewById<Button>(R.id.BtnRanDomChat)
         BtnChatRanDom.setOnClickListener {
+            Loading = ProgressDialog(view.context)
+            Loading!!.setTitle("Đang Tìm Bạn Tâm Giao")
+            Loading!!.setMessage("Xin Đợi Trong Giây Lát")
+            Loading!!.show()
+            check = true
+            SetQueueChat("Finding")
             RanDomChat()
         }
         view.recyclerview_latest_messagesandanh.addItemDecoration(
@@ -73,87 +77,64 @@ class ChatAnDanhFragment : Fragment() {
         return view
     }
 
+    var check = false
+    private fun SetQueueChat(Status: String) {
+        val RandomChat = FirebaseDatabase.getInstance().getReference("RandomChat")
+        val NguoiDung = FirebaseAuth.getInstance().currentUser
+        val randomchat = mapOf(
+            "uid" to NguoiDung!!.uid,
+            "status" to Status
+        )
+        RandomChat.child(NguoiDung!!.uid).updateChildren(randomchat)
+    }
+
+
     @SuppressLint("LongLogTag")
     private fun RanDomChat() {
         val UserFirebase = FirebaseDatabase.getInstance().getReference("user")
+        val RandomChat = FirebaseDatabase.getInstance().getReference("RandomChat")
         val NguoiDung = FirebaseAuth.getInstance().currentUser
-        val MessageFirebase = FirebaseDatabase.getInstance().getReference("latest-messages-andanh")
-        MessageFirebase.get().addOnSuccessListener {
-            var coutMessages: Long = 0
-            if (NguoiDung != null) {
-                coutMessages = it.child(NguoiDung.uid).childrenCount
-            }
-            UserFirebase.get().addOnSuccessListener {
-                val count = it.childrenCount
-                if ((count - 1) != coutMessages) {
-                    var random: Long = Random.nextLong(1, count + 1)
-                    if (NguoiDung != null) {
-                        val uidNguoiDung = it.child(NguoiDung.uid).child("STT").value
-                        while (random == it.child(NguoiDung.uid).child("STT").value) {
-                            random = Random.nextLong(1, count + 1)
-                        }
-                        UserFirebase.get().addOnSuccessListener {
-                            var uid = ""
-                            var name = ""
-                            var STT = ""
-                            var check = "false"
-                            var user: SignUpActivity.getUser? = null
-                            it.children.forEach() {
-                                if (it.child("STT").value == random) {
-                                    uid = it.child("uid").value.toString()
-                                    name = it.child("name").value.toString()
-                                    STT = it.child("STT").value.toString()
-                                    user = it.getValue(SignUpActivity.getUser::class.java)
-                                }
-                            }
 
-                            MessageFirebase.get().addOnSuccessListener {
-                                if (it.child(NguoiDung.uid).hasChild(uid)) {
-                                    check = "true"
-                                }
-                                if (check == "true") {
-                                    random = Random.nextLong(1, count + 1)
-                                    do {
-                                        random = Random.nextLong(1, count + 1)
-                                        Log.d("RANDOM-TRONG-MessageFirebase", random.toString())
-                                    } while (random == uidNguoiDung || random == STT.toLong())
-                                    UserFirebase.get().addOnSuccessListener {
-                                        var userMessageFirebase: SignUpActivity.getUser? = null
-                                        it.children.forEach() {
-                                            if (it.child("STT").value == random) {
-                                                userMessageFirebase =
-                                                    it.getValue(SignUpActivity.getUser::class.java)
 
-                                            }
-                                        }
-                                        Log.d("UID_TEST", userMessageFirebase?.uid.toString())
-                                        Log.d("NAME_TEST", userMessageFirebase?.name.toString())
-                                        Log.d("STT_TEST", userMessageFirebase?.STT.toString())
-                                        val intent = Intent(context, ChatLogAnDanhActivity::class.java)
-                                        intent.putExtra(NewMessActivity.USER_KEY, userMessageFirebase)
-                                        startActivity(intent)
+        RandomChat.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (check) {
+                    snapshot.children.forEach() {
+                        val CheckStatus = it.child("status").value
+                        val useruid = it.child("uid").value
+                        if (CheckStatus == "Finding" && useruid != NguoiDung!!.uid) {
+                            var int = 0
+                            UserFirebase.child(useruid.toString())
+                                .addValueEventListener(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val userProfile =
+                                            snapshot.getValue(SignUpActivity.getUser::class.java)
+                                        OpenActivity(userProfile)
+                                        Loading!!.dismiss()
                                     }
-                                } else {
-                                    Log.d("UID_TEST", user?.uid.toString())
-                                    Log.d("NAME_TEST", user?.name.toString())
-                                    Log.d("STT_TEST", user?.STT.toString())
-                                    val intent = Intent(context, ChatLogAnDanhActivity::class.java)
-                                    intent.putExtra(NewMessActivity.USER_KEY, user)
-                                    startActivity(intent)
 
-                                }
-                                Log.d("CHECK-TEST", check)
-                            }
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+                                })
                         }
-                        Log.d("RANDOM", random.toString())
                     }
-                } else {
-                    Toast.makeText(context, "Bạn Đã Chat Với Người Bí Ẩn", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
-        }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    private var Loading: ProgressDialog? = null
+    private fun OpenActivity(userProfile: SignUpActivity.getUser?) {
+        val intent = Intent(context, ChatLogAnDanhActivity::class.java)
+        intent.putExtra(NewMessActivity.USER_KEY, userProfile)
+        SetQueueChat("Found it")
+        check = false
+        startActivity(intent)
     }
 
     val latestMessagesMap = HashMap<String, ChatMessage>()

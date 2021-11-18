@@ -52,6 +52,13 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         val TAG = "chat log"
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
     val adapter = GroupAdapter<GroupieViewHolder>()
     var selectPhotoUrl: Uri? = null
     lateinit var GuiAnh: ImageView
@@ -163,7 +170,6 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
                                 chatMessage.text,
                                 sdf.format(chatMessage.timestamp),
                                 toUser!!,
-
                                 chatMessage.anh
                             )
                         )
@@ -200,7 +206,6 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         val toId = user?.uid
 
         if (fromId == null) return
-
         // tin nhan tu nguoi gui
         val reference =
             FirebaseDatabase.getInstance().getReference("/user-messages-andanh/$fromId/$toId")

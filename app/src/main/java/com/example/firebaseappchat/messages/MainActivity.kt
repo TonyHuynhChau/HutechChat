@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
     private val accountFragment = AccountFragment()
     private val friendFragment = FriendRequestFragment()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
