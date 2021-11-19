@@ -5,15 +5,20 @@
         android:id="@+id/menu_search"
         android:icon="?android:attr/actionModeWebSearchDrawable"
         android:title="search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_new_mess"
         android:title="Tạo Tin Mới"
         android:icon="@drawable/ic_baseline_add_comment_24"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/menu_new_call"
         android:title="Tạo Cuộc Gọi"
         android:icon="@drawable/ic_baseline_call"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_sign_out"
+        android:title="Đăng xuất"
+        android:icon="@drawable/ic_logout_white"
+        app:showAsAction="always"/>
 </menu>
