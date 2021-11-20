@@ -11,28 +11,34 @@
 
     <EditText
         android:id="@+id/editText_chat_log"
-        android:layout_width="200dp"
+        android:layout_width="240dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="4dp"
-        android:background="@android:color/white"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="8dp"
+        android:padding="15dp"
+        android:background="@drawable/edit_background"
         android:ems="10"
         android:hint="Nhắn tin"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gui_button_chat_log" />
 
-    <Button
+    <ImageView
         android:id="@+id/gui_button_chat_log"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/button_background"
+        android:layout_width="30dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_baseline_send_24"
         android:text="Gửi"
+        android:textColor="?attr/TextColor"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_chat_log" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_chat_log"
@@ -51,7 +57,7 @@
         android:id="@+id/BtnGuiAnh"
         android:layout_width="30dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +71,7 @@
         android:id="@+id/GIF"
         android:layout_width="30dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:background="?attr/colorSecondaryVariant"
@@ -79,9 +85,8 @@
         android:id="@+id/emoji"
         android:layout_width="30dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_chat_log"

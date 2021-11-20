@@ -25,8 +25,6 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import fragment.HomeFragment
-import kotlinx.android.synthetic.main.user_row.view.*
-import kotlinx.android.synthetic.main.user_row_call.view.*
 import java.util.*
 import kotlin.collections.HashMap
 
