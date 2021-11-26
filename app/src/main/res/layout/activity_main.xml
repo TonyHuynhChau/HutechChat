@@ -11,7 +11,7 @@
         android:id="@+id/btnDarkMode"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:textSize="22dp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -40,11 +40,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_menu_nav"
         android:background="?attr/colorPrimary"
         app:itemIconTint="?attr/TextColor"
         app:itemTextColor="?attr/TextColor"
-        >
+        app:menu="@menu/bottom_menu_nav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 </androidx.constraintlayout.widget.ConstraintLayout>

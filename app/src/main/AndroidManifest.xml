@@ -22,10 +22,15 @@
         android:theme="@style/Theme.FirebaseAppChat"
         tools:replace="android:allowBackup"
         tools:targetApi="m">
+
+        <activity
+            android:name=".MemeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Post.Comment.CommentActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Post.ClickPost"
             android:exported="false" />
@@ -67,7 +72,7 @@
         <activity
             android:name=".Friend.Profile_Other_User_Activity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".SearchUser.SearchUserActivity"
             android:exported="false"

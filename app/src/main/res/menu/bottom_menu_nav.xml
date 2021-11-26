@@ -16,10 +16,9 @@
     <item
         android:id="@+id/dashboard"
         android:icon="@drawable/ic_baseline_dashboard"
-        android:title="Nhật Ký" />
+        android:title="Bài Viết" />
     <item
         android:id="@+id/account"
         android:icon="@drawable/ic_account_circle"
         android:title="Tài Khoản" />
-
 </menu>

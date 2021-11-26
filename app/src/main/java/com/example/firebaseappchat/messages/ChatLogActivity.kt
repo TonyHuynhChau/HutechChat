@@ -7,12 +7,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.firebaseappchat.MemeActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
 import com.example.firebaseappchat.model.ChatMessage
@@ -24,7 +27,10 @@ import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.vanniktech.emoji.EmojiManager
@@ -230,6 +236,20 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         selectedContentType: GPHContentType
     ) {
         performsendMessage(media.images.fixedWidth?.gifUrl.toString())
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_chat_meme -> {
+                startActivity(Intent(this, MemeActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.nav_menu_chat, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 }
 
