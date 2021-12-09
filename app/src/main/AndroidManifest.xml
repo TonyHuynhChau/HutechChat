@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +24,10 @@
         android:theme="@style/Theme.FirebaseAppChat"
         tools:replace="android:allowBackup"
         tools:targetApi="m">
-
+        <activity
+            android:name=".TaoMeme.CreateMemeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".MemeActivity"
             android:exported="true"

@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.example.firebaseappchat.MemeActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.TaoMeme.CreateMemeActivity
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.model.UserProfile.Companion.IMGURL
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -50,6 +51,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     companion object {
         val TAG = "chat log"
     }
+
     val adapter = GroupAdapter<GroupieViewHolder>()
     var selectPhotoUrl: Uri? = null
     lateinit var GuiAnh: ImageView
@@ -205,7 +207,7 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         val chatMessage = toId?.let {
             ChatMessage(
                 reference.key!!, text, fromId!!,
-                it, System.currentTimeMillis(),photoUrl
+                it, System.currentTimeMillis(), photoUrl
             )
         }
         reference.setValue(chatMessage)
@@ -242,6 +244,9 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         when (item.itemId) {
             R.id.menu_chat_meme -> {
                 startActivity(Intent(this, MemeActivity::class.java))
+            }
+            R.id.create_meme -> {
+                startActivity(Intent(this, CreateMemeActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)

@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -20,14 +21,17 @@ import com.example.firebaseappchat.R
 import com.example.firebaseappchat.messages.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.util.jar.Attributes
 import kotlin.random.Random
 
 private const val CHANNEL_ID = "my_channel"
 
 class FirebaseService : FirebaseMessagingService() {
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         val intent = Intent(this, MainActivity::class.java)
+        val sound = Uri.parse(R.raw.notification.toString())
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
@@ -45,6 +49,8 @@ class FirebaseService : FirebaseMessagingService() {
             .setContentTitle(message.data["title"])
             .setContentText(message.data["message"])
             .setSmallIcon(R.drawable.ic_2)
+            .setColor(getColor(R.color.Red))
+            .setSound(sound)
             .setLargeIcon(bitmap)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

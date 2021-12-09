@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_baseline_more_24"
         android:title="Lướt Meme"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/create_meme"
+        android:icon="@drawable/ic_baseline_more_24"
+        android:title="Tạo Meme Mới"
+        app:showAsAction="never" />
 </menu>

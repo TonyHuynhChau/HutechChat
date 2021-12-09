@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.example.firebaseappchat.MemeActivity
 import com.example.firebaseappchat.NewMessActivity
 import com.example.firebaseappchat.R
+import com.example.firebaseappchat.TaoMeme.CreateMemeActivity
 import com.example.firebaseappchat.messages.MainActivity
 import com.example.firebaseappchat.model.ChatMessage
 import com.example.firebaseappchat.registerlogin.SignUpActivity
@@ -254,6 +255,9 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         when (item.itemId) {
             R.id.menu_chat_meme -> {
                 startActivity(Intent(this, MemeActivity::class.java))
+            }
+            R.id.create_meme -> {
+                startActivity(Intent(this, CreateMemeActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)
