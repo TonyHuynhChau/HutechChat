@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -27,6 +28,7 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -65,6 +67,8 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
+    lateinit var scrollView: ScrollView
+    lateinit var floatingBtn: FloatingActionButton
     lateinit var recyclerview_chat_log: RecyclerView
     var toUser: SignUpActivity.getUser? = null
     private var Loading: ProgressDialog? = null
@@ -88,7 +92,9 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         GIF.setOnClickListener {
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
         }
-
+        floatingBtn.setOnClickListener{
+            scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        }
         GuiAnh.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -110,6 +116,8 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
+        scrollView = findViewById(R.id.rootView)
+        floatingBtn = findViewById(R.id.btnToBottom)
         recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
