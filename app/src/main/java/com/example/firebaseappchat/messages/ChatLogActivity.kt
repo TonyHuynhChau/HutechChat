@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -27,6 +28,7 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -57,6 +59,8 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
+    lateinit var scrollView: ScrollView
+    lateinit var floatingBtn: FloatingActionButton
     lateinit var recyclerview_chat_log: RecyclerView
     var toUser: SignUpActivity.getUser? = null
     private var Loading: ProgressDialog? = null
@@ -90,6 +94,11 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             Loading!!.setMessage("Xin Đợi Trong Giây Lát")
             Loading!!.show()
         }
+
+        floatingBtn.setOnClickListener{
+            scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+        }
+
         nhantinnhan()
 
         gui_button_chat_log.setOnClickListener {
@@ -102,8 +111,20 @@ class ChatLogActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         emoji = findViewById(R.id.emoji)
+        scrollView = findViewById(R.id.rootView)
+        floatingBtn = findViewById(R.id.btnToBottom)
         recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
+//        recyclerview_chat_log.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if (dy == 10) {
+//                    floatingBtn.isGone
+//                } else {
+//                    floatingBtn.isVisible
+//                }
+//                super.onScrolled(recyclerView, dx, dy)
+//            }
+//        })
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
         supportActionBar?.title = toUser!!.name
     }
