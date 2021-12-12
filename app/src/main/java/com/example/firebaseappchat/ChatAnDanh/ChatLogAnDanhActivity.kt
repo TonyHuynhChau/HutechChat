@@ -67,8 +67,6 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
     lateinit var GuiAnh: ImageView
     lateinit var GIF: ImageView
     lateinit var emoji: ImageView
-    lateinit var scrollView: ScrollView
-    lateinit var floatingBtn: FloatingActionButton
     lateinit var recyclerview_chat_log: RecyclerView
     var toUser: SignUpActivity.getUser? = null
     private var Loading: ProgressDialog? = null
@@ -92,9 +90,6 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         GIF.setOnClickListener {
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
         }
-        floatingBtn.setOnClickListener{
-            scrollView.fullScroll(ScrollView.FOCUS_DOWN)
-        }
         GuiAnh.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -116,8 +111,6 @@ class ChatLogAnDanhActivity : AppCompatActivity(), GiphyDialogFragment.GifSelect
         GIF = findViewById(R.id.GIF)
         GuiAnh = findViewById(R.id.BtnGuiAnh)
         emoji = findViewById(com.example.firebaseappchat.R.id.emoji)
-        scrollView = findViewById(R.id.rootView)
-        floatingBtn = findViewById(R.id.btnToBottom)
         recyclerview_chat_log = findViewById(R.id.recyclerview_chat_log)
         recyclerview_chat_log.adapter = adapter
         toUser = intent.getParcelableExtra(NewMessActivity.USER_KEY)
