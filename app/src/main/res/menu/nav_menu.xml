@@ -12,11 +12,6 @@
         android:icon="@drawable/ic_baseline_add_comment_24"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu_new_call"
-        android:title="Tạo Cuộc Gọi"
-        android:icon="@drawable/ic_baseline_call"
-        app:showAsAction="always"/>
-    <item
         android:id="@+id/menu_sign_out"
         android:title="Đăng xuất"
         android:icon="@drawable/ic_logout_white"

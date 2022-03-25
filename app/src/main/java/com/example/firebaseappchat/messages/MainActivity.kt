@@ -133,9 +133,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, NewMessActivity::class.java))
             }
 
-            R.id.menu_new_call -> {
-                startActivity(Intent(this, VideoChatActivity::class.java))
-            }
             R.id.menu_sign_out ->{
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, LoginActivity::class.java)
